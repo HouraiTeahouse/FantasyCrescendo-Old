@@ -6,7 +6,7 @@ namespace HouraiTeahouse.HouraiInput {
         public static readonly InputControl Null = new InputControl("NullInputControl");
 
         public string Handle { get; protected set; }
-        public InputControlTarget Target { get; protected set; }
+        public InputTarget Target { get; protected set; }
 
         public ulong UpdateTick { get; protected set; }
 
@@ -19,9 +19,9 @@ namespace HouraiTeahouse.HouraiInput {
         /// </summary>
         public bool IsButton { get; protected set; }
 
-        InputControlState thisState;
-        InputControlState lastState;
-        InputControlState tempState;
+        InputSource _thisSource;
+        InputSource _lastSource;
+        InputSource _tempSource;
 
         ulong zeroTick;
 
@@ -34,12 +34,12 @@ namespace HouraiTeahouse.HouraiInput {
         }
 
 
-        public InputControl(string handle, InputControlTarget target) {
+        public InputControl(string handle, InputTarget target) {
             Handle = handle;
             Target = target;
 
-            IsButton = (target >= InputControlTarget.Action1 && target <= InputControlTarget.Action4) ||
-                       (target >= InputControlTarget.Button0 && target <= InputControlTarget.Button19);
+            IsButton = (target >= InputTarget.Action1 && target <= InputTarget.Action4) ||
+                       (target >= InputTarget.Button0 && target <= InputTarget.Button19);
         }
 
 
@@ -52,7 +52,7 @@ namespace HouraiTeahouse.HouraiInput {
                 throw new InvalidOperationException("A control cannot be updated with an earlier tick.");
             }
 
-            tempState.Set(state || tempState.State);
+            _tempSource.Set(state || _tempSource.State);
         }
 
 
@@ -65,8 +65,8 @@ namespace HouraiTeahouse.HouraiInput {
                 throw new InvalidOperationException("A control cannot be updated with an earlier tick.");
             }
 
-            if (Mathf.Abs(value) > Mathf.Abs(tempState.Value)) {
-                tempState.Set(value);
+            if (Mathf.Abs(value) > Mathf.Abs(_tempSource.Value)) {
+                _tempSource.Set(value);
             }
         }
 
@@ -75,14 +75,14 @@ namespace HouraiTeahouse.HouraiInput {
             RawValue = null;
             PreValue = null;
 
-            lastState = thisState;
-            tempState.Reset();
+            _lastSource = _thisSource;
+            _tempSource.Reset();
         }
 
 
         internal void PostUpdate(ulong updateTick) {
-            thisState = tempState;
-            if (thisState != lastState) {
+            _thisSource = _tempSource;
+            if (_thisSource != _lastSource) {
                 UpdateTick = updateTick;
             }
         }
@@ -99,42 +99,42 @@ namespace HouraiTeahouse.HouraiInput {
 
 
         public bool State {
-            get { return thisState.State; }
+            get { return _thisSource.State; }
         }
 
 
         public bool LastState {
-            get { return lastState.State; }
+            get { return _lastSource.State; }
         }
 
 
         public float Value {
-            get { return thisState.Value; }
+            get { return _thisSource.Value; }
         }
 
 
         public float LastValue {
-            get { return lastState.Value; }
+            get { return _lastSource.Value; }
         }
 
 
         public bool HasChanged {
-            get { return thisState != lastState; }
+            get { return _thisSource != _lastSource; }
         }
 
 
         public bool IsPressed {
-            get { return thisState.State; }
+            get { return _thisSource.State; }
         }
 
 
         public bool WasPressed {
-            get { return thisState && !lastState; }
+            get { return _thisSource && !_lastSource; }
         }
 
 
         public bool WasReleased {
-            get { return !thisState && lastState; }
+            get { return !_thisSource && _lastSource; }
         }
 
 
@@ -163,17 +163,17 @@ namespace HouraiTeahouse.HouraiInput {
         }
 
 
-        public InputControlTarget? Obverse {
+        public InputTarget? Obverse {
             get {
                 switch (Target) {
-                    case InputControlTarget.LeftStickX:
-                        return InputControlTarget.LeftStickY;
-                    case InputControlTarget.LeftStickY:
-                        return InputControlTarget.LeftStickX;
-                    case InputControlTarget.RightStickX:
-                        return InputControlTarget.RightStickY;
-                    case InputControlTarget.RightStickY:
-                        return InputControlTarget.RightStickX;
+                    case InputTarget.LeftStickX:
+                        return InputTarget.LeftStickY;
+                    case InputTarget.LeftStickY:
+                        return InputTarget.LeftStickX;
+                    case InputTarget.RightStickX:
+                        return InputTarget.RightStickY;
+                    case InputTarget.RightStickY:
+                        return InputTarget.RightStickX;
                     default:
                         return null;
                 }

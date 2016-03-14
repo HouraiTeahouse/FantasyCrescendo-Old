@@ -9,7 +9,7 @@ namespace HouraiTeahouse.SmashBrew {
         /// <summary>
         /// The button that pauses the game.
         /// </summary>
-        [SerializeField] private InputControlTarget _pauseButton = InputControlTarget.Start;
+        [SerializeField] private InputTarget _pauseButton = InputTarget.Start;
 
         /// <summary>
         /// The player that paused the game.

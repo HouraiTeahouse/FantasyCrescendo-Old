@@ -15,8 +15,8 @@ namespace HouraiTeahouse.HouraiInput {
         public string Name { get; protected set; }
         public string Meta { get; protected set; }
 
-        public InputControlMapping[] AnalogMappings { get; protected set; }
-        public InputControlMapping[] ButtonMappings { get; protected set; }
+        public InputMapping[] AnalogMappings { get; protected set; }
+        public InputMapping[] ButtonMappings { get; protected set; }
 
         protected string[] SupportedPlatforms;
         protected string[] JoystickNames;
@@ -42,8 +42,8 @@ namespace HouraiTeahouse.HouraiInput {
             lowerDeadZone = 0.2f;
             upperDeadZone = 0.9f;
 
-            AnalogMappings = new InputControlMapping[0];
-            ButtonMappings = new InputControlMapping[0];
+            AnalogMappings = new InputMapping[0];
+            ButtonMappings = new InputMapping[0];
 
             MinUnityVersion = new VersionInfo(3);
             MaxUnityVersion = new VersionInfo(9);

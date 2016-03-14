@@ -3,7 +3,7 @@ using UnityEngine;
 
 
 namespace HouraiTeahouse.HouraiInput {
-    public class InputControlMapping {
+    public class InputMapping {
         public class Range {
             public static Range Complete = new Range {Minimum = -1.0f, Maximum = 1.0f};
             public static Range Positive = new Range {Minimum = 0.0f, Maximum = 1.0f};
@@ -15,7 +15,7 @@ namespace HouraiTeahouse.HouraiInput {
 
 
         public InputControlSource Source;
-        public InputControlTarget Target;
+        public InputTarget Target;
 
         // Invert the final mapped value.
         public bool Invert;
@@ -72,8 +72,8 @@ namespace HouraiTeahouse.HouraiInput {
 
         bool IsYAxis {
             get {
-                return Target == InputControlTarget.LeftStickY ||
-                       Target == InputControlTarget.RightStickY;
+                return Target == InputTarget.LeftStickY ||
+                       Target == InputTarget.RightStickY;
             }
         }
     }

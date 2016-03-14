@@ -6,8 +6,8 @@ namespace HouraiTeahouse.HouraiInput {
     public class OneAxisInputControl {
         public ulong UpdateTick { get; private set; }
 
-        InputControlState thisState;
-        InputControlState lastState;
+        InputSource _thisSource;
+        InputSource _lastSource;
 
 
         public void UpdateWithValue(float value, ulong updateTick, float stateThreshold) {
@@ -15,53 +15,53 @@ namespace HouraiTeahouse.HouraiInput {
                 throw new InvalidOperationException("A control cannot be updated with an earlier tick.");
             }
 
-            lastState = thisState;
+            _lastSource = _thisSource;
 
-            thisState.Set(value, stateThreshold);
+            _thisSource.Set(value, stateThreshold);
 
-            if (thisState != lastState) {
+            if (_thisSource != _lastSource) {
                 UpdateTick = updateTick;
             }
         }
 
 
         public bool State {
-            get { return thisState.State; }
+            get { return _thisSource.State; }
         }
 
 
         public bool LastState {
-            get { return lastState.State; }
+            get { return _lastSource.State; }
         }
 
 
         public float Value {
-            get { return thisState.Value; }
+            get { return _thisSource.Value; }
         }
 
 
         public float LastValue {
-            get { return lastState.Value; }
+            get { return _lastSource.Value; }
         }
 
 
         public bool HasChanged {
-            get { return thisState != lastState; }
+            get { return _thisSource != _lastSource; }
         }
 
 
         public bool IsPressed {
-            get { return thisState.State; }
+            get { return _thisSource.State; }
         }
 
 
         public bool WasPressed {
-            get { return thisState && !lastState; }
+            get { return _thisSource && !_lastSource; }
         }
 
 
         public bool WasReleased {
-            get { return !thisState && lastState; }
+            get { return !_thisSource && _lastSource; }
         }
 
 

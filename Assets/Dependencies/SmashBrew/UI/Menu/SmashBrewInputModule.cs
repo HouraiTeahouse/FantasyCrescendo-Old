@@ -12,13 +12,13 @@ namespace HouraiTeahouse.SmashBrew.UI {
 
         [SerializeField] private string _cancelKeyboard = "cancel";
 
-        [SerializeField] private InputControlTarget _horizontalGamepad = InputControlTarget.LeftStickX;
+        [SerializeField] private InputTarget _horizontalGamepad = InputTarget.LeftStickX;
 
-        [SerializeField] private InputControlTarget _verticalGamepad = InputControlTarget.LeftStickY;
+        [SerializeField] private InputTarget _verticalGamepad = InputTarget.LeftStickY;
 
-        [SerializeField] private InputControlTarget _submitGamepad = InputControlTarget.Action1;
+        [SerializeField] private InputTarget _submitGamepad = InputTarget.Action1;
 
-        [SerializeField] private InputControlTarget _cancelGamepad = InputControlTarget.Action2;
+        [SerializeField] private InputTarget _cancelGamepad = InputTarget.Action2;
 
         [SerializeField] private float _deadZone = 0.1f;
 

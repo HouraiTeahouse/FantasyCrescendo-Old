@@ -1,5 +1,5 @@
 namespace HouraiTeahouse.HouraiInput {
-    public enum InputControlTarget {
+    public enum InputTarget {
         None = 0,
 
         // Standardized.

@@ -3,9 +3,9 @@ using HouraiTeahouse.HouraiInput;
 
 namespace HouraiTeahouse.SmashBrew.UI {
     public class MenuWiggle : MonoBehaviour {
-        [SerializeField] private InputControlTarget _horizontalAxis = InputControlTarget.RightStickX;
+        [SerializeField] private InputTarget _horizontalAxis = InputTarget.RightStickX;
 
-        [SerializeField] private InputControlTarget _verticalAxis = InputControlTarget.RightStickY;
+        [SerializeField] private InputTarget _verticalAxis = InputTarget.RightStickY;
 
         [SerializeField] private Vector2 _scale = new Vector2(30, 30);
 

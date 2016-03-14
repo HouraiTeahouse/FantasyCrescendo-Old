@@ -4,7 +4,7 @@ using UnityEngine;
 #pragma warning disable 0660, 0661
 
 namespace HouraiTeahouse.HouraiInput {
-    public struct InputControlState {
+    public struct InputSource {
         public bool State;
         public float Value;
 
@@ -33,22 +33,22 @@ namespace HouraiTeahouse.HouraiInput {
         }
 
 
-        public static implicit operator bool(InputControlState state) {
-            return state.State;
+        public static implicit operator bool(InputSource source) {
+            return source.State;
         }
 
 
-        public static implicit operator float(InputControlState state) {
-            return state.Value;
+        public static implicit operator float(InputSource source) {
+            return source.Value;
         }
 
 
-        public static bool operator ==(InputControlState a, InputControlState b) {
+        public static bool operator ==(InputSource a, InputSource b) {
             return Mathf.Approximately(a.Value, b.Value);
         }
 
 
-        public static bool operator !=(InputControlState a, InputControlState b) {
+        public static bool operator !=(InputSource a, InputSource b) {
             return !Mathf.Approximately(a.Value, b.Value);
         }
     }

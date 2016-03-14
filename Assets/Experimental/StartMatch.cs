@@ -4,7 +4,7 @@ using HouraiTeahouse.HouraiInput;
 using UnityEngine.SceneManagement;
 
 public class StartMatch : MonoBehaviour {
-    [SerializeField] private InputControlTarget button;
+    [SerializeField] private InputTarget button;
 
     [SerializeField, Scene] private string scene;
 
