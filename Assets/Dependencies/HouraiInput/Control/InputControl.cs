@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace InControl {
+namespace HouraiTeahouse.HouraiInput {
     public class InputControl {
         public static readonly InputControl Null = new InputControl("NullInputControl");
 

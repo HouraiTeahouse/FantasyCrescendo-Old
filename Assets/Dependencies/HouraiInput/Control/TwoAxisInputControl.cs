@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 
-namespace InControl {
+namespace HouraiTeahouse.HouraiInput {
     public class TwoAxisInputControl {
         public float X { get; protected set; }
         public float Y { get; protected set; }

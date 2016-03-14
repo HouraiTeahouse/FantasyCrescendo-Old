@@ -1,5 +1,5 @@
 using UnityEngine;
-using InControl;
+using HouraiTeahouse.HouraiInput;
 
 namespace HouraiTeahouse.SmashBrew {
     /// <summary>

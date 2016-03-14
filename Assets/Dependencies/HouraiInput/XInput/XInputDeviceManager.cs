@@ -6,7 +6,7 @@ using UnityEngine;
 using XInputDotNetPure;
 
 
-namespace InControl {
+namespace HouraiTeahouse.HouraiInput {
     public class XInputDeviceManager : InputDeviceManager {
         bool[] deviceConnected = new bool[] {false, false, false, false};
 

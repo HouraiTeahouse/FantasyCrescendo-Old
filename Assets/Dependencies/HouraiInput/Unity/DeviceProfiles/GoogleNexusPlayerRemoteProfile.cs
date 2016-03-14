@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 
 
-namespace InControl {
+namespace HouraiTeahouse.HouraiInput {
     [AutoDiscover]
     public class GoogleNexusPlayerRemoteProfile : UnityInputDeviceProfile {
         public GoogleNexusPlayerRemoteProfile() {

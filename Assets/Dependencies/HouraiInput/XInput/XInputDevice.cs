@@ -6,7 +6,7 @@ using UnityEngine;
 using XInputDotNetPure;
 
 
-namespace InControl {
+namespace HouraiTeahouse.HouraiInput {
     public class XInputDevice : InputDevice {
         public int DeviceIndex { get; private set; }
         GamePadState state;

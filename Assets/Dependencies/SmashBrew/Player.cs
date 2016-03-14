@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using InControl;
+using HouraiTeahouse.HouraiInput;
 using UnityEngine;
 using Random = UnityEngine.Random;
 

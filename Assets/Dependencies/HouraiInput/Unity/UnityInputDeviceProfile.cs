@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 
 
-namespace InControl {
+namespace HouraiTeahouse.HouraiInput {
     public sealed class AutoDiscover : Attribute {
     }
 

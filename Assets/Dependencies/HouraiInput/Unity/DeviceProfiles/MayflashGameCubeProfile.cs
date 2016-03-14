@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace InControl {
+namespace HouraiTeahouse.HouraiInput {
     // @cond nodoc
     [AutoDiscover]
     public class MayflashGameCubeWinProfile : UnityInputDeviceProfile {

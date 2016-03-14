@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 
-namespace InControl {
+namespace HouraiTeahouse.HouraiInput {
     // @cond nodoc
     [AutoDiscover]
     public class OuyaLinuxProfile : UnityInputDeviceProfile {

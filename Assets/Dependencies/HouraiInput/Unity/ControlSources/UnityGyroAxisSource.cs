@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 
-namespace InControl {
+namespace HouraiTeahouse.HouraiInput {
     // This is kind of "beta"... while it works on iOS, gyro controls are
     // inconsistent and are usually fine tuned to the games that use them
     // which is somewhat beyond the scope of this project. But, if you 

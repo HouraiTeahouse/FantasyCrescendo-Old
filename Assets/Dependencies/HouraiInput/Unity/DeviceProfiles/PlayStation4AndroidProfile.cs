@@ -1,7 +1,7 @@
 using System;
 
 
-namespace InControl {
+namespace HouraiTeahouse.HouraiInput {
     // @cond nodoc
     // Tested with Samsung Galaxy Note 2 connected by OTG cable.
     [AutoDiscover]

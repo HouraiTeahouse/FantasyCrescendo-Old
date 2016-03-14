@@ -1,6 +1,6 @@
-﻿using HouraiTeahouse;
+using HouraiTeahouse;
 using UnityEngine;
-using InControl;
+using HouraiTeahouse.HouraiInput;
 using UnityEngine.SceneManagement;
 
 public class StartMatch : MonoBehaviour {

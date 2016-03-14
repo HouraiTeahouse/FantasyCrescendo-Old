@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-namespace InControl {
+namespace HouraiTeahouse.HouraiInput {
     public class InControlManager : MonoBehaviour {
         public bool logDebugInfo = false;
         public bool invertYAxis = false;

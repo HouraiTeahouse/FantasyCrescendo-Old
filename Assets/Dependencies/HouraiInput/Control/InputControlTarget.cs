@@ -1,4 +1,4 @@
-namespace InControl {
+namespace HouraiTeahouse.HouraiInput {
     public enum InputControlTarget {
         None = 0,
 

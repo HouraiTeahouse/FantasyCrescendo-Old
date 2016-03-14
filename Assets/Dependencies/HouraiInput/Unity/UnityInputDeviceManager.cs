@@ -5,7 +5,7 @@ using System.Reflection;
 using UnityEngine;
 
 
-namespace InControl {
+namespace HouraiTeahouse.HouraiInput {
     public class UnityInputDeviceManager : InputDeviceManager {
         float deviceRefreshTimer = 0.0f;
         const float deviceRefreshInterval = 1.0f;

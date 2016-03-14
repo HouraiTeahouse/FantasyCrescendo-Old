@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 
-namespace InControl {
+namespace HouraiTeahouse.HouraiInput {
     public class UnityKeyCodeAxisSource : InputControlSource {
         KeyCode negativeKeyCode;
         KeyCode positiveKeyCode;

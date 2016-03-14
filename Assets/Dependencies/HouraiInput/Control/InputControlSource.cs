@@ -1,7 +1,7 @@
 using System;
 
 
-namespace InControl {
+namespace HouraiTeahouse.HouraiInput {
     public interface InputControlSource {
         float GetValue(InputDevice inputDevice);
         bool GetState(InputDevice inputDevice);

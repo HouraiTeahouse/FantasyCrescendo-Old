@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 
-namespace InControl {
+namespace HouraiTeahouse.HouraiInput {
     public static class InputManager {
         public static readonly VersionInfo Version = VersionInfo.InControlVersion();
 

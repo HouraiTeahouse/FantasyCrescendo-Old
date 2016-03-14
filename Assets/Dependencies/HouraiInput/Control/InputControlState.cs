@@ -3,7 +3,7 @@ using UnityEngine;
 
 #pragma warning disable 0660, 0661
 
-namespace InControl {
+namespace HouraiTeahouse.HouraiInput {
     public struct InputControlState {
         public bool State;
         public float Value;

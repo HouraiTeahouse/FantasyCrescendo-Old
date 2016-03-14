@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 
-namespace InControl {
+namespace HouraiTeahouse.HouraiInput {
     public class InputControlMapping {
         public class Range {
             public static Range Complete = new Range {Minimum = -1.0f, Maximum = 1.0f};

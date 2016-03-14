@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using InControl;
+using HouraiTeahouse.HouraiInput;
 using UnityEngine;
 using UnityEngine.EventSystems;
 

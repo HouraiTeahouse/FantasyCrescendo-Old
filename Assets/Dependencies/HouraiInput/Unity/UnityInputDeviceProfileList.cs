@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 
-namespace InControl {
+namespace HouraiTeahouse.HouraiInput {
     public class UnityInputDeviceProfileList : ScriptableObject {
         public static string[] Profiles = new string[] {
             "InControl.AmazonFireTVProfile",
