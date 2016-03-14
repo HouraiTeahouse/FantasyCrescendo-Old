@@ -1,17 +1,12 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace HouraiTeahouse.SmashBrew {
     public class Counter {
-        private float _count;
-
-        public float Count {
-            get { return _count; }
-        }
+        public float Count { get; private set; }
 
         public void Increment(float value = 1f) {
-            _count += value;
+            Count += value;
         }
 
         public static Counter operator ++(Counter counter) {
@@ -31,14 +26,14 @@ namespace HouraiTeahouse.SmashBrew {
     }
 
     public sealed class StatLogger {
-        private Dictionary<string, Counter> _counters;
-
-        public Counter this[string counterName] {
-            get { return GetCounter(counterName); }
-        }
+        private readonly Dictionary<string, Counter> _counters;
 
         public StatLogger() {
             _counters = new Dictionary<string, Counter>();
+        }
+
+        public Counter this[string counterName] {
+            get { return GetCounter(counterName); }
         }
 
         public Counter GetCounter(string counterName) {

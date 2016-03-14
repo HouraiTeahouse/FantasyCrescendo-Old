@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace HouraiTeahouse.SmashBrew {
     /// <summary>
-    /// A Status effect that prevents players from taking damage while active.
+    ///     A Status effect that prevents players from taking damage while active.
     /// </summary>
     [DisallowMultipleComponent]
     [RequiredCharacterComponent]
@@ -11,7 +11,7 @@ namespace HouraiTeahouse.SmashBrew {
         private Hitbox[] _hitboxes;
 
         /// <summary>
-        /// Unity callback. Called once before the object's first frame.
+        ///     Unity callback. Called once before the object's first frame.
         /// </summary>
         protected override void Start() {
             base.Start();
@@ -21,17 +21,17 @@ namespace HouraiTeahouse.SmashBrew {
         }
 
         /// <summary>
-        /// Unity callback. Called on object destruction.
+        ///     Unity callback. Called on object destruction.
         /// </summary>
-        void OnDestroy() {
+        private void OnDestroy() {
             if (_character)
                 _character.DamageModifiers.In.Remove(InvincibilityModifier);
         }
 
         /// <summary>
-        /// Unity callback. Called when component is enabled.
+        ///     Unity callback. Called when component is enabled.
         /// </summary>
-        void OnEnable() {
+        private void OnEnable() {
             if (_hitboxes == null)
                 _hitboxes = GetComponentsInChildren<Hitbox>();
             foreach (var hitbox in _hitboxes)
@@ -41,9 +41,9 @@ namespace HouraiTeahouse.SmashBrew {
         }
 
         /// <summary>
-        /// Unity callback. Called when component is disabled.
+        ///     Unity callback. Called when component is disabled.
         /// </summary>
-        void OnDisable() {
+        private void OnDisable() {
             if (_hitboxes == null)
                 _hitboxes = GetComponentsInChildren<Hitbox>();
             foreach (var hitbox in _hitboxes)
@@ -52,9 +52,9 @@ namespace HouraiTeahouse.SmashBrew {
         }
 
         /// <summary>
-        /// Invincibilty modifier. Negates all damage while active.
+        ///     Invincibilty modifier. Negates all damage while active.
         /// </summary>
-        float InvincibilityModifier(object source, float damage) {
+        private float InvincibilityModifier(object source, float damage) {
             return enabled ? damage : 0f;
         }
     }

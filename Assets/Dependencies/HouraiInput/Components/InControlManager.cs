@@ -12,7 +12,7 @@ namespace HouraiTeahouse.HouraiInput {
         public List<string> customProfiles = new List<string>();
 
 
-        void OnEnable() {
+        private void OnEnable() {
             if (logDebugInfo) {
                 Debug.Log("InControl (version " + InputManager.Version + ")");
                 Logger.OnLogMessage += HandleOnLogMessage;
@@ -22,8 +22,8 @@ namespace HouraiTeahouse.HouraiInput {
             InputManager.EnableXInput = enableXInput;
             InputManager.SetupInternal();
 
-            foreach (string className in customProfiles) {
-                Type classType = Type.GetType(className);
+            foreach (var className in customProfiles) {
+                var classType = Type.GetType(className);
                 if (classType == null) {
                     Debug.LogError("Cannot find class for custom profile: " + className);
                 }
@@ -39,7 +39,7 @@ namespace HouraiTeahouse.HouraiInput {
         }
 
 
-        void OnDisable() {
+        private void OnDisable() {
             InputManager.ResetInternal();
         }
 
@@ -63,36 +63,36 @@ namespace HouraiTeahouse.HouraiInput {
 		#endif
 
 
-        void Update() {
+        private void Update() {
             if (!useFixedUpdate || Mathf.Approximately(Time.timeScale, 0.0f)) {
                 InputManager.UpdateInternal();
             }
         }
 
 
-        void FixedUpdate() {
+        private void FixedUpdate() {
             if (useFixedUpdate) {
                 InputManager.UpdateInternal();
             }
         }
 
 
-        void OnApplicationFocus(bool focusState) {
+        private void OnApplicationFocus(bool focusState) {
             InputManager.OnApplicationFocus(focusState);
         }
 
 
-        void OnApplicationPause(bool pauseState) {
+        private void OnApplicationPause(bool pauseState) {
             InputManager.OnApplicationPause(pauseState);
         }
 
 
-        void OnApplicationQuit() {
+        private void OnApplicationQuit() {
             InputManager.OnApplicationQuit();
         }
 
 
-        void HandleOnLogMessage(LogMessage logMessage) {
+        private void HandleOnLogMessage(LogMessage logMessage) {
             switch (logMessage.type) {
                 case LogMessageType.Info:
                     Debug.Log(logMessage.text);

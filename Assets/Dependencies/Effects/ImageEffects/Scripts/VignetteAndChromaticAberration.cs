@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace UnityStandardAssets.ImageEffects {
@@ -8,26 +7,27 @@ namespace UnityStandardAssets.ImageEffects {
     public class VignetteAndChromaticAberration : PostEffectsBase {
         public enum AberrationMode {
             Simple = 0,
-            Advanced = 1,
+            Advanced = 1
         }
 
-
-        public AberrationMode mode = AberrationMode.Simple;
-        public float intensity = 0.036f; // intensity == 0 disables pre pass (optimization)
-        public float chromaticAberration = 0.2f;
         public float axialAberration = 0.5f;
         public float blur = 0.0f; // blur == 0 disables blur pass (optimization)
-        public float blurSpread = 0.75f;
-        public float luminanceDependency = 0.25f;
         public float blurDistance = 2.5f;
-        public Shader vignetteShader;
-        public Shader separableBlurShader;
+        public float blurSpread = 0.75f;
         public Shader chromAberrationShader;
+        public float chromaticAberration = 0.2f;
+        public float intensity = 0.036f; // intensity == 0 disables pre pass (optimization)
+        public float luminanceDependency = 0.25f;
+        private Material m_ChromAberrationMaterial;
+        private Material m_SeparableBlurMaterial;
 
 
         private Material m_VignetteMaterial;
-        private Material m_SeparableBlurMaterial;
-        private Material m_ChromAberrationMaterial;
+
+
+        public AberrationMode mode = AberrationMode.Simple;
+        public Shader separableBlurShader;
+        public Shader vignetteShader;
 
 
         public override bool CheckResources() {
@@ -43,18 +43,18 @@ namespace UnityStandardAssets.ImageEffects {
         }
 
 
-        void OnRenderImage(RenderTexture source, RenderTexture destination) {
+        private void OnRenderImage(RenderTexture source, RenderTexture destination) {
             if (CheckResources() == false) {
                 Graphics.Blit(source, destination);
                 return;
             }
 
-            int rtW = source.width;
-            int rtH = source.height;
+            var rtW = source.width;
+            var rtH = source.height;
 
-            bool doPrepass = (Mathf.Abs(blur) > 0.0f || Mathf.Abs(intensity) > 0.0f);
+            var doPrepass = Mathf.Abs(blur) > 0.0f || Mathf.Abs(intensity) > 0.0f;
 
-            float widthOverHeight = (1.0f * rtW) / (1.0f * rtH);
+            var widthOverHeight = 1.0f * rtW / (1.0f * rtH);
             const float oneOverBaseSize = 1.0f / 512.0f;
 
             RenderTexture color = null;
@@ -69,11 +69,11 @@ namespace UnityStandardAssets.ImageEffects {
 
                     Graphics.Blit(source, color2A, m_ChromAberrationMaterial, 0);
 
-                    for (int i = 0; i < 2; i++) {
+                    for (var i = 0; i < 2; i++) {
                         // maybe make iteration count tweakable
                         m_SeparableBlurMaterial.SetVector("offsets",
                             new Vector4(0.0f, blurSpread * oneOverBaseSize, 0.0f, 0.0f));
-                        RenderTexture color2B = RenderTexture.GetTemporary(rtW / 2, rtH / 2, 0, source.format);
+                        var color2B = RenderTexture.GetTemporary(rtW / 2, rtH / 2, 0, source.format);
                         Graphics.Blit(color2A, color2B, m_SeparableBlurMaterial);
                         RenderTexture.ReleaseTemporary(color2A);
 
@@ -85,8 +85,8 @@ namespace UnityStandardAssets.ImageEffects {
                     }
                 }
 
-                m_VignetteMaterial.SetFloat("_Intensity", (1.0f / (1.0f - intensity) - 1.0f)); // intensity for vignette
-                m_VignetteMaterial.SetFloat("_Blur", (1.0f / (1.0f - blur)) - 1.0f); // blur intensity
+                m_VignetteMaterial.SetFloat("_Intensity", 1.0f / (1.0f - intensity) - 1.0f); // intensity for vignette
+                m_VignetteMaterial.SetFloat("_Blur", 1.0f / (1.0f - blur) - 1.0f); // blur intensity
                 m_VignetteMaterial.SetTexture("_VignetteTex", color2A); // blurred texture
 
                 Graphics.Blit(source, color, m_VignetteMaterial, 0); // prepass blit: darken & blur corners

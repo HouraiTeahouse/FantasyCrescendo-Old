@@ -1,6 +1,3 @@
-using System;
-
-
 namespace HouraiTeahouse.HouraiInput {
     // @cond nodoc
     [AutoDiscover]
@@ -98,14 +95,14 @@ namespace HouraiTeahouse.HouraiInput {
                     Target = InputTarget.LeftTrigger,
                     Source = Analog8,
                     SourceRange = InputMapping.Range.Positive,
-                    TargetRange = InputMapping.Range.Positive,
+                    TargetRange = InputMapping.Range.Positive
                 },
                 new InputMapping {
                     Handle = "Right Trigger",
                     Target = InputTarget.RightTrigger,
                     Source = Analog9,
                     SourceRange = InputMapping.Range.Positive,
-                    TargetRange = InputMapping.Range.Positive,
+                    TargetRange = InputMapping.Range.Positive
                 },
                 new InputMapping {
                     Handle = "DPad Left",
@@ -127,7 +124,7 @@ namespace HouraiTeahouse.HouraiInput {
                     Target = InputTarget.DPadUp,
                     Source = Analog6,
                     SourceRange = InputMapping.Range.Positive,
-                    TargetRange = InputMapping.Range.Positive,
+                    TargetRange = InputMapping.Range.Positive
                 },
                 new InputMapping {
                     Handle = "DPad Down",

@@ -1,31 +1,24 @@
 using System;
-using System.Collections.Generic;
-using UnityEngine;
 using HouraiTeahouse.Events;
+using UnityEngine;
 
 namespace HouraiTeahouse.SmashBrew {
     /// <summary>
-    /// A EventHandler for spawning characters at the start of the match
+    ///     A EventHandler for spawning characters at the start of the match
     /// </summary>
     public class Spawn : EventHandlerBehaviour<MatchStartEvent> {
-        [Serializable]
-        private class SpawnPoint {
-            public Transform Point;
-            public bool Direction;
-        }
-
         [SerializeField, Tooltip("The spawn points for each of the characters")] private SpawnPoint[] _spawnPoints;
 
         /// <summary>
-        /// Spawns players when the match begins.
+        ///     Spawns players when the match begins.
         /// </summary>
         /// <param name="startEventArgs"></param>
         protected override void OnEvent(MatchStartEvent startEventArgs) {
             var i = 0;
-            IEnumerator<Player> activePlayers = Player.ActivePlayers.GetEnumerator();
+            var activePlayers = Player.ActivePlayers.GetEnumerator();
             while (i < _spawnPoints.Length && activePlayers.MoveNext()) {
-                Player player = activePlayers.Current;
-                Character runtimeCharacter = player.Spawn(_spawnPoints[i].Point, _spawnPoints[i].Direction);
+                var player = activePlayers.Current;
+                var runtimeCharacter = player.Spawn(_spawnPoints[i].Point, _spawnPoints[i].Direction);
                 i++;
                 if (runtimeCharacter == null)
                     continue;
@@ -36,6 +29,12 @@ namespace HouraiTeahouse.SmashBrew {
                     player.SpawnedCharacter.name);
                 EventManager.Publish(new PlayerSpawnEvent {Player = player, PlayerObject = runtimeCharacter.gameObject});
             }
+        }
+
+        [Serializable]
+        private class SpawnPoint {
+            public bool Direction;
+            public Transform Point;
         }
     }
 }

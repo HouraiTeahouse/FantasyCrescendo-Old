@@ -1,14 +1,12 @@
-using System;
 using UnityEngine;
-
 
 namespace HouraiTeahouse.HouraiInput {
     public class UnityMouseAxisSource : InputControlSource {
-        string mouseAxisQuery;
+        private readonly string mouseAxisQuery;
 
 
         public UnityMouseAxisSource(string axis) {
-            this.mouseAxisQuery = "mouse " + axis;
+            mouseAxisQuery = "mouse " + axis;
         }
 
 

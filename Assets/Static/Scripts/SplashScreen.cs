@@ -18,18 +18,18 @@ public class SplashScreen : MonoBehaviour {
     }
 
     private IEnumerator DisplaySplashScreen() {
-        foreach (GameObject target in disableWhileLoading)
+        foreach (var target in disableWhileLoading)
             target.SetActive(false);
-        float logoDisplayDuration = alphaOverTime.keys[alphaOverTime.length - 1].time;
-        foreach (Graphic graphic in splashGraphics)
+        var logoDisplayDuration = alphaOverTime.keys[alphaOverTime.length - 1].time;
+        foreach (var graphic in splashGraphics)
             graphic.enabled = false;
-        foreach (Graphic graphic in splashGraphics) {
+        foreach (var graphic in splashGraphics) {
             if (graphic == null)
                 continue;
             graphic.enabled = true;
             float t = 0;
-            Color baseColor = graphic.color;
-            Color targetColor = baseColor;
+            var baseColor = graphic.color;
+            var targetColor = baseColor;
             baseColor.a = 0f;
             while (t < logoDisplayDuration) {
                 graphic.color = Color.Lerp(baseColor, targetColor, alphaOverTime.Evaluate(t));
@@ -41,9 +41,9 @@ public class SplashScreen : MonoBehaviour {
             graphic.enabled = false;
             graphic.color = targetColor;
         }
-        AsyncOperation operation = SceneManager.LoadSceneAsync(targetSceneName);
+        var operation = SceneManager.LoadSceneAsync(targetSceneName);
         if (operation != null && !operation.isDone) {
-            foreach (GameObject target in disableWhileLoading)
+            foreach (var target in disableWhileLoading)
                 target.SetActive(true);
             while (!operation.isDone)
                 yield return null;

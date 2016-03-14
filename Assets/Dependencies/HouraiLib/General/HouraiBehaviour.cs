@@ -2,17 +2,17 @@ using UnityEngine;
 
 namespace HouraiTeahouse {
     /// <summary>
-    /// A utility base behaviour for Hourai Teahouse game elements.
+    ///     A utility base behaviour for Hourai Teahouse game elements.
     /// </summary>
     public abstract class HouraiBehaviour : MonoBehaviour, ITimeObject {
-        private TimeModifier _timeMod;
+        private Animator _animator;
 
         // Cached component references.
         private Rigidbody _rigidbody;
-        private Animator _animator;
+        private TimeModifier _timeMod;
 
         /// <summary>
-        /// Unity Callback. Called on object instatiation .
+        ///     Unity Callback. Called on object instatiation .
         /// </summary>
         protected virtual void Awake() {
             _timeMod = GetComponentInParent<TimeModifier>();
@@ -25,7 +25,8 @@ namespace HouraiTeahouse {
         #region Time Properties
 
         /// <summary>
-        /// The local time scale for the GameObject the HouraiBehaviour. Every HouraiBehaviour on each GameObject shares the same value.
+        ///     The local time scale for the GameObject the HouraiBehaviour. Every HouraiBehaviour on each GameObject shares the
+        ///     same value.
         /// </summary>
         public float LocalTimeScale {
             get { return _timeMod.LocalTimeScale; }
@@ -33,21 +34,21 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// The effective timescale affecting the HouraiBehaviour. Factors in both global and local timescale.
+        ///     The effective timescale affecting the HouraiBehaviour. Factors in both global and local timescale.
         /// </summary>
         public float EffectiveTimeScale {
             get { return _timeMod.EffectiveTimeScale; }
         }
 
         /// <summary>
-        /// The effective change in time since the last frame. Factors in both global and local timescale.
+        ///     The effective change in time since the last frame. Factors in both global and local timescale.
         /// </summary>
         public float DeltaTime {
             get { return _timeMod.DeltaTime; }
         }
 
         /// <summary>
-        /// The effective change in time since the last physics update. Factors both global and local timescale.
+        ///     The effective change in time since the last physics update. Factors both global and local timescale.
         /// </summary>
         public float FixedDeltaTime {
             get { return _timeMod.FixedDeltaTime; }
@@ -58,7 +59,7 @@ namespace HouraiTeahouse {
         #region Common Components
 
         /// <summary>
-        /// The Rigidbody that controls the GameObject the HouraiBehaviour is attached to.
+        ///     The Rigidbody that controls the GameObject the HouraiBehaviour is attached to.
         /// </summary>
         public Rigidbody Rigidbody {
             get {
@@ -77,7 +78,7 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// The Animator that controls the GameObject the HouraiBehaviour is attached to.
+        ///     The Animator that controls the GameObject the HouraiBehaviour is attached to.
         /// </summary>
         public Animator Animator {
             get {

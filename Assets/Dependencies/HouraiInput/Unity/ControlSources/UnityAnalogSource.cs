@@ -1,11 +1,9 @@
-using System;
 using UnityEngine;
-
 
 namespace HouraiTeahouse.HouraiInput {
     public class UnityAnalogSource : InputControlSource {
-        int analogId;
-        static string[,] analogQueries;
+        private static string[,] analogQueries;
+        private readonly int analogId;
 
 
         public UnityAnalogSource(int analogId) {
@@ -26,12 +24,12 @@ namespace HouraiTeahouse.HouraiInput {
         }
 
 
-        static void SetupAnalogQueries() {
+        private static void SetupAnalogQueries() {
             if (analogQueries == null) {
                 analogQueries = new string[UnityInputDevice.MaxDevices, UnityInputDevice.MaxAnalogs];
 
-                for (int joystickId = 1; joystickId <= UnityInputDevice.MaxDevices; joystickId++) {
-                    for (int analogId = 0; analogId < UnityInputDevice.MaxAnalogs; analogId++) {
+                for (var joystickId = 1; joystickId <= UnityInputDevice.MaxDevices; joystickId++) {
+                    for (var analogId = 0; analogId < UnityInputDevice.MaxAnalogs; analogId++) {
                         analogQueries[joystickId - 1, analogId] = "joystick " + joystickId + " analog " + analogId;
                     }
                 }
@@ -39,7 +37,7 @@ namespace HouraiTeahouse.HouraiInput {
         }
 
 
-        static string GetAnalogKey(int joystickId, int analogId) {
+        private static string GetAnalogKey(int joystickId, int analogId) {
             return analogQueries[joystickId - 1, analogId];
         }
     }

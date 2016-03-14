@@ -3,22 +3,21 @@ using UnityEngine;
 
 namespace HouraiTeahouse.SmashBrew {
     public class RespawnPlatform : EventHandlerBehaviour<PlayerRespawnEvent> {
-        [SerializeField] private float _invicibilityTimer;
-
-        [SerializeField] private float _platformTimer;
+        private Character _character;
 
         [SerializeField] private bool _facing;
+        [SerializeField] private float _invicibilityTimer;
+        private Invincibility _invincibility;
+
+        [SerializeField] private float _platformTimer;
+        private float _timer;
 
         public bool Occupied {
             get { return _character; }
         }
 
-        private Character _character;
-        private Invincibility _invincibility;
-        private float _timer;
-
         /// <summary>
-        /// Unity callback. Called on object instantiation.
+        ///     Unity callback. Called on object instantiation.
         /// </summary>
         protected override void Awake() {
             base.Awake();
@@ -39,9 +38,9 @@ namespace HouraiTeahouse.SmashBrew {
         }
 
         /// <summary>
-        /// Unity callback. Called once per frame.
+        ///     Unity callback. Called once per frame.
         /// </summary>
-        void Update() {
+        private void Update() {
             if (_character == null)
                 return;
 

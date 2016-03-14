@@ -3,11 +3,10 @@ using UnityEngine.EventSystems;
 
 namespace HouraiTeahouse.Console {
     /// <summary>
-    /// UI Element to toggle the appearance of the GameConsole UI.
+    ///     UI Element to toggle the appearance of the GameConsole UI.
     /// </summary>
     public class ConsoleToggle : MonoBehaviour {
-        [SerializeField, Tooltip("The KeyCode for the key that toggles the appearance of the GameConsole UI.")] private
-            KeyCode _key = KeyCode.F5;
+        [SerializeField, Tooltip("The KeyCode for the key that toggles the appearance of the GameConsole UI.")] private readonly KeyCode _key = KeyCode.F5;
 
         [SerializeField, Tooltip("GameObjects to activate and deactivate when toggling the GameConsole UI.")] private
             GameObject[] _toggle;
@@ -15,17 +14,17 @@ namespace HouraiTeahouse.Console {
         [SerializeField, Tooltip("GameObject to selet when GameConsole is set to show")] private GameObject select;
 
         /// <summary>
-        /// Unity callback. Called once every frame.
+        ///     Unity callback. Called once every frame.
         /// </summary>
-        void Update() {
+        private void Update() {
             if (!Input.GetKeyDown(_key))
                 return;
-            foreach (GameObject go in _toggle) {
+            foreach (var go in _toggle) {
                 if (!go)
                     continue;
                 go.SetActive(!go.activeSelf);
             }
-            EventSystem eventSystem = EventSystem.current;
+            var eventSystem = EventSystem.current;
             if (eventSystem)
                 eventSystem.SetSelectedGameObject(select);
         }

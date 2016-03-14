@@ -1,16 +1,16 @@
 using System;
-using UnityEngine;
 using System.Collections.ObjectModel;
+using UnityEngine;
 
 namespace HouraiTeahouse.SmashBrew {
     /// <summary>
-    /// An abstract class for controlling the global status of the game while under a certain game mode.
+    ///     An abstract class for controlling the global status of the game while under a certain game mode.
     /// </summary>
     public abstract class GameMode {
         private static GameMode _current;
 
         /// <summary>
-        /// The current game mode.
+        ///     The current game mode.
         /// </summary>
         public static GameMode Current {
             get {
@@ -27,43 +27,42 @@ namespace HouraiTeahouse.SmashBrew {
         }
 
         /// <summary>
-        /// The maximum number of chosen players in a match under this game mode.
-        /// This does not affect the number of game-inserted number of players in the match.
+        ///     The maximum number of chosen players in a match under this game mode.
+        ///     This does not affect the number of game-inserted number of players in the match.
         /// </summary>
         public abstract int MaxPlayers { get; }
 
         /// <summary>
-        /// The minimum number of chosen players in a match to start playing the game mode.
+        ///     The minimum number of chosen players in a match to start playing the game mode.
         /// </summary>
         public abstract int MinPlayers { get; }
 
         /// <summary>
-        /// Whether choosing CPU characters is OK for the game mode
+        ///     Whether choosing CPU characters is OK for the game mode
         /// </summary>
         public abstract bool CPUsAllowed { get; }
 
         /// <summary>
-        /// All of the characters that cannot be selected for this  
+        ///     All of the characters that cannot be selected for this
         /// </summary>
         public abstract ReadOnlyCollection<CharacterData> ExcludedCharacters { get; }
 
         /// <summary>
-        /// All of the stages that cannot be selected for the game mode
+        ///     All of the stages that cannot be selected for the game mode
         /// </summary>
         public abstract ReadOnlyCollection<SceneData> ExcludedStages { get; }
     }
 
     [Serializable]
     public sealed class SerializedGameMode : GameMode {
-        [SerializeField] private int _minimumPlayers = 1;
-
-        [SerializeField] private int _maximumPlayers = 4;
-
-        [SerializeField] private bool _cpusAllowed = true;
+        [SerializeField] private readonly bool _cpusAllowed = true;
 
         [SerializeField] private CharacterData[] _excludedCharacters;
 
         [SerializeField] private SceneData[] _excludedStages;
+
+        [SerializeField] private readonly int _maximumPlayers = 4;
+        [SerializeField] private readonly int _minimumPlayers = 1;
 
         public override int MaxPlayers {
             get { return _maximumPlayers; }

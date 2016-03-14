@@ -4,29 +4,26 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace HouraiTeahouse.SmashBrew.UI {
-
     public class CharacterSelectInputModule : PointerInputModule {
-
-        [SerializeField] private InputTarget _horizontal = InputTarget.LeftStickX;
-
-        [SerializeField] private InputTarget _vertical = InputTarget.LeftStickY;
-
-        [SerializeField]
-        private InputTarget _submit = InputTarget.Action1;
-
         [SerializeField] private InputTarget _cancel = InputTarget.Action2;
 
-        [SerializeField] private InputTarget _changeLeft = InputTarget.DPadLeft;
+        [SerializeField] private readonly InputTarget _changeLeft = InputTarget.DPadLeft;
 
-        [SerializeField] private InputTarget _changeRight = InputTarget.DPadRight;
+        [SerializeField] private readonly InputTarget _changeRight = InputTarget.DPadRight;
+        private PointerEventData _eventData;
+
+        [SerializeField] private readonly InputTarget _horizontal = InputTarget.LeftStickX;
 
         private List<PlayerPointer> _pointers;
-        private PointerEventData _eventData;
+
+        [SerializeField] private readonly InputTarget _submit = InputTarget.Action1;
+
+        [SerializeField] private readonly InputTarget _vertical = InputTarget.LeftStickY;
 
         internal static CharacterSelectInputModule Instance { get; private set; }
 
         internal void AddPointer(PlayerPointer pointer) {
-            if(pointer)
+            if (pointer)
                 _pointers.Add(pointer);
         }
 
@@ -42,9 +39,9 @@ namespace HouraiTeahouse.SmashBrew.UI {
 
         public override void Process() {
             for (var i = 0; i < _pointers.Count; i++) {
-                PlayerPointer pointer = _pointers[i];
-                Player player = pointer.Player;
-                InputDevice controller = player.Controller;
+                var pointer = _pointers[i];
+                var player = pointer.Player;
+                var controller = player.Controller;
                 if (controller == null)
                     continue;
                 // Move the controller
@@ -54,13 +51,13 @@ namespace HouraiTeahouse.SmashBrew.UI {
             }
         }
 
-        void ProcessPointerSubmit(PlayerPointer pointer, int i, InputDevice controller) {
+        private void ProcessPointerSubmit(PlayerPointer pointer, int i, InputDevice controller) {
             GetPointerData(i, out _eventData, true);
             _eventData.position = Camera.main.WorldToScreenPoint(pointer.transform.position);
             EventSystem.current.RaycastAll(_eventData, m_RaycastResultCache);
-            RaycastResult result = FindFirstRaycast(m_RaycastResultCache);
+            var result = FindFirstRaycast(m_RaycastResultCache);
             ProcessMove(_eventData);
-            bool success = false;
+            var success = false;
             _eventData.clickCount = 0;
             if (controller.GetControl(_submit).WasPressed) {
                 _eventData.pressPosition = _eventData.position;
@@ -83,7 +80,7 @@ namespace HouraiTeahouse.SmashBrew.UI {
             }
         }
 
-        void CharacterChange(PlayerPointer pointer, Player player, InputDevice controller) {
+        private void CharacterChange(PlayerPointer pointer, Player player, InputDevice controller) {
             if (!player.SelectedCharacter)
                 return;
             if (controller.GetControl(_changeLeft).WasPressed) {

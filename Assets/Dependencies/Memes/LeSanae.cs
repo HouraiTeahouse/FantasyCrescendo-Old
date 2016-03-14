@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public class LeSanae {
+﻿public class LeSanae {
     public bool IsSloot {
         get { return true; }
     }

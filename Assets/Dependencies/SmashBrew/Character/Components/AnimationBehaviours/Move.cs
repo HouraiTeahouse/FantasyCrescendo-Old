@@ -2,11 +2,10 @@ using UnityEngine;
 
 namespace HouraiTeahouse.SmashBrew {
     /// <summary>
-    /// An AnimationBehaviour that causes Characters to constantly move while in the state
+    ///     An AnimationBehaviour that causes Characters to constantly move while in the state
     /// </summary>
     public class Move : BaseAnimationBehaviour<Character> {
-        [SerializeField, Tooltip("The base movement speed that the character will move at while in the state")] private
-            float _baseSpeed = 3f;
+        [SerializeField, Tooltip("The base movement speed that the character will move at while in the state")] private readonly float _baseSpeed = 3f;
 
         [SerializeField, Tooltip("Whether movement in the state ignores or adheres to the difference in state speed")] private bool _ignoreStateSpeed;
 

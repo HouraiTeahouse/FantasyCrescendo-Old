@@ -1,6 +1,3 @@
-using System;
-
-
 namespace HouraiTeahouse.HouraiInput {
     // @cond nodoc
     [AutoDiscover]
@@ -10,11 +7,11 @@ namespace HouraiTeahouse.HouraiInput {
             Meta = "SteelSeries Free on Windows";
 
             SupportedPlatforms = new[] {
-                "Windows",
+                "Windows"
             };
 
             JoystickNames = new[] {
-                "GamePad",
+                "GamePad"
             };
 
             ButtonMappings = new[] {
@@ -74,7 +71,7 @@ namespace HouraiTeahouse.HouraiInput {
                 new InputMapping {
                     Handle = "Left Stick X",
                     Target = InputTarget.LeftStickX,
-                    Source = Analog0,
+                    Source = Analog0
                 },
                 new InputMapping {
                     Handle = "Left Stick Y",

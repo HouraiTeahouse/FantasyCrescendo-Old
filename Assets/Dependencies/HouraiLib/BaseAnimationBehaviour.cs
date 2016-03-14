@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace HouraiTeahouse.SmashBrew {
@@ -8,7 +7,7 @@ namespace HouraiTeahouse.SmashBrew {
         public static void InitializeAll(Animator animator) {
             if (!animator)
                 return;
-            foreach (BaseAnimationBehaviour bab in animator.GetBehaviours<BaseAnimationBehaviour>())
+            foreach (var bab in animator.GetBehaviours<BaseAnimationBehaviour>())
                 if (bab)
                     bab.Initialize(animator.gameObject);
         }

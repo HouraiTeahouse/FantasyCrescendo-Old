@@ -2,9 +2,8 @@
 using System;
 using System.Runtime.InteropServices;
 
-
 namespace XInputDotNetPure {
-    class Imports {
+    internal class Imports {
         internal const string DLLName = "XInputInterface";
 
         [DllImport(DLLName)]
@@ -22,7 +21,16 @@ namespace XInputDotNetPure {
 
 
     public struct GamePadButtons {
-        ButtonState start, back, leftStick, rightStick, leftShoulder, rightShoulder, a, b, x, y;
+        private readonly ButtonState start;
+        private readonly ButtonState back;
+        private readonly ButtonState leftStick;
+        private readonly ButtonState rightStick;
+        private readonly ButtonState leftShoulder;
+        private readonly ButtonState rightShoulder;
+        private readonly ButtonState a;
+        private readonly ButtonState b;
+        private readonly ButtonState x;
+        private readonly ButtonState y;
 
         internal GamePadButtons(ButtonState start, ButtonState back, ButtonState leftStick, ButtonState rightStick,
             ButtonState leftShoulder, ButtonState rightShoulder, ButtonState a, ButtonState b,
@@ -92,7 +100,10 @@ namespace XInputDotNetPure {
 
 
     public struct GamePadDPad {
-        ButtonState up, down, left, right;
+        private readonly ButtonState up;
+        private readonly ButtonState down;
+        private readonly ButtonState left;
+        private readonly ButtonState right;
 
         internal GamePadDPad(ButtonState up, ButtonState down, ButtonState left, ButtonState right) {
             this.up = up;
@@ -125,7 +136,8 @@ namespace XInputDotNetPure {
 
     public struct GamePadThumbSticks {
         public struct StickValue {
-            float x, y;
+            private readonly float x;
+            private readonly float y;
 
             internal StickValue(float x, float y) {
                 this.x = x;
@@ -141,7 +153,8 @@ namespace XInputDotNetPure {
             }
         }
 
-        StickValue left, right;
+        private readonly StickValue left;
+        private readonly StickValue right;
 
 
         internal GamePadThumbSticks(StickValue left, StickValue right) {
@@ -162,8 +175,8 @@ namespace XInputDotNetPure {
 
 
     public struct GamePadTriggers {
-        float left;
-        float right;
+        private readonly float left;
+        private readonly float right;
 
 
         internal GamePadTriggers(float left, float right) {
@@ -199,14 +212,14 @@ namespace XInputDotNetPure {
             }
         }
 
-        bool isConnected;
-        uint packetNumber;
-        GamePadButtons buttons;
-        GamePadDPad dPad;
-        GamePadThumbSticks thumbSticks;
-        GamePadTriggers triggers;
+        private readonly bool isConnected;
+        private readonly uint packetNumber;
+        private readonly GamePadButtons buttons;
+        private readonly GamePadDPad dPad;
+        private readonly GamePadThumbSticks thumbSticks;
+        private readonly GamePadTriggers triggers;
 
-        enum ButtonsConstants {
+        private enum ButtonsConstants {
             DPadUp = 0x00000001,
             DPadDown = 0x00000002,
             DPadLeft = 0x00000004,
@@ -349,9 +362,9 @@ namespace XInputDotNetPure {
         }
 
         public static GamePadState GetState(PlayerIndex playerIndex, GamePadDeadZone deadZone) {
-            IntPtr gamePadStatePointer = Marshal.AllocHGlobal(Marshal.SizeOf(typeof (GamePadState.RawState)));
-            uint result = Imports.XInputGamePadGetState((uint) playerIndex, gamePadStatePointer);
-            GamePadState.RawState state =
+            var gamePadStatePointer = Marshal.AllocHGlobal(Marshal.SizeOf(typeof (GamePadState.RawState)));
+            var result = Imports.XInputGamePadGetState((uint) playerIndex, gamePadStatePointer);
+            var state =
                 (GamePadState.RawState) Marshal.PtrToStructure(gamePadStatePointer, typeof (GamePadState.RawState));
             return new GamePadState(result == Utils.Success, state, deadZone);
         }

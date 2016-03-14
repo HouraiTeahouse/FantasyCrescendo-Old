@@ -2,18 +2,18 @@ using UnityEngine;
 
 namespace HouraiTeahouse {
     /// <summary>
-    /// A static PlayerPrefs wrapper that provides additional type support.
+    ///     A static PlayerPrefs wrapper that provides additional type support.
     /// </summary>
     public static class Prefs {
         /// <summary>
-        /// Saves all the changes to disk .
+        ///     Saves all the changes to disk .
         /// </summary>
         public static void Save() {
             PlayerPrefs.Save();
         }
 
         /// <summary>
-        /// Check whether a key exists or not.
+        ///     Check whether a key exists or not.
         /// </summary>
         /// <param name="key">the key to check for</param>
         /// <returns>true, if the key exists, false otherwise</returns>
@@ -24,13 +24,13 @@ namespace HouraiTeahouse {
         #region Object Values
 
         /// <summary>
-        /// Gets a JSON serialized object from PlayerPrefs.
+        ///     Gets a JSON serialized object from PlayerPrefs.
         /// </summary>
         /// <remarks>
-        /// The underlying representation was as a string, and can be read via <see cref="GetString"/>
+        ///     The underlying representation was as a string, and can be read via <see cref="GetString" />
         /// </remarks>
-        /// <seealso cref="SetObject"/>
-        /// <seealso cref="ReadObject"/>
+        /// <seealso cref="SetObject" />
+        /// <seealso cref="ReadObject" />
         /// <typeparam name="T">the type of the object to deserialize to</typeparam>
         /// <param name="key">the key the object is saved to</param>
         /// <returns>the deserialized object</returns>
@@ -39,13 +39,13 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Serializes an object to JSON format and saves it to PlayerPrefs.
+        ///     Serializes an object to JSON format and saves it to PlayerPrefs.
         /// </summary>
         /// <remarks>
-        /// The underlying representation was as a string, and can be read via <see cref="GetString"/>
+        ///     The underlying representation was as a string, and can be read via <see cref="GetString" />
         /// </remarks>
-        /// <seealso cref="GetObject{T}"/>
-        /// <seealso cref="ReadObject"/>
+        /// <seealso cref="GetObject{T}" />
+        /// <seealso cref="ReadObject" />
         /// <param name="key">the key to save the object to</param>
         /// <param name="obj">the object to save to PlayerPrefs</param>
         public static void SetObject(string key, object obj) {
@@ -53,10 +53,10 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Deserializes an object and applies it's values on an existing instance. 
+        ///     Deserializes an object and applies it's values on an existing instance.
         /// </summary>
-        /// <seealso cref="GetObject{T}"/>
-        /// <seealso cref="SetObject"/>
+        /// <seealso cref="GetObject{T}" />
+        /// <seealso cref="SetObject" />
         /// <param name="key">the key the object is saved to</param>
         /// <param name="obj">the object to apply the values to </param>
         public static void ReadObject(string key, object obj) {
@@ -68,13 +68,13 @@ namespace HouraiTeahouse {
         #region Bool Values
 
         /// <summary>
-        /// Gets a boolean value from PlayerPrefs.
+        ///     Gets a boolean value from PlayerPrefs.
         /// </summary>
         /// <remarks>
-        /// The underlying representation is stored as an integer. 
-        /// Is false if it is 0, and true otherwise.
+        ///     The underlying representation is stored as an integer.
+        ///     Is false if it is 0, and true otherwise.
         /// </remarks>
-        /// <seealso cref="SetBool"/>
+        /// <seealso cref="SetBool" />
         /// <param name="key">the key the boolean value is saved to</param>
         /// <returns>the saved boolean value</returns>
         public static bool GetBool(string key) {
@@ -82,13 +82,13 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Sets a boolean value to PlayerPrefs.
+        ///     Sets a boolean value to PlayerPrefs.
         /// </summary>
         /// <remarks>
-        /// The underlying representation is stored as an integer. 
-        /// Is false if it is 0, and true otherwise.
+        ///     The underlying representation is stored as an integer.
+        ///     Is false if it is 0, and true otherwise.
         /// </remarks>
-        /// <seealso cref="GetBool"/>
+        /// <seealso cref="GetBool" />
         /// <param name="key">the key the boolean value is saved to</param>
         public static void SetBool(string key, bool value) {
             PlayerPrefs.SetInt(key, value ? 1 : 0);
@@ -99,9 +99,9 @@ namespace HouraiTeahouse {
         #region Int Values
 
         /// <summary>
-        /// Gets an integer value from PlayerPrefs.
+        ///     Gets an integer value from PlayerPrefs.
         /// </summary>
-        /// <seealso cref="SetInt"/>
+        /// <seealso cref="SetInt" />
         /// <param name="key">the key the integer value is saved to</param>
         /// <returns>the saved integer value</returns>
         public static int GetInt(string key) {
@@ -109,9 +109,9 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Sets an integer value to PlayerPrefs.
+        ///     Sets an integer value to PlayerPrefs.
         /// </summary>
-        /// <seealso cref="GetInt"/>
+        /// <seealso cref="GetInt" />
         /// <param name="key">the key the integer value is saved to</param>
         /// <param name="value">the value to save</param>
         public static void SetInt(string key, int value) {
@@ -123,9 +123,9 @@ namespace HouraiTeahouse {
         #region Float Values
 
         /// <summary>
-        /// Gets a floating point value from PlayerPrefs.
+        ///     Gets a floating point value from PlayerPrefs.
         /// </summary>
-        /// <seealso cref="SetFloat"/>
+        /// <seealso cref="SetFloat" />
         /// <param name="key">the key the floating point value is saved to</param>
         /// <returns>the saved floating point value</returns>
         public static float GetFloat(string key) {
@@ -133,9 +133,9 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Sets a floating point value to PlayerPrefs
+        ///     Sets a floating point value to PlayerPrefs
         /// </summary>
-        /// <seealso cref="GetFloat"/>
+        /// <seealso cref="GetFloat" />
         /// <param name="key">the key the floating point value is saved to</param>
         /// <param name="value">the value to save</param>
         public static void SetFloat(string key, float value) {
@@ -147,9 +147,9 @@ namespace HouraiTeahouse {
         #region String Values
 
         /// <summary>
-        /// Gets a string value from PlayerPrefs.
+        ///     Gets a string value from PlayerPrefs.
         /// </summary>
-        /// <seealso cref="SetString"/>
+        /// <seealso cref="SetString" />
         /// <param name="key">the key the string value is saved to </param>
         /// <returns>the saved string value</returns>
         public static string GetString(string key) {
@@ -157,9 +157,9 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Sets a string value to PlayerPrefs.
+        ///     Sets a string value to PlayerPrefs.
         /// </summary>
-        /// <seealso cref="GetString"/>
+        /// <seealso cref="GetString" />
         /// <param name="key">the key the string value is saved to</param>
         /// <param name="value">the value to save</param>
         public static void SetString(string key, string value) {

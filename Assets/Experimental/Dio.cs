@@ -3,17 +3,16 @@ using UnityEngine;
 namespace HouraiTeahouse {
     [ExecuteInEditMode]
     public class Dio : MonoBehaviour {
-        [SerializeField] private Vector2 center;
-
         [SerializeField, Range(0, 1)] private float _innerRatio;
+
+        private Material _mat;
 
         [SerializeField, Range(0, 1)] private float _outerRatio;
 
         [SerializeField, HideInInspector] private Shader _shader;
+        [SerializeField] private Vector2 center;
 
-        private Material _mat;
-
-        void OnRenderImage(RenderTexture src, RenderTexture dst) {
+        private void OnRenderImage(RenderTexture src, RenderTexture dst) {
             if (_mat == null) {
                 if (_shader == null) {
                     enabled = false;

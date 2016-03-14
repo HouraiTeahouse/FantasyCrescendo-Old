@@ -1,5 +1,4 @@
-using System;
-
+using UnityEngine;
 
 namespace HouraiTeahouse.HouraiInput {
     // @cond nodoc
@@ -28,7 +27,7 @@ namespace HouraiTeahouse.HouraiInput {
                 new InputMapping {
                     Handle = "Back",
                     Target = InputTarget.Select,
-                    Source = KeyCodeButton(UnityEngine.KeyCode.Escape)
+                    Source = KeyCodeButton(KeyCode.Escape)
                 }
             };
 
@@ -61,7 +60,7 @@ namespace HouraiTeahouse.HouraiInput {
                     Target = InputTarget.DPadDown,
                     Source = Analog5,
                     SourceRange = InputMapping.Range.Positive,
-                    TargetRange = InputMapping.Range.Positive,
+                    TargetRange = InputMapping.Range.Positive
                 }
             };
         }

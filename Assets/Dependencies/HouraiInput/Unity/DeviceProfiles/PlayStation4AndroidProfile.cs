@@ -1,6 +1,3 @@
-using System;
-
-
 namespace HouraiTeahouse.HouraiInput {
     // @cond nodoc
     // Tested with Samsung Galaxy Note 2 connected by OTG cable.
@@ -99,14 +96,14 @@ namespace HouraiTeahouse.HouraiInput {
                     Target = InputTarget.LeftTrigger,
                     Source = Analog2,
                     SourceRange = InputMapping.Range.Complete,
-                    TargetRange = InputMapping.Range.Positive,
+                    TargetRange = InputMapping.Range.Positive
                 },
                 new InputMapping {
                     Handle = "Right Trigger",
                     Target = InputTarget.RightTrigger,
                     Source = Analog3,
                     SourceRange = InputMapping.Range.Complete,
-                    TargetRange = InputMapping.Range.Positive,
+                    TargetRange = InputMapping.Range.Positive
                 },
                 new InputMapping {
                     Handle = "DPad Left",
@@ -136,7 +133,7 @@ namespace HouraiTeahouse.HouraiInput {
                     Target = InputTarget.DPadDown,
                     Source = Analog5,
                     SourceRange = InputMapping.Range.Positive,
-                    TargetRange = InputMapping.Range.Positive,
+                    TargetRange = InputMapping.Range.Positive
                 }
             };
         }

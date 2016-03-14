@@ -1,5 +1,3 @@
-using System;
-
 namespace HouraiTeahouse.HouraiInput {
     // @cond nodoc
     [AutoDiscover]

@@ -1,6 +1,3 @@
-using System;
-
-
 namespace HouraiTeahouse.HouraiInput {
     // @cond nodoc
     [AutoDiscover]
@@ -10,7 +7,7 @@ namespace HouraiTeahouse.HouraiInput {
             Meta = "SteelSeries Free on Linux";
 
             SupportedPlatforms = new[] {
-                "Linux",
+                "Linux"
             };
 
             JoystickNames = new[] {

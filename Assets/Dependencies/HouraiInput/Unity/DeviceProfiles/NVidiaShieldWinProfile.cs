@@ -1,6 +1,3 @@
-using System;
-
-
 namespace HouraiTeahouse.HouraiInput {
     // @cond nodoc
     [AutoDiscover]
@@ -14,7 +11,7 @@ namespace HouraiTeahouse.HouraiInput {
             };
 
             JoystickRegex = new[] {
-                "NVIDIA Controller",
+                "NVIDIA Controller"
             };
 
             ButtonMappings = new[] {

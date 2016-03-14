@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class Yukkuri : MonoBehaviour {
     public string Reimu {
@@ -54,7 +53,7 @@ public class Yukkuri : MonoBehaviour {
             ",.ﾍ,）､　　）＞,､ _____,　,.イ　 ハ　　　　レ ル｀ ー--─ ´ルﾚ　ﾚ´";
     }
 
-    override public string ToString() {
+    public override string ToString() {
         return "ゆっくりしていってね！！！";
     }
 }

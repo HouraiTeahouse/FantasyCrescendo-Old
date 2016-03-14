@@ -1,17 +1,10 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
 
 namespace HouraiTeahouse.HouraiInput {
     public class UnityInputDevice : InputDevice {
         public const int MaxDevices = 10;
         public const int MaxButtons = 20;
         public const int MaxAnalogs = 20;
-
-        internal int JoystickId { get; private set; }
-        public UnityInputDeviceProfile Profile { get; protected set; }
 
 
         public UnityInputDevice(UnityInputDeviceProfile profile, int joystickId)
@@ -25,13 +18,26 @@ namespace HouraiTeahouse.HouraiInput {
             Initialize(profile, 0);
         }
 
+        internal int JoystickId { get; private set; }
+        public UnityInputDeviceProfile Profile { get; protected set; }
 
-        void Initialize(UnityInputDeviceProfile profile, int joystickId) {
+
+        public override bool IsSupportedOnThisPlatform {
+            get { return Profile.IsSupportedOnThisPlatform; }
+        }
+
+
+        public override bool IsKnown {
+            get { return Profile.IsKnown; }
+        }
+
+
+        private void Initialize(UnityInputDeviceProfile profile, int joystickId) {
             Profile = profile;
             Meta = Profile.Meta;
 
             var analogMappingCount = Profile.AnalogCount;
-            for (int i = 0; i < analogMappingCount; i++) {
+            for (var i = 0; i < analogMappingCount; i++) {
                 var analogMapping = Profile.AnalogMappings[i];
                 var analogControl = AddControl(analogMapping.Target, analogMapping.Handle);
 
@@ -41,7 +47,7 @@ namespace HouraiTeahouse.HouraiInput {
             }
 
             var buttonMappingCount = Profile.ButtonCount;
-            for (int i = 0; i < buttonMappingCount; i++) {
+            for (var i = 0; i < buttonMappingCount; i++) {
                 var buttonMapping = Profile.ButtonMappings[i];
                 AddControl(buttonMapping.Target, buttonMapping.Handle);
             }
@@ -61,7 +67,7 @@ namespace HouraiTeahouse.HouraiInput {
 
             // Preprocess all analog values.
             var analogMappingCount = Profile.AnalogCount;
-            for (int i = 0; i < analogMappingCount; i++) {
+            for (var i = 0; i < analogMappingCount; i++) {
                 var analogMapping = Profile.AnalogMappings[i];
                 var targetControl = GetControl(analogMapping.Target);
 
@@ -89,7 +95,7 @@ namespace HouraiTeahouse.HouraiInput {
 
             // Buttons are easy: just update the control state.
             var buttonMappingCount = Profile.ButtonCount;
-            for (int i = 0; i < buttonMappingCount; i++) {
+            for (var i = 0; i < buttonMappingCount; i++) {
                 var buttonMapping = Profile.ButtonMappings[i];
                 var buttonState = buttonMapping.Source.GetState(this);
 
@@ -98,28 +104,16 @@ namespace HouraiTeahouse.HouraiInput {
         }
 
 
-        float Combine(float? value1, float value2) {
+        private float Combine(float? value1, float value2) {
             if (value1.HasValue) {
                 return Mathf.Abs(value1.Value) > Mathf.Abs(value2) ? value1.Value : value2;
             }
-            else {
-                return value2;
-            }
+            return value2;
         }
 
 
         public bool IsConfiguredWith(UnityInputDeviceProfile deviceProfile, int joystickId) {
             return Profile == deviceProfile && JoystickId == joystickId;
-        }
-
-
-        public override bool IsSupportedOnThisPlatform {
-            get { return Profile.IsSupportedOnThisPlatform; }
-        }
-
-
-        public override bool IsKnown {
-            get { return Profile.IsKnown; }
         }
     }
 }

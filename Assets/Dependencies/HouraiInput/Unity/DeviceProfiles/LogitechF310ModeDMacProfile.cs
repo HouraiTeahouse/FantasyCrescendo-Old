@@ -1,6 +1,3 @@
-using System;
-
-
 namespace HouraiTeahouse.HouraiInput {
     // @cond nodoc
     [AutoDiscover]
@@ -77,7 +74,7 @@ namespace HouraiTeahouse.HouraiInput {
                     Handle = "Right Trigger",
                     Target = InputTarget.RightTrigger,
                     Source = Button7
-                },
+                }
             };
 
             AnalogMappings = new[] {
@@ -95,7 +92,7 @@ namespace HouraiTeahouse.HouraiInput {
                 new InputMapping {
                     Handle = "Right Stick X",
                     Target = InputTarget.RightStickX,
-                    Source = Analog2,
+                    Source = Analog2
                 },
                 new InputMapping {
                     Handle = "Right Stick Y",

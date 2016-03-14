@@ -1,6 +1,3 @@
-using System;
-
-
 namespace HouraiTeahouse.HouraiInput {
     // @cond nodoc
     [AutoDiscover]
@@ -120,7 +117,7 @@ namespace HouraiTeahouse.HouraiInput {
                     Source = Analog5,
                     SourceRange = InputMapping.Range.Positive,
                     TargetRange = InputMapping.Range.Positive
-                },
+                }
             };
         }
     }

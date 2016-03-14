@@ -1,15 +1,13 @@
-using System;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace HouraiTeahouse {
     /// <summary>
-    /// A set of extenion methods for all Unity Objects.
+    ///     A set of extenion methods for all Unity Objects.
     /// </summary>
     public static class UnityObjectExtensions {
         /// <summary>
-        /// Destroys objects if they exist.
-        /// Shorthand for Object.Destroy()
+        ///     Destroys objects if they exist.
+        ///     Shorthand for Object.Destroy()
         /// </summary>
         /// <param name="obj">the object to destroy</param>
         public static void Destroy(this Object obj) {
@@ -18,8 +16,8 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Destroys objects if they exist after a specified time.
-        /// Shorthand for Object.Destroy()
+        ///     Destroys objects if they exist after a specified time.
+        ///     Shorthand for Object.Destroy()
         /// </summary>
         /// <param name="obj">the object to destroy</param>
         /// <param name="t">the delay before destroying the object</param>
@@ -29,10 +27,10 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Creates a copy of the object given.
+        ///     Creates a copy of the object given.
         /// </summary>
         /// <remarks>
-        /// Returns null if <paramref name="obj"/> is null.
+        ///     Returns null if <paramref name="obj" /> is null.
         /// </remarks>
         /// <typeparam name="T">the type of the object to instantiate</typeparam>
         /// <param name="obj">the original object</param>
@@ -44,19 +42,19 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Instantiates a copy of the object given at a certain location.
+        ///     Instantiates a copy of the object given at a certain location.
         /// </summary>
         /// <remarks>
-        /// The rotation of the object is untouched and is copied as-is from the source object.
-        /// Does the same thing as Duplicate(obj) if obj is not a GameObject or a Component.
-        /// Returns null if <paramref name="obj"/> is null.
+        ///     The rotation of the object is untouched and is copied as-is from the source object.
+        ///     Does the same thing as Duplicate(obj) if obj is not a GameObject or a Component.
+        ///     Returns null if <paramref name="obj" /> is null.
         /// </remarks>
         /// <typeparam name="T">the type of the Unity object to instantiate</typeparam>
         /// <param name="obj">the source object to instantiate from</param>
         /// <param name="position">the position to place it.</param>
         /// <returns>the copied instance</returns>
         public static T Duplicate<T>(this T obj, Vector3 position) where T : Object {
-            T copy = obj.Duplicate();
+            var copy = obj.Duplicate();
             if (!copy)
                 return copy;
             Transform transform = null;
@@ -72,18 +70,19 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Instantiates a copy of the object given with a certain rotation.
+        ///     Instantiates a copy of the object given with a certain rotation.
         /// </summary>
         /// <remarks>
-        /// The position of the object is untouched and is copied as-is fromthe source object.
-        /// Does the same thing as Duplicate(obj) if obj is not a GameObject or a Component.
-        /// Returns null if <paramref name="obj"/> is null.</remarks>
+        ///     The position of the object is untouched and is copied as-is fromthe source object.
+        ///     Does the same thing as Duplicate(obj) if obj is not a GameObject or a Component.
+        ///     Returns null if <paramref name="obj" /> is null.
+        /// </remarks>
         /// <typeparam name="T">the type of the Unity object to instantiate</typeparam>
         /// <param name="obj">the source object to instantiate from</param>
         /// <param name="rotation">the rotation to use on the object</param>
         /// <returns>the copied instance</returns>
         public static T Duplicate<T>(this T obj, Quaternion rotation) where T : Object {
-            T copy = obj.Duplicate();
+            var copy = obj.Duplicate();
             if (!copy)
                 return copy;
             Transform transform = null;
@@ -99,13 +98,13 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Instantiates a copy of the object given with a certain rotation.
+        ///     Instantiates a copy of the object given with a certain rotation.
         /// </summary>
         /// <remarks>
-        /// The position of the object is untouched and is copied as-is fromthe source object.
-        /// Does the same thing as Duplicate(obj) if obj is not a GameObject or a Component.
-        /// This applies a 2D rotation only (only rotates along the Z axis).
-        /// Returns null if <paramref name="obj"/> is null.
+        ///     The position of the object is untouched and is copied as-is fromthe source object.
+        ///     Does the same thing as Duplicate(obj) if obj is not a GameObject or a Component.
+        ///     This applies a 2D rotation only (only rotates along the Z axis).
+        ///     Returns null if <paramref name="obj" /> is null.
         /// </remarks>
         /// <typeparam name="T">the type of the Unity object to instantiate</typeparam>
         /// <param name="obj">the source object to instantiate from</param>
@@ -116,10 +115,10 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Creates a copy of an object at a specified positiona nd rotation.
+        ///     Creates a copy of an object at a specified positiona nd rotation.
         /// </summary>
         /// <remarks>
-        /// Returns null if <paramref name="obj"/> is null.
+        ///     Returns null if <paramref name="obj" /> is null.
         /// </remarks>
         /// Does the same thing as Duplicate(obj) if obj is not a GameObject or a Component.
         /// This applies a 2D rotation only (only rotates along the Z axis)
@@ -129,7 +128,7 @@ namespace HouraiTeahouse {
         /// <param name="rotation">the rotation to use on the object</param>
         /// <returns>the copied instance</returns>
         public static T Duplicate<T>(this T obj, Vector3 position, Quaternion rotation) where T : Object {
-            T copy = obj.Duplicate();
+            var copy = obj.Duplicate();
             if (!copy)
                 return copy;
             Transform transform = null;
@@ -147,12 +146,12 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Creates a copy of an object at a specified positiona nd rotation.
+        ///     Creates a copy of an object at a specified positiona nd rotation.
         /// </summary>
         /// <remarks>
-        /// Does the same thing as Duplicate(obj) if obj is not a GameObject or a Component.
-        /// This applies a 2D rotation only (only rotates along the Z axis)>
-        /// Returns null if <paramref name="obj"/> is null.
+        ///     Does the same thing as Duplicate(obj) if obj is not a GameObject or a Component.
+        ///     This applies a 2D rotation only (only rotates along the Z axis)>
+        ///     Returns null if <paramref name="obj" /> is null.
         /// </remarks>
         /// <typeparam name="T">the type of the object to instantiates</typeparam>
         /// <param name="obj">the original object</param>
@@ -164,16 +163,16 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Gets an object's GameObject, if it has one.
-        /// Returns itself if it is a GameObject.
-        /// Returns the containing GameObject if it is a component.
-        /// Returns null otherwise.
+        ///     Gets an object's GameObject, if it has one.
+        ///     Returns itself if it is a GameObject.
+        ///     Returns the containing GameObject if it is a component.
+        ///     Returns null otherwise.
         /// </summary>
         /// <param name="obj">the object in question</param>
         /// <returns>The object GameObject, null if not associated with one</returns>
         public static GameObject GetGameObject(this Object obj) {
-            GameObject go = obj as GameObject;
-            Component comp = obj as Component;
+            var go = obj as GameObject;
+            var comp = obj as Component;
             if (go != null)
                 return go;
             if (comp != null)

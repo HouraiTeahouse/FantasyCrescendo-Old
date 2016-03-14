@@ -1,12 +1,11 @@
 using UnityEngine;
-using UnityEngine.CrashLog;
 
 /// <summary>
-/// Initializes Crash Reporting using Unity Game Performance Reporting.
+///     Initializes Crash Reporting using Unity Game Performance Reporting.
 /// </summary>
 public class GameCrashReporting : MonoBehaviour {
     /// <summary>
-    /// The Unity Project ID for the project
+    ///     The Unity Project ID for the project
     /// </summary>
     [SerializeField] private string _unityProjectID;
 

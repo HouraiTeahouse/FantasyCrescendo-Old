@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace HouraiTeahouse.SmashBrew {
     /// <summary>
-    /// Constants for fast access to Character's animator parameters
+    ///     Constants for fast access to Character's animator parameters
     /// </summary>
     public static class CharacterAnimVars {
         // Input

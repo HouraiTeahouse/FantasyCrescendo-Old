@@ -1,23 +1,28 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
-
 
 namespace HouraiTeahouse.HouraiInput {
     public class UnityInputDeviceManager : InputDeviceManager {
-        float deviceRefreshTimer = 0.0f;
-        const float deviceRefreshInterval = 1.0f;
+        private const float deviceRefreshInterval = 1.0f;
 
-        List<UnityInputDeviceProfile> deviceProfiles = new List<UnityInputDeviceProfile>();
-        bool keyboardDevicesAttached = false;
-        string joystickHash = "";
+        private readonly List<UnityInputDeviceProfile> deviceProfiles = new List<UnityInputDeviceProfile>();
+        private float deviceRefreshTimer;
+        private string joystickHash = "";
+        private bool keyboardDevicesAttached;
 
 
         public UnityInputDeviceManager() {
             AutoDiscoverDeviceProfiles();
             RefreshDevices();
+        }
+
+
+        private static string JoystickHash {
+            get {
+                var joystickNames = Input.GetJoystickNames();
+                return joystickNames.Length + ": " + string.Join(", ", joystickNames);
+            }
         }
 
 
@@ -34,7 +39,7 @@ namespace HouraiTeahouse.HouraiInput {
         }
 
 
-        void RefreshDevices() {
+        private void RefreshDevices() {
             AttachKeyboardDevices();
             DetectAttachedJoystickDevices();
             DetectDetachedJoystickDevices();
@@ -42,15 +47,15 @@ namespace HouraiTeahouse.HouraiInput {
         }
 
 
-        void AttachDevice(UnityInputDevice device) {
+        private void AttachDevice(UnityInputDevice device) {
             devices.Add(device);
             InputManager.AttachDevice(device);
         }
 
 
-        void AttachKeyboardDevices() {
-            int deviceProfileCount = deviceProfiles.Count;
-            for (int i = 0; i < deviceProfileCount; i++) {
+        private void AttachKeyboardDevices() {
+            var deviceProfileCount = deviceProfiles.Count;
+            for (var i = 0; i < deviceProfileCount; i++) {
                 var deviceProfile = deviceProfiles[i];
                 if (deviceProfile.IsNotJoystick && deviceProfile.IsSupportedOnThisPlatform) {
                     AttachKeyboardDeviceWithConfig(deviceProfile);
@@ -59,7 +64,7 @@ namespace HouraiTeahouse.HouraiInput {
         }
 
 
-        void AttachKeyboardDeviceWithConfig(UnityInputDeviceProfile config) {
+        private void AttachKeyboardDeviceWithConfig(UnityInputDeviceProfile config) {
             if (keyboardDevicesAttached) {
                 return;
             }
@@ -71,10 +76,10 @@ namespace HouraiTeahouse.HouraiInput {
         }
 
 
-        void DetectAttachedJoystickDevices() {
+        private void DetectAttachedJoystickDevices() {
             try {
                 var joystickNames = Input.GetJoystickNames();
-                for (int i = 0; i < joystickNames.Length; i++) {
+                for (var i = 0; i < joystickNames.Length; i++) {
                     DetectAttachedJoystickDevice(i + 1, joystickNames[i]);
                 }
             }
@@ -85,7 +90,7 @@ namespace HouraiTeahouse.HouraiInput {
         }
 
 
-        void DetectAttachedJoystickDevice(int unityJoystickId, string unityJoystickName) {
+        private void DetectAttachedJoystickDevice(int unityJoystickId, string unityJoystickName) {
             if (unityJoystickName == "WIRED CONTROLLER" ||
                 unityJoystickName == " WIRED CONTROLLER") {
                 // Ignore Steam controller for now.
@@ -114,7 +119,7 @@ namespace HouraiTeahouse.HouraiInput {
                 if (Application.platform == RuntimePlatform.WindowsEditor ||
                     Application.platform == RuntimePlatform.WindowsPlayer ||
                     Application.platform == RuntimePlatform.WindowsWebPlayer) {
-                    if (String.IsNullOrEmpty(unityJoystickName)) {
+                    if (string.IsNullOrEmpty(unityJoystickName)) {
                         return;
                     }
                 }
@@ -136,8 +141,8 @@ namespace HouraiTeahouse.HouraiInput {
                 deviceProfile = matchedDeviceProfile;
             }
 
-            int deviceCount = devices.Count;
-            for (int i = 0; i < deviceCount; i++) {
+            var deviceCount = devices.Count;
+            for (var i = 0; i < deviceCount; i++) {
                 var device = devices[i];
                 var unityDevice = device as UnityInputDevice;
                 if (unityDevice != null && unityDevice.IsConfiguredWith(deviceProfile, unityJoystickId)) {
@@ -167,10 +172,10 @@ namespace HouraiTeahouse.HouraiInput {
         }
 
 
-        void DetectDetachedJoystickDevices() {
+        private void DetectDetachedJoystickDevices() {
             var joystickNames = Input.GetJoystickNames();
 
-            for (int i = devices.Count - 1; i >= 0; i--) {
+            for (var i = devices.Count - 1; i >= 0; i--) {
                 var inputDevice = devices[i] as UnityInputDevice;
 
                 if (inputDevice.Profile.IsNotJoystick) {
@@ -188,21 +193,13 @@ namespace HouraiTeahouse.HouraiInput {
         }
 
 
-        void AutoDiscoverDeviceProfiles() {
+        private void AutoDiscoverDeviceProfiles() {
             foreach (var typeName in UnityInputDeviceProfileList.Profiles) {
                 var deviceProfile = (UnityInputDeviceProfile) Activator.CreateInstance(Type.GetType(typeName));
                 if (deviceProfile.IsSupportedOnThisPlatform) {
                     // Logger.LogInfo( "Found profile: " + deviceProfile.GetType().Name + " (" + deviceProfile.Name + ")" );
                     deviceProfiles.Add(deviceProfile);
                 }
-            }
-        }
-
-
-        static string JoystickHash {
-            get {
-                var joystickNames = Input.GetJoystickNames();
-                return joystickNames.Length + ": " + String.Join(", ", joystickNames);
             }
         }
     }

@@ -8,10 +8,6 @@ namespace HouraiTeahouse.SmashBrew {
     [DisallowMultipleComponent]
     [RequiredCharacterComponent]
     public sealed class Shield : HouraiBehaviour, IDamageable {
-        //TODO: properly implement
-
-        [SerializeField] private Material _shieldMaterial;
-
         //[SerializeField]
         //private float _maxHP = 100f;
 
@@ -30,9 +26,15 @@ namespace HouraiTeahouse.SmashBrew {
         //private float _currentHP;
 
         private Character _character;
+        private PlayerController _playerController;
+        //TODO: properly implement
+
+        [SerializeField] private Material _shieldMaterial;
         private GameObject _shieldObj;
         private Transform _shieldTransform;
-        private PlayerController _playerController;
+
+        public void Damage(object source, float damage) {
+        }
 
         protected override void Awake() {
             base.Awake();
@@ -63,7 +65,7 @@ namespace HouraiTeahouse.SmashBrew {
             // Make sure the Color of the shield matches the HumanPlayer
             var player = GetComponentInParent<PlayerController>();
             if (player != null && player.PlayerData != null) {
-                Color shieldColor = player.PlayerData.Color;
+                var shieldColor = player.PlayerData.Color;
                 shieldColor.a = _shieldMaterial.color.a;
                 render.material.color = shieldColor;
             }
@@ -87,12 +89,9 @@ namespace HouraiTeahouse.SmashBrew {
         //    _shieldTransform.localScale = Vector3.one * _shieldSize * (_currentHP/_maxHP);
         //}
 
-        void ShieldBreak() {
+        private void ShieldBreak() {
             _character.CharacterEvents.Publish(new PlayerShieldBreakEvent());
             //_currentHP = _resetHP;
-        }
-
-        public void Damage(object source, float damage) {
         }
     }
 }

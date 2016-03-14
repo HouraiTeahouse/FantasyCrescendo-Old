@@ -1,6 +1,3 @@
-using System;
-
-
 namespace HouraiTeahouse.HouraiInput {
     // @cond nodoc
     [AutoDiscover]
@@ -10,11 +7,11 @@ namespace HouraiTeahouse.HouraiInput {
             Meta = "MOGA Pro on Mac";
 
             SupportedPlatforms = new[] {
-                "OS X",
+                "OS X"
             };
 
             JoystickNames = new[] {
-                "Unknown Moga Pro HID",
+                "Unknown Moga Pro HID"
             };
 
             ButtonMappings = new[] {
@@ -74,7 +71,7 @@ namespace HouraiTeahouse.HouraiInput {
                 new InputMapping {
                     Handle = "Left Stick X",
                     Target = InputTarget.LeftStickX,
-                    Source = Analog0,
+                    Source = Analog0
                 },
                 new InputMapping {
                     Handle = "Left Stick Y",
@@ -121,7 +118,7 @@ namespace HouraiTeahouse.HouraiInput {
                     Target = InputTarget.DPadDown,
                     Source = Analog5,
                     SourceRange = InputMapping.Range.Positive,
-                    TargetRange = InputMapping.Range.Positive,
+                    TargetRange = InputMapping.Range.Positive
                 },
                 new InputMapping {
                     Handle = "Left Trigger",

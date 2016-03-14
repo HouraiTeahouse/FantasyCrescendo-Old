@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace UnityStandardAssets.ImageEffects {
@@ -6,81 +5,88 @@ namespace UnityStandardAssets.ImageEffects {
     [RequireComponent(typeof (Camera))]
     [AddComponentMenu("Image Effects/Camera/Depth of Field (deprecated)")]
     public class DepthOfFieldDeprecated : PostEffectsBase {
-        public enum Dof34QualitySetting {
-            OnlyBackground = 1,
-            BackgroundAndForeground = 2,
+        public enum BokehDestination {
+            Background = 0x1,
+            Foreground = 0x2,
+            BackgroundAndForeground = 0x3
         }
 
-        public enum DofResolution {
-            High = 2,
-            Medium = 3,
-            Low = 4,
+        public enum Dof34QualitySetting {
+            OnlyBackground = 1,
+            BackgroundAndForeground = 2
         }
 
         public enum DofBlurriness {
             Low = 1,
             High = 2,
-            VeryHigh = 4,
+            VeryHigh = 4
         }
 
-        public enum BokehDestination {
-            Background = 0x1,
-            Foreground = 0x2,
-            BackgroundAndForeground = 0x3,
+        public enum DofResolution {
+            High = 2,
+            Medium = 3,
+            Low = 4
         }
 
-        static private int SMOOTH_DOWNSAMPLE_PASS = 6;
-        static private float BOKEH_EXTRA_BLUR = 2.0f;
+        private static readonly int SMOOTH_DOWNSAMPLE_PASS = 6;
+        private static readonly float BOKEH_EXTRA_BLUR = 2.0f;
+
+        private Camera _camera;
+
+        public DofBlurriness bluriness = DofBlurriness.High;
+
+        public bool bokeh;
+        public BokehDestination bokehDestination = BokehDestination.Background;
+        public int bokehDownsample = 1;
+        public float bokehIntensity = 0.15f;
+        private Material bokehMaterial;
+        public float bokehScale = 2.4f;
+        public Shader bokehShader;
+        private RenderTexture bokehSource;
+        private RenderTexture bokehSource2;
+        public bool bokehSupport = true;
+        public Texture2D bokehTexture;
+        public float bokehThresholdContrast = 0.1f;
+        public float bokehThresholdLuminance = 0.55f;
+        private Material dofBlurMaterial;
+
+        public Shader dofBlurShader;
+        private Material dofMaterial;
+
+        public Shader dofShader;
+        private RenderTexture finalDefocus;
+        private float focalDistance01 = 0.1f;
+        private float focalEndCurve = 2.0f;
+
+        public float focalPoint = 1.0f;
+        public float focalSize = 0.0f;
+
+        private float focalStartCurve = 2.0f;
+
+        public float focalZDistance = 0.0f;
+        public float focalZEndCurve = 1.0f;
+        public float focalZStartCurve = 1.0f;
+
+        public float foregroundBlurExtrude = 1.15f;
+
+        private RenderTexture foregroundTexture;
+        private RenderTexture lowRezWorkTexture;
+        public float maxBlurSpread = 1.75f;
+        private RenderTexture mediumRezWorkTexture;
+
+        public Transform objectFocus = null;
+        private float oneOverBaseSize = 1.0f / 512.0f;
 
         public Dof34QualitySetting quality = Dof34QualitySetting.OnlyBackground;
         public DofResolution resolution = DofResolution.Low;
         public bool simpleTweakMode = true;
-
-        public float focalPoint = 1.0f;
         public float smoothness = 0.5f;
 
-        public float focalZDistance = 0.0f;
-        public float focalZStartCurve = 1.0f;
-        public float focalZEndCurve = 1.0f;
-
-        private float focalStartCurve = 2.0f;
-        private float focalEndCurve = 2.0f;
-        private float focalDistance01 = 0.1f;
-
-        public Transform objectFocus = null;
-        public float focalSize = 0.0f;
-
-        public DofBlurriness bluriness = DofBlurriness.High;
-        public float maxBlurSpread = 1.75f;
-
-        public float foregroundBlurExtrude = 1.15f;
-
-        public Shader dofBlurShader;
-        private Material dofBlurMaterial = null;
-
-        public Shader dofShader;
-        private Material dofMaterial = null;
-
         public bool visualize = false;
-        public BokehDestination bokehDestination = BokehDestination.Background;
 
         private float widthOverHeight = 1.25f;
-        private float oneOverBaseSize = 1.0f / 512.0f;
 
-        public bool bokeh = false;
-        public bool bokehSupport = true;
-        public Shader bokehShader;
-        public Texture2D bokehTexture;
-        public float bokehScale = 2.4f;
-        public float bokehIntensity = 0.15f;
-        public float bokehThresholdContrast = 0.1f;
-        public float bokehThresholdLuminance = 0.55f;
-        public int bokehDownsample = 1;
-        private Material bokehMaterial;
-
-        private Camera _camera;
-
-        void CreateMaterials() {
+        private void CreateMaterials() {
             dofBlurMaterial = CheckShaderAndCreateMaterial(dofBlurShader, dofBlurMaterial);
             dofMaterial = CheckShaderAndCreateMaterial(dofShader, dofMaterial);
             bokehSupport = bokehShader.isSupported;
@@ -105,24 +111,24 @@ namespace UnityStandardAssets.ImageEffects {
             return isSupported;
         }
 
-        void OnDisable() {
+        private void OnDisable() {
             Quads.Cleanup();
         }
 
-        void OnEnable() {
+        private void OnEnable() {
             _camera = GetComponent<Camera>();
             _camera.depthTextureMode |= DepthTextureMode.Depth;
         }
 
-        float FocalDistance01(float worldDist) {
+        private float FocalDistance01(float worldDist) {
             return
                 _camera.WorldToViewportPoint((worldDist - _camera.nearClipPlane) * _camera.transform.forward +
                                              _camera.transform.position).z /
                 (_camera.farClipPlane - _camera.nearClipPlane);
         }
 
-        int GetDividerBasedOnQuality() {
-            int divider = 1;
+        private int GetDividerBasedOnQuality() {
+            var divider = 1;
             if (resolution == DofResolution.Medium)
                 divider = 2;
             else if (resolution == DofResolution.Low)
@@ -130,8 +136,8 @@ namespace UnityStandardAssets.ImageEffects {
             return divider;
         }
 
-        int GetLowResolutionDividerBasedOnQuality(int baseDivider) {
-            int lowTexDivider = baseDivider;
+        private int GetLowResolutionDividerBasedOnQuality(int baseDivider) {
+            var lowTexDivider = baseDivider;
             if (resolution == DofResolution.High)
                 lowTexDivider *= 2;
             if (resolution == DofResolution.Low)
@@ -139,14 +145,7 @@ namespace UnityStandardAssets.ImageEffects {
             return lowTexDivider;
         }
 
-        private RenderTexture foregroundTexture = null;
-        private RenderTexture mediumRezWorkTexture = null;
-        private RenderTexture finalDefocus = null;
-        private RenderTexture lowRezWorkTexture = null;
-        private RenderTexture bokehSource = null;
-        private RenderTexture bokehSource2 = null;
-
-        void OnRenderImage(RenderTexture source, RenderTexture destination) {
+        private void OnRenderImage(RenderTexture source, RenderTexture destination) {
             if (CheckResources() == false) {
                 Graphics.Blit(source, destination);
                 return;
@@ -158,24 +157,24 @@ namespace UnityStandardAssets.ImageEffects {
             // update needed focal & rt size parameter
 
             bokeh = bokeh && bokehSupport;
-            float bokehBlurAmplifier = bokeh ? BOKEH_EXTRA_BLUR : 1.0f;
+            var bokehBlurAmplifier = bokeh ? BOKEH_EXTRA_BLUR : 1.0f;
 
-            bool blurForeground = quality > Dof34QualitySetting.OnlyBackground;
-            float focal01Size = focalSize / (_camera.farClipPlane - _camera.nearClipPlane);
+            var blurForeground = quality > Dof34QualitySetting.OnlyBackground;
+            var focal01Size = focalSize / (_camera.farClipPlane - _camera.nearClipPlane);
             ;
 
             if (simpleTweakMode) {
                 focalDistance01 = objectFocus
-                    ? (_camera.WorldToViewportPoint(objectFocus.position)).z / (_camera.farClipPlane)
+                    ? _camera.WorldToViewportPoint(objectFocus.position).z / _camera.farClipPlane
                     : FocalDistance01(focalPoint);
                 focalStartCurve = focalDistance01 * smoothness;
                 focalEndCurve = focalStartCurve;
-                blurForeground = blurForeground && (focalPoint > (_camera.nearClipPlane + Mathf.Epsilon));
+                blurForeground = blurForeground && (focalPoint > _camera.nearClipPlane + Mathf.Epsilon);
             }
             else {
                 if (objectFocus) {
                     var vpPoint = _camera.WorldToViewportPoint(objectFocus.position);
-                    vpPoint.z = (vpPoint.z) / (_camera.farClipPlane);
+                    vpPoint.z = vpPoint.z / _camera.farClipPlane;
                     focalDistance01 = vpPoint.z;
                 }
                 else
@@ -183,10 +182,10 @@ namespace UnityStandardAssets.ImageEffects {
 
                 focalStartCurve = focalZStartCurve;
                 focalEndCurve = focalZEndCurve;
-                blurForeground = blurForeground && (focalPoint > (_camera.nearClipPlane + Mathf.Epsilon));
+                blurForeground = blurForeground && (focalPoint > _camera.nearClipPlane + Mathf.Epsilon);
             }
 
-            widthOverHeight = (1.0f * source.width) / (1.0f * source.height);
+            widthOverHeight = 1.0f * source.width / (1.0f * source.height);
             oneOverBaseSize = 1.0f / 512.0f;
 
             dofMaterial.SetFloat("_ForegroundBlurExtrude", foregroundBlurExtrude);
@@ -196,8 +195,8 @@ namespace UnityStandardAssets.ImageEffects {
             dofMaterial.SetVector("_InvRenderTargetSize",
                 new Vector4(1.0f / (1.0f * source.width), 1.0f / (1.0f * source.height), 0.0f, 0.0f));
 
-            int divider = GetDividerBasedOnQuality();
-            int lowTexDivider = GetLowResolutionDividerBasedOnQuality(divider);
+            var divider = GetDividerBasedOnQuality();
+            var lowTexDivider = GetLowResolutionDividerBasedOnQuality(divider);
 
             AllocateTextures(blurForeground, source, divider, lowTexDivider);
 
@@ -213,7 +212,7 @@ namespace UnityStandardAssets.ImageEffects {
             // 2.) produce the little-blur buffer used in composition later
             Blur(mediumRezWorkTexture, mediumRezWorkTexture, DofBlurriness.Low, 4, maxBlurSpread);
 
-            if ((bokeh) && ((BokehDestination.Foreground & bokehDestination) != 0)) {
+            if (bokeh && ((BokehDestination.Foreground & bokehDestination) != 0)) {
                 dofMaterial.SetVector("_Threshhold",
                     new Vector4(bokehThresholdContrast, bokehThresholdLuminance, 0.95f, 0.0f));
 
@@ -241,7 +240,7 @@ namespace UnityStandardAssets.ImageEffects {
             Graphics.Blit(null, finalDefocus, dofBlurMaterial, 3);
 
             // we are only adding bokeh now if the background is the only part we have to deal with
-            if ((bokeh) && ((BokehDestination.Foreground & bokehDestination) != 0))
+            if (bokeh && ((BokehDestination.Foreground & bokehDestination) != 0))
                 AddBokeh(bokehSource2, bokehSource, finalDefocus);
 
             dofMaterial.SetTexture("_TapLowBackground", finalDefocus);
@@ -263,7 +262,7 @@ namespace UnityStandardAssets.ImageEffects {
                 // 2.) produce the little-blur buffer used in composition later
                 BlurFg(mediumRezWorkTexture, mediumRezWorkTexture, DofBlurriness.Low, 2, maxBlurSpread);
 
-                if ((bokeh) && ((BokehDestination.Foreground & bokehDestination) != 0)) {
+                if (bokeh && ((BokehDestination.Foreground & bokehDestination) != 0)) {
                     dofMaterial.SetVector("_Threshhold",
                         new Vector4(bokehThresholdContrast * 0.5f, bokehThresholdLuminance, 0.0f, 0.0f));
 
@@ -288,15 +287,15 @@ namespace UnityStandardAssets.ImageEffects {
                 dofMaterial.SetTexture("_TapLowForeground", finalDefocus);
                 Graphics.Blit(source, destination, dofMaterial, visualize ? 1 : 4);
 
-                if ((bokeh) && ((BokehDestination.Foreground & bokehDestination) != 0))
+                if (bokeh && ((BokehDestination.Foreground & bokehDestination) != 0))
                     AddBokeh(bokehSource2, bokehSource, destination);
             }
 
             ReleaseTextures();
         }
 
-        void Blur(RenderTexture from, RenderTexture to, DofBlurriness iterations, int blurPass, float spread) {
-            RenderTexture tmp = RenderTexture.GetTemporary(to.width, to.height);
+        private void Blur(RenderTexture from, RenderTexture to, DofBlurriness iterations, int blurPass, float spread) {
+            var tmp = RenderTexture.GetTemporary(to.width, to.height);
             if ((int) iterations > 1) {
                 BlurHex(from, to, blurPass, spread, tmp);
                 if ((int) iterations > 2) {
@@ -317,11 +316,11 @@ namespace UnityStandardAssets.ImageEffects {
             RenderTexture.ReleaseTemporary(tmp);
         }
 
-        void BlurFg(RenderTexture from, RenderTexture to, DofBlurriness iterations, int blurPass, float spread) {
+        private void BlurFg(RenderTexture from, RenderTexture to, DofBlurriness iterations, int blurPass, float spread) {
             // we want a nice, big coc, hence we need to tap once from this (higher resolution) texture
             dofBlurMaterial.SetTexture("_TapHigh", from);
 
-            RenderTexture tmp = RenderTexture.GetTemporary(to.width, to.height);
+            var tmp = RenderTexture.GetTemporary(to.width, to.height);
             if ((int) iterations > 1) {
                 BlurHex(from, to, blurPass, spread, tmp);
                 if ((int) iterations > 2) {
@@ -342,7 +341,7 @@ namespace UnityStandardAssets.ImageEffects {
             RenderTexture.ReleaseTemporary(tmp);
         }
 
-        void BlurHex(RenderTexture from, RenderTexture to, int blurPass, float spread, RenderTexture tmp) {
+        private void BlurHex(RenderTexture from, RenderTexture to, int blurPass, float spread, RenderTexture tmp) {
             dofBlurMaterial.SetVector("offsets", new Vector4(0.0f, spread * oneOverBaseSize, 0.0f, 0.0f));
             Graphics.Blit(from, tmp, dofBlurMaterial, blurPass);
             dofBlurMaterial.SetVector("offsets",
@@ -356,16 +355,16 @@ namespace UnityStandardAssets.ImageEffects {
             Graphics.Blit(tmp, to, dofBlurMaterial, blurPass);
         }
 
-        void Downsample(RenderTexture from, RenderTexture to) {
+        private void Downsample(RenderTexture from, RenderTexture to) {
             dofMaterial.SetVector("_InvRenderTargetSize",
                 new Vector4(1.0f / (1.0f * to.width), 1.0f / (1.0f * to.height), 0.0f, 0.0f));
             Graphics.Blit(from, to, dofMaterial, SMOOTH_DOWNSAMPLE_PASS);
         }
 
-        void AddBokeh(RenderTexture bokehInfo, RenderTexture tempTex, RenderTexture finalTarget) {
+        private void AddBokeh(RenderTexture bokehInfo, RenderTexture tempTex, RenderTexture finalTarget) {
             if (bokehMaterial) {
                 var meshes = Quads.GetMeshes(tempTex.width, tempTex.height);
-                    // quads: exchanging more triangles with less overdraw
+                // quads: exchanging more triangles with less overdraw
 
                 RenderTexture.active = tempTex;
                 GL.Clear(false, true, new Color(0.0f, 0.0f, 0.0f, 0.0f));
@@ -376,8 +375,8 @@ namespace UnityStandardAssets.ImageEffects {
                 // point filter mode is important, otherwise we get bokeh shape & size artefacts
                 bokehInfo.filterMode = FilterMode.Point;
 
-                float arW = (bokehInfo.width * 1.0f) / (bokehInfo.height * 1.0f);
-                float sc = 2.0f / (1.0f * bokehInfo.width);
+                var arW = bokehInfo.width * 1.0f / (bokehInfo.height * 1.0f);
+                var sc = 2.0f / (1.0f * bokehInfo.width);
                 sc += bokehScale * maxBlurSpread * BOKEH_EXTRA_BLUR * oneOverBaseSize;
 
                 bokehMaterial.SetTexture("_Source", bokehInfo);
@@ -386,7 +385,7 @@ namespace UnityStandardAssets.ImageEffects {
                 bokehMaterial.SetFloat("_Intensity", bokehIntensity);
                 bokehMaterial.SetPass(0);
 
-                foreach (Mesh m in meshes)
+                foreach (var m in meshes)
                     if (m) Graphics.DrawMeshNow(m, Matrix4x4.identity);
 
                 GL.PopMatrix();
@@ -399,7 +398,7 @@ namespace UnityStandardAssets.ImageEffects {
         }
 
 
-        void ReleaseTextures() {
+        private void ReleaseTextures() {
             if (foregroundTexture) RenderTexture.ReleaseTemporary(foregroundTexture);
             if (finalDefocus) RenderTexture.ReleaseTemporary(finalDefocus);
             if (mediumRezWorkTexture) RenderTexture.ReleaseTemporary(mediumRezWorkTexture);
@@ -408,7 +407,7 @@ namespace UnityStandardAssets.ImageEffects {
             if (bokehSource2) RenderTexture.ReleaseTemporary(bokehSource2);
         }
 
-        void AllocateTextures(bool blurForeground, RenderTexture source, int divider, int lowTexDivider) {
+        private void AllocateTextures(bool blurForeground, RenderTexture source, int divider, int lowTexDivider) {
             foregroundTexture = null;
             if (blurForeground)
                 foregroundTexture = RenderTexture.GetTemporary(source.width, source.height, 0);

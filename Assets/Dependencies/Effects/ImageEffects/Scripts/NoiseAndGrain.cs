@@ -1,38 +1,35 @@
-using System;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace UnityStandardAssets.ImageEffects {
     [ExecuteInEditMode]
     [RequireComponent(typeof (Camera))]
     [AddComponentMenu("Image Effects/Noise/Noise And Grain (Filmic)")]
     public class NoiseAndGrain : PostEffectsBase {
-        public float intensityMultiplier = 0.25f;
-
-        public float generalIntensity = 0.5f;
+        private static readonly float TILE_AMOUNT = 64.0f;
         public float blackIntensity = 1.0f;
-        public float whiteIntensity = 1.0f;
-        public float midGrey = 0.2f;
 
         public bool dx11Grain = false;
-        public float softness = 0.0f;
-        public bool monochrome = false;
+        private Material dx11NoiseMaterial;
 
-        public Vector3 intensities = new Vector3(1.0f, 1.0f, 1.0f);
-        public Vector3 tiling = new Vector3(64.0f, 64.0f, 64.0f);
-        public float monochromeTiling = 64.0f;
+        public Shader dx11NoiseShader;
 
         public FilterMode filterMode = FilterMode.Bilinear;
 
-        public Texture2D noiseTexture;
+        public float generalIntensity = 0.5f;
+
+        public Vector3 intensities = new Vector3(1.0f, 1.0f, 1.0f);
+        public float intensityMultiplier = 0.25f;
+        public float midGrey = 0.2f;
+        public bool monochrome = false;
+        public float monochromeTiling = 64.0f;
+        private Material noiseMaterial;
 
         public Shader noiseShader;
-        private Material noiseMaterial = null;
 
-        public Shader dx11NoiseShader;
-        private Material dx11NoiseMaterial = null;
-
-        private static float TILE_AMOUNT = 64.0f;
+        public Texture2D noiseTexture;
+        public float softness;
+        public Vector3 tiling = new Vector3(64.0f, 64.0f, 64.0f);
+        public float whiteIntensity = 1.0f;
 
 
         public override bool CheckResources() {
@@ -52,7 +49,7 @@ namespace UnityStandardAssets.ImageEffects {
             return isSupported;
         }
 
-        void OnRenderImage(RenderTexture source, RenderTexture destination) {
+        private void OnRenderImage(RenderTexture source, RenderTexture destination) {
             if (CheckResources() == false || (null == noiseTexture)) {
                 Graphics.Blit(source, destination);
                 if (null == noiseTexture) {
@@ -75,7 +72,7 @@ namespace UnityStandardAssets.ImageEffects {
                     new Vector3(generalIntensity, blackIntensity, whiteIntensity) * intensityMultiplier);
 
                 if (softness > Mathf.Epsilon) {
-                    RenderTexture rt = RenderTexture.GetTemporary((int) (source.width * (1.0f - softness)),
+                    var rt = RenderTexture.GetTemporary((int) (source.width * (1.0f - softness)),
                         (int) (source.height * (1.0f - softness)));
                     DrawNoiseQuadGrid(source, rt, dx11NoiseMaterial, noiseTexture, monochrome ? 3 : 2);
                     dx11NoiseMaterial.SetTexture("_NoiseTex", rt);
@@ -83,7 +80,7 @@ namespace UnityStandardAssets.ImageEffects {
                     RenderTexture.ReleaseTemporary(rt);
                 }
                 else
-                    DrawNoiseQuadGrid(source, destination, dx11NoiseMaterial, noiseTexture, (monochrome ? 1 : 0));
+                    DrawNoiseQuadGrid(source, destination, dx11NoiseMaterial, noiseTexture, monochrome ? 1 : 0);
             }
             else {
                 // normal noise (DX9 style)
@@ -101,7 +98,7 @@ namespace UnityStandardAssets.ImageEffects {
                     new Vector3(generalIntensity, blackIntensity, whiteIntensity) * intensityMultiplier);
 
                 if (softness > Mathf.Epsilon) {
-                    RenderTexture rt2 = RenderTexture.GetTemporary((int) (source.width * (1.0f - softness)),
+                    var rt2 = RenderTexture.GetTemporary((int) (source.width * (1.0f - softness)),
                         (int) (source.height * (1.0f - softness)));
                     DrawNoiseQuadGrid(source, rt2, noiseMaterial, noiseTexture, 2);
                     noiseMaterial.SetTexture("_NoiseTex", rt2);
@@ -113,31 +110,32 @@ namespace UnityStandardAssets.ImageEffects {
             }
         }
 
-        static void DrawNoiseQuadGrid(RenderTexture source, RenderTexture dest, Material fxMaterial, Texture2D noise,
+        private static void DrawNoiseQuadGrid(RenderTexture source, RenderTexture dest, Material fxMaterial,
+            Texture2D noise,
             int passNr) {
             RenderTexture.active = dest;
 
-            float noiseSize = (noise.width * 1.0f);
-            float subDs = (1.0f * source.width) / TILE_AMOUNT;
+            var noiseSize = noise.width * 1.0f;
+            var subDs = 1.0f * source.width / TILE_AMOUNT;
 
             fxMaterial.SetTexture("_MainTex", source);
 
             GL.PushMatrix();
             GL.LoadOrtho();
 
-            float aspectCorrection = (1.0f * source.width) / (1.0f * source.height);
-            float stepSizeX = 1.0f / subDs;
-            float stepSizeY = stepSizeX * aspectCorrection;
-            float texTile = noiseSize / (noise.width * 1.0f);
+            var aspectCorrection = 1.0f * source.width / (1.0f * source.height);
+            var stepSizeX = 1.0f / subDs;
+            var stepSizeY = stepSizeX * aspectCorrection;
+            var texTile = noiseSize / (noise.width * 1.0f);
 
             fxMaterial.SetPass(passNr);
 
             GL.Begin(GL.QUADS);
 
-            for (float x1 = 0.0f; x1 < 1.0f; x1 += stepSizeX) {
-                for (float y1 = 0.0f; y1 < 1.0f; y1 += stepSizeY) {
-                    float tcXStart = Random.Range(0.0f, 1.0f);
-                    float tcYStart = Random.Range(0.0f, 1.0f);
+            for (var x1 = 0.0f; x1 < 1.0f; x1 += stepSizeX) {
+                for (var y1 = 0.0f; y1 < 1.0f; y1 += stepSizeY) {
+                    var tcXStart = Random.Range(0.0f, 1.0f);
+                    var tcYStart = Random.Range(0.0f, 1.0f);
 
                     //Vector3 v3 = Random.insideUnitSphere;
                     //Color c = new Color(v3.x, v3.y, v3.z);
@@ -145,7 +143,7 @@ namespace UnityStandardAssets.ImageEffects {
                     tcXStart = Mathf.Floor(tcXStart * noiseSize) / noiseSize;
                     tcYStart = Mathf.Floor(tcYStart * noiseSize) / noiseSize;
 
-                    float texTileMod = 1.0f / noiseSize;
+                    var texTileMod = 1.0f / noiseSize;
 
                     GL.MultiTexCoord2(0, tcXStart, tcYStart);
                     GL.MultiTexCoord2(1, 0.0f, 0.0f);

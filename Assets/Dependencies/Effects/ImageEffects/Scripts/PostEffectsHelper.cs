@@ -1,15 +1,14 @@
-using System;
 using UnityEngine;
 
 namespace UnityStandardAssets.ImageEffects {
     [ExecuteInEditMode]
     [RequireComponent(typeof (Camera))]
-    class PostEffectsHelper : MonoBehaviour {
-        void OnRenderImage(RenderTexture source, RenderTexture destination) {
+    internal class PostEffectsHelper : MonoBehaviour {
+        private void OnRenderImage(RenderTexture source, RenderTexture destination) {
             Debug.Log("OnRenderImage in Helper called ...");
         }
 
-        static void DrawLowLevelPlaneAlignedWithCamera(
+        private static void DrawLowLevelPlaneAlignedWithCamera(
             float dist,
             RenderTexture source, RenderTexture dest,
             Material material,
@@ -18,31 +17,31 @@ namespace UnityStandardAssets.ImageEffects {
             RenderTexture.active = dest;
             // Assign the source texture to a property from a shader
             material.SetTexture("_MainTex", source);
-            bool invertY = true; // source.texelSize.y < 0.0f;
+            var invertY = true; // source.texelSize.y < 0.0f;
             // Set up the simple Matrix
             GL.PushMatrix();
             GL.LoadIdentity();
             GL.LoadProjectionMatrix(cameraForProjectionMatrix.projectionMatrix);
 
-            float fovYHalfRad = cameraForProjectionMatrix.fieldOfView * 0.5f * Mathf.Deg2Rad;
-            float cotangent = Mathf.Cos(fovYHalfRad) / Mathf.Sin(fovYHalfRad);
-            float asp = cameraForProjectionMatrix.aspect;
+            var fovYHalfRad = cameraForProjectionMatrix.fieldOfView * 0.5f * Mathf.Deg2Rad;
+            var cotangent = Mathf.Cos(fovYHalfRad) / Mathf.Sin(fovYHalfRad);
+            var asp = cameraForProjectionMatrix.aspect;
 
-            float x1 = asp / -cotangent;
-            float x2 = asp / cotangent;
-            float y1 = 1.0f / -cotangent;
-            float y2 = 1.0f / cotangent;
+            var x1 = asp / -cotangent;
+            var x2 = asp / cotangent;
+            var y1 = 1.0f / -cotangent;
+            var y2 = 1.0f / cotangent;
 
-            float sc = 1.0f; // magic constant (for now)
+            var sc = 1.0f; // magic constant (for now)
 
             x1 *= dist * sc;
             x2 *= dist * sc;
             y1 *= dist * sc;
             y2 *= dist * sc;
 
-            float z1 = -dist;
+            var z1 = -dist;
 
-            for (int i = 0; i < material.passCount; i++) {
+            for (var i = 0; i < material.passCount; i++) {
                 material.SetPass(i);
 
                 GL.Begin(GL.QUADS);
@@ -70,7 +69,7 @@ namespace UnityStandardAssets.ImageEffects {
             GL.PopMatrix();
         }
 
-        static void DrawBorder(
+        private static void DrawBorder(
             RenderTexture dest,
             Material material) {
             float x1;
@@ -79,12 +78,12 @@ namespace UnityStandardAssets.ImageEffects {
             float y2;
 
             RenderTexture.active = dest;
-            bool invertY = true; // source.texelSize.y < 0.0ff;
+            var invertY = true; // source.texelSize.y < 0.0ff;
             // Set up the simple Matrix
             GL.PushMatrix();
             GL.LoadOrtho();
 
-            for (int i = 0; i < material.passCount; i++) {
+            for (var i = 0; i < material.passCount; i++) {
                 material.SetPass(i);
 
                 float y1_;
@@ -165,18 +164,19 @@ namespace UnityStandardAssets.ImageEffects {
             GL.PopMatrix();
         }
 
-        static void DrawLowLevelQuad(float x1, float x2, float y1, float y2, RenderTexture source, RenderTexture dest,
+        private static void DrawLowLevelQuad(float x1, float x2, float y1, float y2, RenderTexture source,
+            RenderTexture dest,
             Material material) {
             // Make the destination texture the target for all rendering
             RenderTexture.active = dest;
             // Assign the source texture to a property from a shader
             material.SetTexture("_MainTex", source);
-            bool invertY = true; // source.texelSize.y < 0.0f;
+            var invertY = true; // source.texelSize.y < 0.0f;
             // Set up the simple Matrix
             GL.PushMatrix();
             GL.LoadOrtho();
 
-            for (int i = 0; i < material.passCount; i++) {
+            for (var i = 0; i < material.passCount; i++) {
                 material.SetPass(i);
 
                 GL.Begin(GL.QUADS);

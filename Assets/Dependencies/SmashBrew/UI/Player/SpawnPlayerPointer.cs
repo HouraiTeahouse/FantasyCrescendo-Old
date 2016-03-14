@@ -5,20 +5,19 @@ using UnityEngine;
 
 namespace HouraiTeahouse {
     public class SpawnPlayerPointer : PlayerUIComponent {
+        private RectTransform _cTransform;
+        private RectTransform _currentPointer;
         [SerializeField] private RectTransform _pointer;
+        private RectTransform _rTransform;
 
         [SerializeField, Tag] private string _tag;
 
-        private RectTransform _cTransform;
-        private RectTransform _rTransform;
-        private RectTransform _currentPointer;
-
         /// <summary>
-        /// Unity callback. Called on object instaniation.
+        ///     Unity callback. Called on object instaniation.
         /// </summary>
         protected override void Awake() {
             base.Awake();
-            GameObject go = GameObject.FindWithTag(_tag);
+            var go = GameObject.FindWithTag(_tag);
             _rTransform = transform as RectTransform;
             _currentPointer = Instantiate(_pointer);
             _currentPointer.SetParent(go.transform);
@@ -27,7 +26,7 @@ namespace HouraiTeahouse {
         }
 
         // Ridiculously hacky coroutine to get the pointer to the right location 
-        IEnumerator Test() {
+        private IEnumerator Test() {
             // need to wait two frames frames before everything is properly settled
             yield return null;
             yield return null;
@@ -37,7 +36,6 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// 
         /// </summary>
         protected override void OnDestroy() {
             base.OnDestroy();

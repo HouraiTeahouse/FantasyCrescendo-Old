@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace UnityStandardAssets.ImageEffects {
@@ -9,39 +8,39 @@ namespace UnityStandardAssets.ImageEffects {
         FXAA1PresetB = 3,
         NFAA = 4,
         SSAA = 5,
-        DLAA = 6,
+        DLAA = 6
     }
 
     [ExecuteInEditMode]
     [RequireComponent(typeof (Camera))]
     [AddComponentMenu("Image Effects/Other/Antialiasing")]
     public class Antialiasing : PostEffectsBase {
-        public AAMode mode = AAMode.FXAA3Console;
-
-        public bool showGeneratedNormals = false;
-        public float offsetScale = 0.2f;
         public float blurRadius = 18.0f;
-
-        public float edgeThresholdMin = 0.05f;
-        public float edgeThreshold = 0.2f;
-        public float edgeSharpness = 4.0f;
+        private Material dlaa;
+        public Shader dlaaShader;
 
         public bool dlaaSharp = false;
+        public float edgeSharpness = 4.0f;
+        public float edgeThreshold = 0.2f;
+
+        public float edgeThresholdMin = 0.05f;
+        private Material materialFXAAII;
+        private Material materialFXAAIII;
+        private Material materialFXAAPreset2;
+        private Material materialFXAAPreset3;
+        public AAMode mode = AAMode.FXAA3Console;
+        private Material nfaa;
+        public Shader nfaaShader;
+        public float offsetScale = 0.2f;
+        public Shader shaderFXAAII;
+        public Shader shaderFXAAIII;
+        public Shader shaderFXAAPreset2;
+        public Shader shaderFXAAPreset3;
+
+        public bool showGeneratedNormals = false;
+        private Material ssaa;
 
         public Shader ssaaShader;
-        private Material ssaa;
-        public Shader dlaaShader;
-        private Material dlaa;
-        public Shader nfaaShader;
-        private Material nfaa;
-        public Shader shaderFXAAPreset2;
-        private Material materialFXAAPreset2;
-        public Shader shaderFXAAPreset3;
-        private Material materialFXAAPreset3;
-        public Shader shaderFXAAII;
-        private Material materialFXAAII;
-        public Shader shaderFXAAIII;
-        private Material materialFXAAIII;
 
 
         public Material CurrentAAMaterial() {
@@ -135,7 +134,7 @@ namespace UnityStandardAssets.ImageEffects {
                 // DLAA antialiasing
 
                 source.anisoLevel = 0;
-                RenderTexture interim = RenderTexture.GetTemporary(source.width, source.height);
+                var interim = RenderTexture.GetTemporary(source.width, source.height);
                 Graphics.Blit(source, interim, dlaa, 0);
                 Graphics.Blit(interim, destination, dlaa, dlaaSharp ? 2 : 1);
                 RenderTexture.ReleaseTemporary(interim);

@@ -1,6 +1,3 @@
-using System;
-
-
 namespace HouraiTeahouse.HouraiInput {
     // @cond nodoc
     [AutoDiscover]
@@ -77,7 +74,7 @@ namespace HouraiTeahouse.HouraiInput {
                     Handle = "TouchPad Button",
                     Target = InputTarget.TouchPadTap,
                     Source = Button13
-                },
+                }
             };
 
             AnalogMappings = new[] {

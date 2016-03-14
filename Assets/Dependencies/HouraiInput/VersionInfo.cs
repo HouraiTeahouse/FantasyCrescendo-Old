@@ -2,7 +2,6 @@ using System;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
-
 namespace HouraiTeahouse.HouraiInput {
     public struct VersionInfo : IComparable<VersionInfo> {
         public int Major;
@@ -20,7 +19,7 @@ namespace HouraiTeahouse.HouraiInput {
 
 
         public static VersionInfo InControlVersion() {
-            return new VersionInfo() {
+            return new VersionInfo {
                 Major = 1,
                 Minor = 4,
                 Patch = 4,
@@ -32,7 +31,7 @@ namespace HouraiTeahouse.HouraiInput {
         public static VersionInfo UnityVersion() {
             var match = Regex.Match(Application.unityVersion, @"^(\d+)\.(\d+)\.(\d+)");
             var build = 0;
-            return new VersionInfo() {
+            return new VersionInfo {
                 Major = Convert.ToInt32(match.Groups[1].Value),
                 Minor = Convert.ToInt32(match.Groups[2].Value),
                 Patch = Convert.ToInt32(match.Groups[3].Value),
@@ -102,7 +101,7 @@ namespace HouraiTeahouse.HouraiInput {
 
         public override bool Equals(object other) {
             if (other is VersionInfo) {
-                return this == ((VersionInfo) other);
+                return this == (VersionInfo) other;
             }
             return false;
         }

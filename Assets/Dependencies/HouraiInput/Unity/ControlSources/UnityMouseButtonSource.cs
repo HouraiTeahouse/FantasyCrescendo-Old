@@ -1,10 +1,8 @@
-using System;
 using UnityEngine;
-
 
 namespace HouraiTeahouse.HouraiInput {
     public class UnityMouseButtonSource : InputControlSource {
-        int buttonId;
+        private readonly int buttonId;
 
 
         public UnityMouseButtonSource(int buttonId) {

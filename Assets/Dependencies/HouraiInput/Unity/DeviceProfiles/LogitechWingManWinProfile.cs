@@ -1,6 +1,3 @@
-using System;
-
-
 namespace HouraiTeahouse.HouraiInput {
     // @cond nodoc
     [AutoDiscover]
@@ -14,7 +11,7 @@ namespace HouraiTeahouse.HouraiInput {
             };
 
             JoystickNames = new[] {
-                "WingMan Cordless Gamepad",
+                "WingMan Cordless Gamepad"
             };
 
             ButtonMappings = new[] {
@@ -66,7 +63,7 @@ namespace HouraiTeahouse.HouraiInput {
                 new InputMapping {
                     Handle = "Right Trigger",
                     Target = InputTarget.RightTrigger,
-                    Source = Button11,
+                    Source = Button11
                 },
                 new InputMapping {
                     Handle = "Start",

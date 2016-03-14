@@ -3,20 +3,12 @@ using UnityEngine;
 
 namespace HouraiTeahouse.SmashBrew {
     public class TestMatchSelect : MonoBehaviour {
-        [Serializable]
-        private class Selection {
-#pragma warning disable 0649
-            public CharacterData Data;
-            public int Pallete;
-#pragma warning restore 0649
-        }
-
         [SerializeField] private Selection[] testCharacters;
 
         /// <summary>
-        /// Unity callback. Called on object instantiation.
+        ///     Unity callback. Called on object instantiation.
         /// </summary>
-        void Awake() {
+        private void Awake() {
             var index = 0;
             foreach (var player in Player.AllPlayers) {
                 if (index >= testCharacters.Length)
@@ -28,6 +20,14 @@ namespace HouraiTeahouse.SmashBrew {
                 player.Type = player.SelectedCharacter ? Player.PlayerType.HumanPlayer : Player.PlayerType.None;
                 index++;
             }
+        }
+
+        [Serializable]
+        private class Selection {
+#pragma warning disable 0649
+            public CharacterData Data;
+            public int Pallete;
+#pragma warning restore 0649
         }
     }
 }

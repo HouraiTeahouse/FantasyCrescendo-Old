@@ -1,5 +1,5 @@
-using UnityEngine;
 using HouraiTeahouse.SmashBrew;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class SetPlayerCharacters : MonoBehaviour, ISubmitHandler {

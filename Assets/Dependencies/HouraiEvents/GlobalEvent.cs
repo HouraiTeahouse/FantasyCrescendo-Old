@@ -1,23 +1,23 @@
 namespace HouraiTeahouse.Events {
     /// <summary>
-    /// Singleton version of the Mediator class.
-    /// Use Instance to get the singleton object.
+    ///     Singleton version of the Mediator class.
+    ///     Use Instance to get the singleton object.
     /// </summary>
     public class GlobalMediator : Mediator {
         private static GlobalMediator _instance;
 
         /// <summary>
-        /// Gets the singleton GlobalMediator instance.
+        ///     Initializes a new GlobalMediator.
+        ///     Private to prevent external creation.
         /// </summary>
-        public static GlobalMediator Instance {
-            get { return _instance ?? (_instance = new GlobalMediator()); }
+        private GlobalMediator() {
         }
 
         /// <summary>
-        /// Initializes a new GlobalMediator.
-        /// Private to prevent external creation.
+        ///     Gets the singleton GlobalMediator instance.
         /// </summary>
-        GlobalMediator() {
+        public static GlobalMediator Instance {
+            get { return _instance ?? (_instance = new GlobalMediator()); }
         }
     }
 }

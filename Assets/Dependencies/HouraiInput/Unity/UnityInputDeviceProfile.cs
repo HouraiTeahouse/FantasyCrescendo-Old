@@ -1,10 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
-
 
 namespace HouraiTeahouse.HouraiInput {
     public sealed class AutoDiscover : Attribute {
@@ -12,26 +10,17 @@ namespace HouraiTeahouse.HouraiInput {
 
 
     public class UnityInputDeviceProfile {
-        public string Name { get; protected set; }
-        public string Meta { get; protected set; }
-
-        public InputMapping[] AnalogMappings { get; protected set; }
-        public InputMapping[] ButtonMappings { get; protected set; }
-
-        protected string[] SupportedPlatforms;
+        private static readonly HashSet<Type> hideList = new HashSet<Type>();
         protected string[] JoystickNames;
         protected string[] JoystickRegex;
 
         protected string LastResortRegex;
+        private float lowerDeadZone;
 
-        public VersionInfo MinUnityVersion { get; protected set; }
-        public VersionInfo MaxUnityVersion { get; protected set; }
+        private float sensitivity;
 
-        static HashSet<Type> hideList = new HashSet<Type>();
-
-        float sensitivity;
-        float lowerDeadZone;
-        float upperDeadZone;
+        protected string[] SupportedPlatforms;
+        private float upperDeadZone;
 
 
         public UnityInputDeviceProfile() {
@@ -48,6 +37,15 @@ namespace HouraiTeahouse.HouraiInput {
             MinUnityVersion = new VersionInfo(3);
             MaxUnityVersion = new VersionInfo(9);
         }
+
+        public string Name { get; protected set; }
+        public string Meta { get; protected set; }
+
+        public InputMapping[] AnalogMappings { get; protected set; }
+        public InputMapping[] ButtonMappings { get; protected set; }
+
+        public VersionInfo MinUnityVersion { get; protected set; }
+        public VersionInfo MaxUnityVersion { get; protected set; }
 
 
         public float Sensitivity {
@@ -111,6 +109,26 @@ namespace HouraiTeahouse.HouraiInput {
         }
 
 
+        public bool IsHidden {
+            get { return hideList.Contains(GetType()); }
+        }
+
+
+        public virtual bool IsKnown {
+            get { return true; }
+        }
+
+
+        public int AnalogCount {
+            get { return AnalogMappings.Length; }
+        }
+
+
+        public int ButtonCount {
+            get { return ButtonMappings.Length; }
+        }
+
+
         public bool HasJoystickName(string joystickName) {
             if (IsNotJoystick) {
                 return false;
@@ -123,7 +141,7 @@ namespace HouraiTeahouse.HouraiInput {
             }
 
             if (JoystickRegex != null) {
-                for (int i = 0; i < JoystickRegex.Length; i++) {
+                for (var i = 0; i < JoystickRegex.Length; i++) {
                     if (Regex.IsMatch(joystickName, JoystickRegex[i], RegexOptions.IgnoreCase)) {
                         return true;
                     }
@@ -154,26 +172,6 @@ namespace HouraiTeahouse.HouraiInput {
 
         public static void Hide(Type type) {
             hideList.Add(type);
-        }
-
-
-        public bool IsHidden {
-            get { return hideList.Contains(GetType()); }
-        }
-
-
-        public virtual bool IsKnown {
-            get { return true; }
-        }
-
-
-        public int AnalogCount {
-            get { return AnalogMappings.Length; }
-        }
-
-
-        public int ButtonCount {
-            get { return ButtonMappings.Length; }
         }
 
         #region InputControlSource Helpers

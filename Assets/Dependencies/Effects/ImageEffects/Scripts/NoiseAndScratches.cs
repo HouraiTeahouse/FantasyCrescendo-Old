@@ -1,45 +1,60 @@
-using System;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace UnityStandardAssets.ImageEffects {
     [ExecuteInEditMode]
     [RequireComponent(typeof (Camera))]
     [AddComponentMenu("Image Effects/Noise/Noise and Scratches")]
     public class NoiseAndScratches : MonoBehaviour {
+        [Range(0.0f, 5.0f)] public float grainIntensityMax = 0.2f;
+
+        // Noise grain takes random intensity from Min to Max.
+        [Range(0.0f, 5.0f)] public float grainIntensityMin = 0.1f;
+
+        /// The size of the noise grains (1 = one pixel).
+        [Range(0.1f, 50.0f)] public float grainSize = 2.0f;
+
+        public Texture grainTexture;
+        private Material m_MaterialRGB;
+        private Material m_MaterialYUV;
+
         /// Monochrome noise just adds grain. Non-monochrome noise
         /// more resembles VCR as it adds noise in YUV color space,
         /// thus introducing magenta/green colors.
         public bool monochrome = true;
 
-        private bool rgbFallback = false;
-
-        // Noise grain takes random intensity from Min to Max.
-        [Range(0.0f, 5.0f)] public float grainIntensityMin = 0.1f;
-        [Range(0.0f, 5.0f)] public float grainIntensityMax = 0.2f;
-
-        /// The size of the noise grains (1 = one pixel).
-        [Range(0.1f, 50.0f)] public float grainSize = 2.0f;
-
-        // Scratches take random intensity from Min to Max.
-        [Range(0.0f, 5.0f)] public float scratchIntensityMin = 0.05f;
-        [Range(0.0f, 5.0f)] public float scratchIntensityMax = 0.25f;
+        private bool rgbFallback;
 
         /// Scratches jump to another locations at this times per second.
         [Range(1.0f, 30.0f)] public float scratchFPS = 10.0f;
 
+        [Range(0.0f, 5.0f)] public float scratchIntensityMax = 0.25f;
+
+        // Scratches take random intensity from Min to Max.
+        [Range(0.0f, 5.0f)] public float scratchIntensityMin = 0.05f;
+
         /// While scratches are in the same location, they jitter a bit.
         [Range(0.0f, 1.0f)] public float scratchJitter = 0.01f;
 
-        public Texture grainTexture;
         public Texture scratchTexture;
+
+        private float scratchTimeLeft;
+        private float scratchX, scratchY;
         public Shader shaderRGB;
         public Shader shaderYUV;
-        private Material m_MaterialRGB;
-        private Material m_MaterialYUV;
 
-        private float scratchTimeLeft = 0.0f;
-        private float scratchX, scratchY;
+        protected Material material {
+            get {
+                if (m_MaterialRGB == null) {
+                    m_MaterialRGB = new Material(shaderRGB);
+                    m_MaterialRGB.hideFlags = HideFlags.HideAndDontSave;
+                }
+                if (m_MaterialYUV == null && !rgbFallback) {
+                    m_MaterialYUV = new Material(shaderYUV);
+                    m_MaterialYUV.hideFlags = HideFlags.HideAndDontSave;
+                }
+                return !rgbFallback && !monochrome ? m_MaterialYUV : m_MaterialRGB;
+            }
+        }
 
         protected void Start() {
             // Disable if we don't support image effects
@@ -57,20 +72,6 @@ namespace UnityStandardAssets.ImageEffects {
                     enabled = false;
                 else if (!shaderYUV.isSupported) // fallback to RGB if YUV is not supported
                     rgbFallback = true;
-            }
-        }
-
-        protected Material material {
-            get {
-                if (m_MaterialRGB == null) {
-                    m_MaterialRGB = new Material(shaderRGB);
-                    m_MaterialRGB.hideFlags = HideFlags.HideAndDontSave;
-                }
-                if (m_MaterialYUV == null && !rgbFallback) {
-                    m_MaterialYUV = new Material(shaderYUV);
-                    m_MaterialYUV.hideFlags = HideFlags.HideAndDontSave;
-                }
-                return (!rgbFallback && !monochrome) ? m_MaterialYUV : m_MaterialRGB;
             }
         }
 
@@ -92,7 +93,7 @@ namespace UnityStandardAssets.ImageEffects {
         }
 
         // Called by the camera to apply the image effect
-        void OnRenderImage(RenderTexture source, RenderTexture destination) {
+        private void OnRenderImage(RenderTexture source, RenderTexture destination) {
             SanitizeParameters();
 
             if (scratchTimeLeft <= 0.0f) {
@@ -102,22 +103,22 @@ namespace UnityStandardAssets.ImageEffects {
             }
             scratchTimeLeft -= Time.deltaTime;
 
-            Material mat = material;
+            var mat = material;
 
             mat.SetTexture("_GrainTex", grainTexture);
             mat.SetTexture("_ScratchTex", scratchTexture);
-            float grainScale = 1.0f / grainSize; // we have sanitized it earlier, won't be zero
+            var grainScale = 1.0f / grainSize; // we have sanitized it earlier, won't be zero
             mat.SetVector("_GrainOffsetScale", new Vector4(
                 Random.value,
                 Random.value,
-                (float) Screen.width / (float) grainTexture.width * grainScale,
-                (float) Screen.height / (float) grainTexture.height * grainScale
+                Screen.width / (float) grainTexture.width * grainScale,
+                Screen.height / (float) grainTexture.height * grainScale
                 ));
             mat.SetVector("_ScratchOffsetScale", new Vector4(
                 scratchX + Random.value * scratchJitter,
                 scratchY + Random.value * scratchJitter,
-                (float) Screen.width / (float) scratchTexture.width,
-                (float) Screen.height / (float) scratchTexture.height
+                Screen.width / (float) scratchTexture.width,
+                Screen.height / (float) scratchTexture.height
                 ));
             mat.SetVector("_Intensity", new Vector4(
                 Random.Range(grainIntensityMin, grainIntensityMax),

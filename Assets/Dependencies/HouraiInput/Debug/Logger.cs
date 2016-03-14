@@ -1,7 +1,3 @@
-using System;
-using UnityEngine;
-
-
 namespace HouraiTeahouse.HouraiInput {
     public enum LogMessageType {
         Info,
@@ -24,7 +20,7 @@ namespace HouraiTeahouse.HouraiInput {
 
         public static void LogInfo(string text) {
             if (OnLogMessage != null) {
-                var logMessage = new LogMessage() {text = text, type = LogMessageType.Info};
+                var logMessage = new LogMessage {text = text, type = LogMessageType.Info};
                 OnLogMessage(logMessage);
             }
         }
@@ -32,7 +28,7 @@ namespace HouraiTeahouse.HouraiInput {
 
         public static void LogWarning(string text) {
             if (OnLogMessage != null) {
-                var logMessage = new LogMessage() {text = text, type = LogMessageType.Warning};
+                var logMessage = new LogMessage {text = text, type = LogMessageType.Warning};
                 OnLogMessage(logMessage);
             }
         }
@@ -40,7 +36,7 @@ namespace HouraiTeahouse.HouraiInput {
 
         public static void LogError(string text) {
             if (OnLogMessage != null) {
-                var logMessage = new LogMessage() {text = text, type = LogMessageType.Error};
+                var logMessage = new LogMessage {text = text, type = LogMessageType.Error};
                 OnLogMessage(logMessage);
             }
         }

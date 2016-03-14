@@ -1,6 +1,3 @@
-using System;
-
-
 namespace HouraiTeahouse.HouraiInput {
     // @cond nodoc
     [AutoDiscover]
@@ -10,11 +7,11 @@ namespace HouraiTeahouse.HouraiInput {
             Meta = "MOGA Pro on Linux";
 
             SupportedPlatforms = new[] {
-                "Linux",
+                "Linux"
             };
 
             JoystickNames = new[] {
-                "Moga Pro HID",
+                "Moga Pro HID"
             };
 
             MaxUnityVersion = new VersionInfo(4, 9);
@@ -71,7 +68,7 @@ namespace HouraiTeahouse.HouraiInput {
                 new InputMapping {
                     Handle = "Left Stick X",
                     Target = InputTarget.LeftStickX,
-                    Source = Analog0,
+                    Source = Analog0
                 },
                 new InputMapping {
                     Handle = "Left Stick Y",
@@ -123,7 +120,7 @@ namespace HouraiTeahouse.HouraiInput {
                 new InputMapping {
                     Handle = "Left Trigger",
                     Target = InputTarget.LeftTrigger,
-                    Source = Analog5,
+                    Source = Analog5
                 },
                 new InputMapping {
                     Handle = "Right Trigger",

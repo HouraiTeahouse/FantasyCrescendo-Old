@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace HouraiTeahouse {
     /// <summary>
-    /// Set of extension methods for collections and enumerations of any type.
+    ///     Set of extension methods for collections and enumerations of any type.
     /// </summary>
     public static class GenericCollectionExtensions {
         /// <summary>
-        /// Selects a random element from a list.
+        ///     Selects a random element from a list.
         /// </summary>
-        /// <exception cref="NullReferenceException">thrown if <paramref name="list"/> is null</exception>
+        /// <exception cref="NullReferenceException">thrown if <paramref name="list" /> is null</exception>
         /// <typeparam name="T">the type of the list</typeparam>
         /// <param name="list">the list to randomly select from</param>
         /// <returns>a random element from the list</returns>
@@ -21,7 +21,7 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Selects a random element from a list, within a specified range.
+        ///     Selects a random element from a list, within a specified range.
         /// </summary>
         /// <typeparam name="T">the type of the list</typeparam>
         /// <param name="list">the list to randomly select from</param>

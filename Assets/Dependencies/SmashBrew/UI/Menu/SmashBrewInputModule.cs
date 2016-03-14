@@ -4,30 +4,29 @@ using UnityEngine.EventSystems;
 
 namespace HouraiTeahouse.SmashBrew.UI {
     public class SmashBrewInputModule : PointerInputModule {
-        [SerializeField] private string _horizontalKeyboard = "horizontal";
+        [SerializeField] private readonly InputTarget _cancelGamepad = InputTarget.Action2;
 
-        [SerializeField] private string _verticalKeyboard = "vertical";
+        [SerializeField] private readonly string _cancelKeyboard = "cancel";
 
-        [SerializeField] private string _submitKeyboard = "submit";
+        [SerializeField] private readonly float _deadZone = 0.1f;
 
-        [SerializeField] private string _cancelKeyboard = "cancel";
+        [SerializeField] private readonly InputTarget _horizontalGamepad = InputTarget.LeftStickX;
+        [SerializeField] private readonly string _horizontalKeyboard = "horizontal";
 
-        [SerializeField] private InputTarget _horizontalGamepad = InputTarget.LeftStickX;
+        [SerializeField] private readonly float _navigationDelay = 0.25f;
 
-        [SerializeField] private InputTarget _verticalGamepad = InputTarget.LeftStickY;
+        [SerializeField] private readonly InputTarget _submitGamepad = InputTarget.Action1;
 
-        [SerializeField] private InputTarget _submitGamepad = InputTarget.Action1;
+        [SerializeField] private readonly string _submitKeyboard = "submit";
 
-        [SerializeField] private InputTarget _cancelGamepad = InputTarget.Action2;
+        [SerializeField] private readonly InputTarget _verticalGamepad = InputTarget.LeftStickY;
 
-        [SerializeField] private float _deadZone = 0.1f;
-
-        [SerializeField] private float _navigationDelay = 0.25f;
+        [SerializeField] private readonly string _verticalKeyboard = "vertical";
 
         private float currentDelay;
 
         /// <summary>
-        /// Called when the InputModule is activated.
+        ///     Called when the InputModule is activated.
         /// </summary>
         public override void ActivateModule() {
             base.ActivateModule();
@@ -37,7 +36,7 @@ namespace HouraiTeahouse.SmashBrew.UI {
         }
 
         /// <summary>
-        /// Called when the InputModule is deactivated.
+        ///     Called when the InputModule is deactivated.
         /// </summary>
         public override void DeactivateModule() {
             base.DeactivateModule();
@@ -45,20 +44,20 @@ namespace HouraiTeahouse.SmashBrew.UI {
         }
 
         /// <summary>
-        /// Called once every frame while InputModule is active.
+        ///     Called once every frame while InputModule is active.
         /// </summary>
         public override void Process() {
             if (!eventSystem)
                 return;
-            GameObject target = eventSystem.currentSelectedGameObject;
+            var target = eventSystem.currentSelectedGameObject;
 
-            bool submit = Input.GetButtonDown(_submitKeyboard);
-            bool cancel = Input.GetButtonDown(_cancelKeyboard);
+            var submit = Input.GetButtonDown(_submitKeyboard);
+            var cancel = Input.GetButtonDown(_cancelKeyboard);
 
-            float x = Input.GetAxisRaw(_horizontalKeyboard);
-            float y = Input.GetAxisRaw(_verticalKeyboard);
+            var x = Input.GetAxisRaw(_horizontalKeyboard);
+            var y = Input.GetAxisRaw(_verticalKeyboard);
             var count = 1;
-            foreach (InputDevice device in InputManager.Devices) {
+            foreach (var device in InputManager.Devices) {
                 if (device == null)
                     continue;
                 x += device.GetControl(_horizontalGamepad);
@@ -79,7 +78,7 @@ namespace HouraiTeahouse.SmashBrew.UI {
 
             x /= count;
             y /= count;
-            AxisEventData moveData = GetAxisEventData(x, y, _deadZone);
+            var moveData = GetAxisEventData(x, y, _deadZone);
             ExecuteEvents.Execute(target, moveData, ExecuteEvents.moveHandler);
             if (moveData.moveDir != MoveDirection.None)
                 currentDelay = _navigationDelay;

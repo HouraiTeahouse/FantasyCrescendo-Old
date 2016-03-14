@@ -2,9 +2,9 @@ using UnityEngine;
 
 namespace HouraiTeahouse {
     /// <summary>
-    /// Draws Colliders as Gizmos, permanentally seen in the Scene view.
-    /// Good for general establishing of boundaries.
-    /// Currently does not support CapsuleColliders
+    ///     Draws Colliders as Gizmos, permanentally seen in the Scene view.
+    ///     Good for general establishing of boundaries.
+    ///     Currently does not support CapsuleColliders
     /// </summary>
     public class DrawCollider3D : MonoBehaviour {
         [SerializeField, Tooltip("The color used to draw the colliders with.")] private Color color;
@@ -15,10 +15,10 @@ namespace HouraiTeahouse {
 
 #if UNITY_EDITOR
         /// <summary>
-        /// Unity Callback. Called in the Editor to draw Gizmos on each GUI update.
+        ///     Unity Callback. Called in the Editor to draw Gizmos on each GUI update.
         /// </summary>
-        void OnDrawGizmos() {
-            Collider[] colliders = includeChildren ? GetComponentsInChildren<Collider>() : GetComponents<Collider>();
+        private void OnDrawGizmos() {
+            var colliders = includeChildren ? GetComponentsInChildren<Collider>() : GetComponents<Collider>();
 
             if (colliders == null)
                 return;

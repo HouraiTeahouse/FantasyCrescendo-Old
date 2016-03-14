@@ -7,7 +7,7 @@ namespace HouraiTeahouse.SmashBrew {
     public sealed class CameraController : EventHandlerBehaviour<PlayerSpawnEvent> {
         private Camera _camera;
 
-        [SerializeField] private float _cameraSpeed = 1f;
+        [SerializeField] private readonly float _cameraSpeed = 1f;
 
         [SerializeField] private Vector2 _fovRange;
 
@@ -18,7 +18,7 @@ namespace HouraiTeahouse.SmashBrew {
         private HashSet<Transform> _targets;
 
         /// <summary>
-        /// Unity callback. Called on object instantiation.
+        ///     Unity callback. Called on object instantiation.
         /// </summary>
         protected override void Awake() {
             base.Awake();
@@ -33,17 +33,17 @@ namespace HouraiTeahouse.SmashBrew {
         }
 
         /// <summary>
-        /// Unity callback. Called once per frame after all Updates are processed.
+        ///     Unity callback. Called once per frame after all Updates are processed.
         /// </summary>
-        void LateUpdate() {
+        private void LateUpdate() {
             var count = 0;
-            float dt = DeltaTime;
+            var dt = DeltaTime;
 
             //Find the Bounds in which
-            Vector3 sum = Vector3.zero;
-            Vector3 min = Vector3.one * float.PositiveInfinity;
-            Vector3 max = Vector3.one * float.NegativeInfinity;
-            foreach (Transform target in _targets) {
+            var sum = Vector3.zero;
+            var min = Vector3.one * float.PositiveInfinity;
+            var max = Vector3.one * float.NegativeInfinity;
+            foreach (var target in _targets) {
                 if (target == null || !target.gameObject.activeInHierarchy)
                     continue;
                 count++;
@@ -52,8 +52,8 @@ namespace HouraiTeahouse.SmashBrew {
                 max = Vector3.Max(max, target.position);
             }
 
-            Vector3 targetPosition = _targetPositionBias + ((count <= 0) ? Vector3.zero : sum / count);
-            Vector2 size = (Vector2) max - (Vector2) min;
+            var targetPosition = _targetPositionBias + (count <= 0 ? Vector3.zero : sum / count);
+            var size = (Vector2) max - (Vector2) min;
 
             // Calculate the actual padding to use
             var actualPadding = new Vector2(1 + 2 * _padding.x, 1 + 2 * _padding.y);
@@ -62,8 +62,8 @@ namespace HouraiTeahouse.SmashBrew {
             size = new Vector2(size.x * actualPadding.x, size.y * actualPadding.y);
 
             // Calculate the target field of view for the proper cpuLevel of zoom
-            float targetFOV = 2f * Mathf.Atan(size.x * 0.5f / Mathf.Abs(transform.position.z - targetPosition.z)) *
-                              Mathf.Rad2Deg;
+            var targetFOV = 2f * Mathf.Atan(size.x * 0.5f / Mathf.Abs(transform.position.z - targetPosition.z)) *
+                            Mathf.Rad2Deg;
 
             // Clamp the FOV so it isn't too small or too big.
             targetFOV = Mathf.Clamp(targetFOV, _fovRange.x, _fovRange.y);

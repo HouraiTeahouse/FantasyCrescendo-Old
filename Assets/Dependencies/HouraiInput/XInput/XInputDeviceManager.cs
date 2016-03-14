@@ -1,18 +1,16 @@
 #if UNITY_STANDALONE_WIN || UNITY_EDITOR
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using XInputDotNetPure;
 
-
 namespace HouraiTeahouse.HouraiInput {
     public class XInputDeviceManager : InputDeviceManager {
-        bool[] deviceConnected = new bool[] {false, false, false, false};
+        private readonly bool[] deviceConnected = {false, false, false, false};
 
 
         public XInputDeviceManager() {
-            for (int deviceIndex = 0; deviceIndex < 4; deviceIndex++) {
+            for (var deviceIndex = 0; deviceIndex < 4; deviceIndex++) {
                 devices.Add(new XInputDevice(deviceIndex));
             }
 
@@ -21,7 +19,7 @@ namespace HouraiTeahouse.HouraiInput {
 
 
         public override void Update(ulong updateTick, float deltaTime) {
-            for (int deviceIndex = 0; deviceIndex < 4; deviceIndex++) {
+            for (var deviceIndex = 0; deviceIndex < 4; deviceIndex++) {
                 var device = devices[deviceIndex] as XInputDevice;
 
                 // Unconnected devices won't be updated otherwise, so poll here.
@@ -65,7 +63,7 @@ namespace HouraiTeahouse.HouraiInput {
 
         public static void Enable() {
             var errors = new List<string>();
-            if (XInputDeviceManager.CheckPlatformSupport(errors)) {
+            if (CheckPlatformSupport(errors)) {
                 InputManager.HideDevicesWithProfile(typeof (Xbox360WinProfile));
                 InputManager.HideDevicesWithProfile(typeof (XboxOneWinProfile));
                 InputManager.HideDevicesWithProfile(typeof (LogitechF710ModeXWinProfile));

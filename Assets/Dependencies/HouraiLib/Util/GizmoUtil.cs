@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace HouraiTeahouse {
-    sealed class GizmoDisposable : IDisposable {
+    internal sealed class GizmoDisposable : IDisposable {
         private readonly Color? _oldColor;
         private readonly Matrix4x4? _oldTransform;
 
@@ -28,17 +28,17 @@ namespace HouraiTeahouse {
 
 
     /// <summary>
-    /// A static utlity class of functions for helping draw Gizmos
+    ///     A static utlity class of functions for helping draw Gizmos
     /// </summary>
     public static class GizmoUtil {
         /// <summary>
-        /// Creates an IDisposable object for drawing Gizmos of a certain color.
+        ///     Creates an IDisposable object for drawing Gizmos of a certain color.
         /// </summary>
         /// <example>
-        /// using(GizmoUtil.With(Color.white) {
+        ///     using(GizmoUtil.With(Color.white) {
         ///     // Draw a white cube
-        ///     Gizmos.DrawCube(center, size); 
-        /// }
+        ///     Gizmos.DrawCube(center, size);
+        ///     }
         /// </example>
         /// <param name="color">the color to set the Gizmos color to</param>
         /// <returns>the IDisposable object for working with Gizmos</returns>
@@ -47,7 +47,7 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Creates an IDisposable object for drawing Gizmos within certain transformation.
+        ///     Creates an IDisposable object for drawing Gizmos within certain transformation.
         /// </summary>
         /// <param name="transform">the transformation matrix to use when drawing Gizmos</param>
         /// <returns>the IDisposable object for working with Gizmos</returns>
@@ -56,7 +56,7 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Creates an IDisposable object for drawing Gizmos within certain transformation and color.
+        ///     Creates an IDisposable object for drawing Gizmos within certain transformation and color.
         /// </summary>
         /// <param name="color">the color to set the Gizmos color to</param>
         /// <param name="transform">the transformation matrix to use when drawing Gizmos</param>
@@ -66,7 +66,7 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Creates an IDisposable object for drawing Gizmos within certain transformation.
+        ///     Creates an IDisposable object for drawing Gizmos within certain transformation.
         /// </summary>
         /// <param name="transform">the transformation matrix to use when drawing Gizmos</param>
         /// <returns>the IDisposable object for working with Gizmos</returns>
@@ -77,7 +77,7 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Creates an IDisposable object for drawing Gizmos within certain transformation and color.
+        ///     Creates an IDisposable object for drawing Gizmos within certain transformation and color.
         /// </summary>
         /// <param name="color">the color to set the Gizmos color to</param>
         /// <param name="transform">the transformation matrix to use when drawing Gizmos</param>
@@ -89,7 +89,7 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Draws a Gizmo that matches the shape and size of a given 3D collider
+        ///     Draws a Gizmo that matches the shape and size of a given 3D collider
         /// </summary>
         /// <param name="collider">the collider to draw</param>
         /// <param name="color">the color to draw the collider in</param>
@@ -102,7 +102,7 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Draws Gizmos that matches the shape and size of multiple 3D colliders 
+        ///     Draws Gizmos that matches the shape and size of multiple 3D colliders
         /// </summary>
         /// <param name="colliders">the colliders to draw</param>
         /// <param name="color">the color to draw the collider in</param>
@@ -116,9 +116,9 @@ namespace HouraiTeahouse {
                 return;
 
             using (With(color, Matrix4x4.identity)) {
-                Collider[] asArray = colliders as Collider[];
+                var asArray = colliders as Collider[];
                 if (asArray != null) {
-                    foreach (Collider collider in asArray) {
+                    foreach (var collider in asArray) {
                         if (collider == null || (filter != null && !filter(collider)))
                             continue;
                         Gizmos.matrix = collider.transform.localToWorldMatrix;
@@ -126,7 +126,7 @@ namespace HouraiTeahouse {
                     }
                 }
                 else {
-                    foreach (Collider collider in colliders) {
+                    foreach (var collider in colliders) {
                         if (collider == null || (filter != null && !filter(collider)))
                             continue;
                         Gizmos.matrix = collider.transform.localToWorldMatrix;
@@ -136,7 +136,7 @@ namespace HouraiTeahouse {
             }
         }
 
-        static void DrawCollider3D_Impl(Collider collider, bool solid) {
+        private static void DrawCollider3D_Impl(Collider collider, bool solid) {
             var boxCollider = collider as BoxCollider;
             var sphereCollider = collider as SphereCollider;
             var meshCollider = collider as MeshCollider;

@@ -2,14 +2,14 @@ using UnityEngine;
 
 namespace HouraiTeahouse {
     /// <summary>
-    /// A simple struct representing a range of real numbers.
-    /// </summary> 
+    ///     A simple struct representing a range of real numbers.
+    /// </summary>
     public struct Range {
         private float _min;
         private float _max;
 
         /// <summary>
-        /// The lower bound of the Range
+        ///     The lower bound of the Range
         /// </summary>
         public float Min {
             get { return _min; }
@@ -25,7 +25,7 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// The upper bound of the Range
+        ///     The upper bound of the Range
         /// </summary>
         public float Max {
             get { return _max; }
@@ -41,35 +41,35 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Returns the width of the Range. Equal to the difference between Max and Min.
+        ///     Returns the width of the Range. Equal to the difference between Max and Min.
         /// </summary>
         public float Width {
             get { return _max - _min; }
         }
 
         /// <summary>
-        /// Returns the center of the Range
+        ///     Returns the center of the Range
         /// </summary>
         public float Center {
             get { return Lerp(0.5f); }
         }
 
         /// <summary>
-        /// Gets the full range of real numbers, from negative infinity to positive infinity
+        ///     Gets the full range of real numbers, from negative infinity to positive infinity
         /// </summary>
         public static Range FullRange {
             get { return new Range(float.NegativeInfinity, float.PositiveInfinity); }
         }
 
         /// <summary>
-        /// Creates an instance of Range.
+        ///     Creates an instance of Range.
         /// </summary>
         /// <param name="value"></param>
         public Range(float value) : this(value, value) {
         }
 
         /// <summary>
-        /// Creates a instance of Range.
+        ///     Creates a instance of Range.
         /// </summary>
         /// <param name="min">the </param>
         /// <param name="max"></param>
@@ -79,7 +79,7 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Clamps a value to the Range
+        ///     Clamps a value to the Range
         /// </summary>
         /// <param name="x">the value to clamp</param>
         /// <returns>the clamped value</returns>
@@ -88,7 +88,7 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Selects a random floating point number contianed within the Range
+        ///     Selects a random floating point number contianed within the Range
         /// </summary>
         /// <returns>a random number sampled from the range, with uniform probabilty</returns>
         public float Random() {
@@ -96,10 +96,10 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Linearly interpolates between the two extremes of the range.
-        /// If val = 1, returns Max.
-        /// If val = 0, returns Min.
-        /// If betweeen, the returned value is linearly proportional to the width of the Range.
+        ///     Linearly interpolates between the two extremes of the range.
+        ///     If val = 1, returns Max.
+        ///     If val = 0, returns Min.
+        ///     If betweeen, the returned value is linearly proportional to the width of the Range.
         /// </summary>
         /// <param name="val"></param>
         /// <returns></returns>

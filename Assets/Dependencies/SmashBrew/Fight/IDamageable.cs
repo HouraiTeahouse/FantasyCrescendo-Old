@@ -2,20 +2,20 @@ using UnityEngine;
 
 namespace HouraiTeahouse.SmashBrew {
     /// <summary>
-    /// Represents a single object that can be hit
+    ///     Represents a single object that can be hit
     /// </summary>
     public interface IStrikable {
     }
 
     /// <summary>
-    /// Represents a single object that can be hit and can take damage from it
+    ///     Represents a single object that can be hit and can take damage from it
     /// </summary>
     public interface IDamageable : IStrikable {
         void Damage(object source, float damage);
     }
 
     /// <summary>
-    /// Represents a single objec that can be 
+    ///     Represents a single objec that can be
     /// </summary>
     public interface IHealable : IStrikable {
         void Heal(object source, float healing);

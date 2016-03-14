@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace HouraiTeahouse {
     /// <summary>
-    /// HSV (Hue/Saturation/Value) color struct.
+    ///     HSV (Hue/Saturation/Value) color struct.
     /// </summary>
     [Serializable]
     public struct HSV {
@@ -48,27 +48,27 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// The hue of the color. Range: [0, 360)
+        ///     The hue of the color. Range: [0, 360)
         /// </summary>
         public float h;
 
         /// <summary>
-        /// The saturation of the color. Range: [0, 1]
+        ///     The saturation of the color. Range: [0, 1]
         /// </summary>
         public float s;
 
         /// <summary>
-        /// The value of the color. Range: [0, 1]
+        ///     The value of the color. Range: [0, 1]
         /// </summary>
         public float v;
 
         /// <summary>
-        /// The alpha of the color. Range: [0, 1]
+        ///     The alpha of the color. Range: [0, 1]
         /// </summary>
         public float a;
 
         /// <summary>
-        /// Initializes an instance of HSV.
+        ///     Initializes an instance of HSV.
         /// </summary>
         /// <param name="h">the hue of the color</param>
         /// <param name="s">the saturation of the color</param>
@@ -82,7 +82,7 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Initializes an instance of HSV.
+        ///     Initializes an instance of HSV.
         /// </summary>
         /// <param name="h">the hue of the color</param>
         /// <param name="s">the saturation of the color</param>
@@ -91,11 +91,11 @@ namespace HouraiTeahouse {
             this.h = h;
             this.s = s;
             this.v = v;
-            this.a = 1f;
+            a = 1f;
         }
 
         /// <summary>
-        /// Initializes an instance of HSV from a RGBA color.
+        ///     Initializes an instance of HSV from a RGBA color.
         /// </summary>
         /// <param name="col">the source Color</param>
         public HSV(Color col) {
@@ -104,25 +104,25 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Initializes an instance of HSV from another instance of HSV.
+        ///     Initializes an instance of HSV from another instance of HSV.
         /// </summary>
         /// <param name="src">the source HSV instance</param>
         public HSV(HSV src) : this(src.h, src.s, src.v, src.a) {
         }
 
         /// <summary>
-        /// Initalizes an instance of HSV from a Vector3.
+        ///     Initalizes an instance of HSV from a Vector3.
         /// </summary>
         /// <param name="src">the source vector</param>
         public HSV(Vector3 src) : this(src.x, src.y, src.z) {
         }
 
         /// <summary>
-        /// Converts the HSVA representatio to a RGBA representation. 
+        ///     Converts the HSVA representatio to a RGBA representation.
         /// </summary>
         /// <returns>the RGBA color representation</returns>
         public Color ToColor() {
-            Color col = Color.HSVToRGB(h, s, v);
+            var col = Color.HSVToRGB(h, s, v);
             col.a = a;
             return col;
         }

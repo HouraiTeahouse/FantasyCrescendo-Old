@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace HouraiTeahouse {
     /// <summary>
-    /// Matches the color between multiple Graphics.
+    ///     Matches the color between multiple Graphics.
     /// </summary>
     [ExecuteInEditMode]
     public class MatchColor : MonoBehaviour {
@@ -12,21 +12,21 @@ namespace HouraiTeahouse {
         [SerializeField] private Graphic[] _targets;
 
         /// <summary>
-        /// Unity Callback. Called on object instantiation.
+        ///     Unity Callback. Called on object instantiation.
         /// </summary>
-        void Awake() {
+        private void Awake() {
             if (_source == null)
                 _source = GetComponent<Graphic>();
         }
 
         /// <summary>
-        /// Unity Callback. Called once per frame.
+        ///     Unity Callback. Called once per frame.
         /// </summary>
-        void Update() {
+        private void Update() {
             if (_source == null || _targets == null)
                 return;
 
-            foreach (Graphic graphic in _targets)
+            foreach (var graphic in _targets)
                 graphic.color = _source.color;
         }
     }

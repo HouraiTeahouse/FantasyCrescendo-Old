@@ -1,7 +1,4 @@
-﻿using System;
-
-
-namespace HouraiTeahouse.HouraiInput {
+﻿namespace HouraiTeahouse.HouraiInput {
     // Tested with ADT-1
     // Profile by Artūras 'arturaz' Šlajus <arturas@tinylabproductions.com>
     //
@@ -125,7 +122,7 @@ namespace HouraiTeahouse.HouraiInput {
                     Handle = "Right Trigger",
                     Target = InputTarget.RightTrigger,
                     Source = Analog7
-                },
+                }
             };
         }
     }

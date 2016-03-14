@@ -3,13 +3,13 @@ using UnityEngine.EventSystems;
 
 namespace HouraiTeahouse.SmashBrew.UI {
     /// <summary>
-    /// A UI Component that depends on data assigned from a Player object 
+    ///     A UI Component that depends on data assigned from a Player object
     /// </summary>
     public abstract class PlayerUIComponent : UIBehaviour, IDataComponent<Player> {
         private Player _player;
 
         /// <summary>
-        /// The target Player the behaviour represents
+        ///     The target Player the behaviour represents
         /// </summary>
         public Player Player {
             get { return _player; }
@@ -17,22 +17,7 @@ namespace HouraiTeahouse.SmashBrew.UI {
         }
 
         /// <summary>
-        /// Unity callback. Called on object destruction.
-        /// </summary>
-        protected override void OnDestroy() {
-            base.OnDestroy();
-            if (_player != null)
-                _player.OnChanged -= OnPlayerChange;
-        }
-
-        /// <summary>
-        /// Event callback. Called whenever <see cref="Player"/>'s state changes
-        /// </summary>
-        protected virtual void OnPlayerChange() {
-        }
-
-        /// <summary>
-        /// <see cref="IDataComponent{T}.SetData"/>
+        ///     <see cref="IDataComponent{T}.SetData" />
         /// </summary>
         /// <param name="data">the data to set</param>
         public virtual void SetData(Player data) {
@@ -43,17 +28,32 @@ namespace HouraiTeahouse.SmashBrew.UI {
                 _player.OnChanged += OnPlayerChange;
             OnPlayerChange();
         }
+
+        /// <summary>
+        ///     Unity callback. Called on object destruction.
+        /// </summary>
+        protected override void OnDestroy() {
+            base.OnDestroy();
+            if (_player != null)
+                _player.OnChanged -= OnPlayerChange;
+        }
+
+        /// <summary>
+        ///     Event callback. Called whenever <see cref="Player" />'s state changes
+        /// </summary>
+        protected virtual void OnPlayerChange() {
+        }
     }
 
     /// <summary>
-    /// An abstract UI behaviour class for handling a Player's current state
+    ///     An abstract UI behaviour class for handling a Player's current state
     /// </summary>
     /// <typeparam name="T">the type of component the PlayerUIComponent manipulates</typeparam>
     public abstract class PlayerUIComponent<T> : PlayerUIComponent where T : Component {
         [SerializeField] private T _component;
 
         /// <summary>
-        /// The component the behaviour manipulates
+        ///     The component the behaviour manipulates
         /// </summary>
         public T Component {
             get { return _component; }
@@ -61,7 +61,7 @@ namespace HouraiTeahouse.SmashBrew.UI {
         }
 
         /// <summary>
-        /// Unity callback. Called on object instantiation.
+        ///     Unity callback. Called on object instantiation.
         /// </summary>
         protected override void Awake() {
             base.Awake();
@@ -71,7 +71,7 @@ namespace HouraiTeahouse.SmashBrew.UI {
     }
 
     /// <summary>
-    /// An abstract UI behaviour class for handling a Character's data
+    ///     An abstract UI behaviour class for handling a Character's data
     /// </summary>
     /// <typeparam name="T">the type of component the CharacterUIComponent manipulates</typeparam>
     public abstract class CharacterUIComponent<T> : PlayerUIComponent<T>, IDataComponent<CharacterData>
@@ -79,7 +79,7 @@ namespace HouraiTeahouse.SmashBrew.UI {
         [SerializeField, Tooltip("The character whose data is to be displayed")] private CharacterData _character;
 
         /// <summary>
-        /// The target Character currently represented by the behaviour
+        ///     The target Character currently represented by the behaviour
         /// </summary>
         public CharacterData Character {
             get { return _character; }
@@ -87,7 +87,14 @@ namespace HouraiTeahouse.SmashBrew.UI {
         }
 
         /// <summary>
-        /// Unity Callback. Called on object instantiation.
+        ///     <see cref="IDataComponent{T}.SetData" />
+        /// </summary>
+        public virtual void SetData(CharacterData data) {
+            _character = data;
+        }
+
+        /// <summary>
+        ///     Unity Callback. Called on object instantiation.
         /// </summary>
         protected override void Awake() {
             base.Awake();
@@ -95,17 +102,10 @@ namespace HouraiTeahouse.SmashBrew.UI {
         }
 
         /// <summary>
-        /// <see cref="PlayerUIComponent{T}.OnPlayerChange"/>
+        ///     <see cref="PlayerUIComponent{T}.OnPlayerChange" />
         /// </summary>
         protected override void OnPlayerChange() {
             SetData(Player == null ? null : Player.SelectedCharacter);
-        }
-
-        /// <summary>
-        /// <see cref="IDataComponent{T}.SetData"/>
-        /// </summary>
-        public virtual void SetData(CharacterData data) {
-            _character = data;
         }
     }
 }

@@ -1,6 +1,3 @@
-using System;
-
-
 namespace HouraiTeahouse.HouraiInput {
     // @cond nodoc
     [AutoDiscover]
@@ -14,7 +11,7 @@ namespace HouraiTeahouse.HouraiInput {
             };
 
             JoystickNames = new[] {
-                "Controller (Rumble Gamepad F510)",
+                "Controller (Rumble Gamepad F510)"
             };
 
             ButtonMappings = new[] {

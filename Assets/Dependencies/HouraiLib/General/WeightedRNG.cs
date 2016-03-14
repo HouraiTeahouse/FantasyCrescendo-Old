@@ -5,7 +5,7 @@ using Random = UnityEngine.Random;
 
 namespace HouraiTeahouse {
     /// <summary>
-    /// A collection of objects/values
+    ///     A collection of objects/values
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class WeightedRNG<T> : ICollection<T> {
@@ -16,46 +16,46 @@ namespace HouraiTeahouse {
         private float _weightSum;
 
         /// <summary>
-        /// Initializes a new empty instance of WeightedRNG.
+        ///     Initializes a new empty instance of WeightedRNG.
         /// </summary>
         public WeightedRNG() {
             _weights = new Dictionary<T, float>();
         }
 
         /// <summary>
-        /// Initializes a new WeightedRNG instance from a given collection.
+        ///     Initializes a new WeightedRNG instance from a given collection.
         /// </summary>
         /// <remarks>
-        /// Every element has the same weight of 1.
-        /// If <paramref name="collection"/> is null, the resultant WeightedRNG instance will be empty.
+        ///     Every element has the same weight of 1.
+        ///     If <paramref name="collection" /> is null, the resultant WeightedRNG instance will be empty.
         /// </remarks>
         /// <param name="collection"></param>
         public WeightedRNG(IEnumerable<T> collection) : this() {
             if (collection == null)
                 return;
 
-            foreach (T element in collection)
+            foreach (var element in collection)
                 this[element] = 1f;
         }
 
         /// <summary>
-        /// Initializes a new instance of WeightedRNG using the weights and elements specifed by a dictionary.
+        ///     Initializes a new instance of WeightedRNG using the weights and elements specifed by a dictionary.
         /// </summary>
         /// <remarks>
-        /// If <paramref name="dictionary"/> is null, the resultant WeightedRNG instance will be empty.
+        ///     If <paramref name="dictionary" /> is null, the resultant WeightedRNG instance will be empty.
         /// </remarks>
         /// <param name="dictionary">a map between. </param>
         public WeightedRNG(IDictionary<T, float> dictionary) : this() {
             if (dictionary == null)
                 return;
 
-            foreach (KeyValuePair<T, float> element in dictionary)
+            foreach (var element in dictionary)
                 this[element.Key] = element.Value;
         }
 
         /// <summary>
-        /// Indexer to get or set the weight of an element.
-        /// When using the setter, if the WeigthedRNG does not contain the element, it will be added.
+        ///     Indexer to get or set the weight of an element.
+        ///     When using the setter, if the WeigthedRNG does not contain the element, it will be added.
         /// </summary>
         /// <param name="index">the element to edit/retrieve the weight of</param>
         /// <returns>the weight of the element</returns>
@@ -70,20 +70,20 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Returns a randomly selected element from the WeightedRNG.
+        ///     Returns a randomly selected element from the WeightedRNG.
         /// </summary>
         /// <remarks>
-        /// The probability that each element is selected is based on the relative weights of each element.
-        /// Those with higher weights have porportionally higher probability of being selected.
-        /// This operation runs in worst case O(n) time, where n is the Count of elements in the WeightedRNG.
+        ///     The probability that each element is selected is based on the relative weights of each element.
+        ///     Those with higher weights have porportionally higher probability of being selected.
+        ///     This operation runs in worst case O(n) time, where n is the Count of elements in the WeightedRNG.
         /// </remarks>
         /// <exception cref="InvalidOperationException">thrown if the WeightedRNG is empty</exception>
         /// <returns>a randomly selected</returns>
         public T Select() {
             if (Count <= 0)
                 throw new InvalidOperationException();
-            float randomValue = Random.value * _weightSum;
-            foreach (KeyValuePair<T, float> element in _weights) {
+            var randomValue = Random.value * _weightSum;
+            foreach (var element in _weights) {
                 randomValue -= element.Value;
                 if (randomValue <= 0)
                     return element.Key;
@@ -101,14 +101,14 @@ namespace HouraiTeahouse {
             if (!_weights.ContainsKey(obj))
                 return false;
 
-            bool success = _weights.Remove(obj);
+            var success = _weights.Remove(obj);
             if (success)
                 _weightSum -= _weights[obj];
             return success;
         }
 
         /// <summary>
-        /// A count of how many elements are in the WeightedRNG.
+        ///     A count of how many elements are in the WeightedRNG.
         /// </summary>
         public int Count {
             get { return _weights.Count; }
@@ -119,7 +119,7 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Adds an item to the WeightedRNG with a weight of 1.
+        ///     Adds an item to the WeightedRNG with a weight of 1.
         /// </summary>
         /// <param name="item"></param>
         public void Add(T item) {
@@ -127,7 +127,7 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Clears all elements from the WeightedRNG
+        ///     Clears all elements from the WeightedRNG
         /// </summary>
         public void Clear() {
             _weights.Clear();
@@ -135,7 +135,7 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Checks if the WeightedRNG contains a certain element.
+        ///     Checks if the WeightedRNG contains a certain element.
         /// </summary>
         /// <param name="obj">the element to check for</param>
         /// <returns>whether the element is </returns>

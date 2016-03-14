@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace UnityStandardAssets.ImageEffects {
@@ -10,49 +9,50 @@ namespace UnityStandardAssets.ImageEffects {
             Advanced = 1
         }
 
-        public AnimationCurve redChannel = new AnimationCurve(new Keyframe(0f, 0f), new Keyframe(1f, 1f));
-        public AnimationCurve greenChannel = new AnimationCurve(new Keyframe(0f, 0f), new Keyframe(1f, 1f));
         public AnimationCurve blueChannel = new AnimationCurve(new Keyframe(0f, 0f), new Keyframe(1f, 1f));
-
-        public bool useDepthCorrection = false;
-
-        public AnimationCurve zCurve = new AnimationCurve(new Keyframe(0f, 0f), new Keyframe(1f, 1f));
-        public AnimationCurve depthRedChannel = new AnimationCurve(new Keyframe(0f, 0f), new Keyframe(1f, 1f));
-        public AnimationCurve depthGreenChannel = new AnimationCurve(new Keyframe(0f, 0f), new Keyframe(1f, 1f));
-        public AnimationCurve depthBlueChannel = new AnimationCurve(new Keyframe(0f, 0f), new Keyframe(1f, 1f));
+        private Material ccDepthMaterial;
 
         private Material ccMaterial;
-        private Material ccDepthMaterial;
-        private Material selectiveCcMaterial;
+
+        public Shader colorCorrectionCurvesShader = null;
+        public Shader colorCorrectionSelectiveShader = null;
+        public AnimationCurve depthBlueChannel = new AnimationCurve(new Keyframe(0f, 0f), new Keyframe(1f, 1f));
+        public AnimationCurve depthGreenChannel = new AnimationCurve(new Keyframe(0f, 0f), new Keyframe(1f, 1f));
+        public AnimationCurve depthRedChannel = new AnimationCurve(new Keyframe(0f, 0f), new Keyframe(1f, 1f));
+        public AnimationCurve greenChannel = new AnimationCurve(new Keyframe(0f, 0f), new Keyframe(1f, 1f));
+
+        public ColorCorrectionMode mode;
+
+        public AnimationCurve redChannel = new AnimationCurve(new Keyframe(0f, 0f), new Keyframe(1f, 1f));
 
         private Texture2D rgbChannelTex;
         private Texture2D rgbDepthChannelTex;
-        private Texture2D zCurveTex;
 
         public float saturation = 1.0f;
 
         public bool selectiveCc = false;
+        private Material selectiveCcMaterial;
 
         public Color selectiveFromColor = Color.white;
         public Color selectiveToColor = Color.white;
-
-        public ColorCorrectionMode mode;
+        public Shader simpleColorCorrectionCurvesShader = null;
 
         public bool updateTextures = true;
 
-        public Shader colorCorrectionCurvesShader = null;
-        public Shader simpleColorCorrectionCurvesShader = null;
-        public Shader colorCorrectionSelectiveShader = null;
-
         private bool updateTexturesOnStartup = true;
 
+        public bool useDepthCorrection = false;
 
-        new void Start() {
+        public AnimationCurve zCurve = new AnimationCurve(new Keyframe(0f, 0f), new Keyframe(1f, 1f));
+        private Texture2D zCurveTex;
+
+
+        private new void Start() {
             base.Start();
             updateTexturesOnStartup = true;
         }
 
-        void Awake() {
+        private void Awake() {
         }
 
 
@@ -87,16 +87,16 @@ namespace UnityStandardAssets.ImageEffects {
             CheckResources(); // textures might not be created if we're tweaking UI while disabled
 
             if (redChannel != null && greenChannel != null && blueChannel != null) {
-                for (float i = 0.0f; i <= 1.0f; i += 1.0f / 255.0f) {
-                    float rCh = Mathf.Clamp(redChannel.Evaluate(i), 0.0f, 1.0f);
-                    float gCh = Mathf.Clamp(greenChannel.Evaluate(i), 0.0f, 1.0f);
-                    float bCh = Mathf.Clamp(blueChannel.Evaluate(i), 0.0f, 1.0f);
+                for (var i = 0.0f; i <= 1.0f; i += 1.0f / 255.0f) {
+                    var rCh = Mathf.Clamp(redChannel.Evaluate(i), 0.0f, 1.0f);
+                    var gCh = Mathf.Clamp(greenChannel.Evaluate(i), 0.0f, 1.0f);
+                    var bCh = Mathf.Clamp(blueChannel.Evaluate(i), 0.0f, 1.0f);
 
                     rgbChannelTex.SetPixel((int) Mathf.Floor(i * 255.0f), 0, new Color(rCh, rCh, rCh));
                     rgbChannelTex.SetPixel((int) Mathf.Floor(i * 255.0f), 1, new Color(gCh, gCh, gCh));
                     rgbChannelTex.SetPixel((int) Mathf.Floor(i * 255.0f), 2, new Color(bCh, bCh, bCh));
 
-                    float zC = Mathf.Clamp(zCurve.Evaluate(i), 0.0f, 1.0f);
+                    var zC = Mathf.Clamp(zCurve.Evaluate(i), 0.0f, 1.0f);
 
                     zCurveTex.SetPixel((int) Mathf.Floor(i * 255.0f), 0, new Color(zC, zC, zC));
 
@@ -115,11 +115,11 @@ namespace UnityStandardAssets.ImageEffects {
             }
         }
 
-        void UpdateTextures() {
+        private void UpdateTextures() {
             UpdateParameters();
         }
 
-        void OnRenderImage(RenderTexture source, RenderTexture destination) {
+        private void OnRenderImage(RenderTexture source, RenderTexture destination) {
             if (CheckResources() == false) {
                 Graphics.Blit(source, destination);
                 return;
@@ -133,7 +133,7 @@ namespace UnityStandardAssets.ImageEffects {
             if (useDepthCorrection)
                 GetComponent<Camera>().depthTextureMode |= DepthTextureMode.Depth;
 
-            RenderTexture renderTarget2Use = destination;
+            var renderTarget2Use = destination;
 
             if (selectiveCc) {
                 renderTarget2Use = RenderTexture.GetTemporary(source.width, source.height);

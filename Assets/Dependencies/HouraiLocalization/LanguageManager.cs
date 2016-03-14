@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Globalization;
 using System.Linq;
+using UnityEngine;
 #if HOURAI_EVENTS
 using HouraiTeahouse.Events;
 
@@ -16,33 +16,37 @@ namespace HouraiTeahouse.Localization {
 #endif
 
     /// <summary>
-    /// Singleton MonoBehaviour that manages all of localization system.
+    ///     Singleton MonoBehaviour that manages all of localization system.
     /// </summary>
     [HelpURL("http://wiki.houraiteahouse.net/index.php/Dev:Localization#Language_Manager")]
     public sealed class LanguageManager : MonoBehaviour {
-        [SerializeField, Tooltip("The Resources directory to load the Language files from")] private string
-            localizaitonResourceDirectory = "Lang/";
-
-        [SerializeField, Tooltip("The PlayerPrefs key to store the Player's language in")] private string
-            _langPlayerPrefKey = "lang";
-
-        [SerializeField, Tooltip("Destroy this object on scene changes?")] private bool _dontDestroyOnLoad = false;
+        private Language _currentLanguage;
 
         [SerializeField, Tooltip("The default language to use if the Player's current language is not supported")] [Resource(typeof (Language))] private string _defaultLanguage;
 
-        private Language _currentLanguage;
+        [SerializeField, Tooltip("Destroy this object on scene changes?")] private readonly bool _dontDestroyOnLoad =
+            false;
 
 #if HOURAI_EVENTS
         private Mediator _eventManager;
 #endif
+        private HashSet<string> _keys;
+
+        [SerializeField, Tooltip("The PlayerPrefs key to store the Player's language in")] private readonly string
+            _langPlayerPrefKey = "lang";
+
+        private HashSet<string> _languages;
+
+        [SerializeField, Tooltip("The Resources directory to load the Language files from")] private readonly string
+            localizaitonResourceDirectory = "Lang/";
 
         /// <summary>
-        /// The currently used language.
+        ///     The currently used language.
         /// </summary>
         public Language CurrentLangauge {
             get { return _currentLanguage; }
             private set {
-                bool changed = _currentLanguage != value;
+                var changed = _currentLanguage != value;
                 if (_currentLanguage != null)
                     Resources.UnloadAsset(_currentLanguage);
                 _currentLanguage = value;
@@ -55,20 +59,12 @@ namespace HouraiTeahouse.Localization {
         }
 
         /// <summary>
-        /// The Singleton instance of LanguamgeManager.
+        ///     The Singleton instance of LanguamgeManager.
         /// </summary>
         public static LanguageManager Instance { get; private set; }
 
         /// <summary>
-        /// An event that is called every time the language is changed.
-        /// </summary>
-        public event Action<Language> OnChangeLanguage;
-
-        private HashSet<string> _languages;
-        private HashSet<string> _keys;
-
-        /// <summary>
-        /// All available languages currently supported by the system.
+        ///     All available languages currently supported by the system.
         /// </summary>
         public IEnumerable<string> AvailableLanguages {
             get {
@@ -79,7 +75,7 @@ namespace HouraiTeahouse.Localization {
         }
 
         /// <summary>
-        /// Gets an enumeration of all of the localizable keys.  
+        ///     Gets an enumeration of all of the localizable keys.
         /// </summary>
         public IEnumerable<string> Keys {
             get {
@@ -89,7 +85,25 @@ namespace HouraiTeahouse.Localization {
         }
 
         /// <summary>
-        /// Is the provided key localizable?
+        ///     Localizes a key based on the currently loaded language.
+        /// </summary>
+        /// <param name="key">the localization key to use.</param>
+        /// <returns>the localized string</returns>
+        public string this[string key] {
+            get {
+                if (!CurrentLangauge)
+                    throw new InvalidOperationException();
+                return CurrentLangauge[key];
+            }
+        }
+
+        /// <summary>
+        ///     An event that is called every time the language is changed.
+        /// </summary>
+        public event Action<Language> OnChangeLanguage;
+
+        /// <summary>
+        ///     Is the provided key localizable?
         /// </summary>
         /// <param name="key">the key to check</param>
         /// <returns>True if the key will return a localized string, false otherwise.</returns>
@@ -98,7 +112,7 @@ namespace HouraiTeahouse.Localization {
         }
 
         /// <summary>
-        /// Converts a SystemLanugage value into a CultureInfo.
+        ///     Converts a SystemLanugage value into a CultureInfo.
         /// </summary>
         /// <param name="language">the SystemLanugage value to map</param>
         /// <returns>the corresponding CultureInfo</returns>
@@ -194,16 +208,16 @@ namespace HouraiTeahouse.Localization {
         }
 
         /// <summary>
-        /// Unity Callback. Called once on object instantation.
+        ///     Unity Callback. Called once on object instantation.
         /// </summary>
-        void Awake() {
+        private void Awake() {
             Instance = this;
 
 #if HOURAI_EVENTS
             _eventManager = GlobalMediator.Instance;
 #endif
 
-            Language[] languages = Resources.LoadAll<Language>(localizaitonResourceDirectory);
+            var languages = Resources.LoadAll<Language>(localizaitonResourceDirectory);
             _languages = new HashSet<string>(languages.Select(lang => lang.name));
             _keys = new HashSet<string>(languages.SelectMany(lang => lang.Keys));
 
@@ -218,7 +232,7 @@ namespace HouraiTeahouse.Localization {
                 currentLang = Prefs.GetString(_langPlayerPrefKey);
             }
 
-            foreach (Language lang in languages) {
+            foreach (var lang in languages) {
                 if (lang.name == currentLang)
                     CurrentLangauge = lang;
                 else
@@ -230,23 +244,23 @@ namespace HouraiTeahouse.Localization {
         }
 
         /// <summary>
-        /// Unity Callback. Called on object destruction.
+        ///     Unity Callback. Called on object destruction.
         /// </summary>
-        void OnDestroy() {
+        private void OnDestroy() {
             Save();
         }
 
         /// <summary>
-        /// Unity Callback. Called when entire application exits.
+        ///     Unity Callback. Called when entire application exits.
         /// </summary>
-        void OnApplicationQuit() {
+        private void OnApplicationQuit() {
             Save();
         }
 
         /// <summary>
-        /// Saves the current language preferences to PlayerPrefs to keep it persistent.
+        ///     Saves the current language preferences to PlayerPrefs to keep it persistent.
         /// </summary>
-        void Save() {
+        private void Save() {
             if (CurrentLangauge == null)
                 PlayerPrefs.DeleteKey(_langPlayerPrefKey);
             else
@@ -254,24 +268,14 @@ namespace HouraiTeahouse.Localization {
         }
 
         /// <summary>
-        /// Localizes a key based on the currently loaded language.
-        /// </summary>
-        /// <param name="key">the localization key to use.</param>
-        /// <returns>the localized string</returns>
-        public string this[string key] {
-            get {
-                if (!CurrentLangauge)
-                    throw new InvalidOperationException();
-                return CurrentLangauge[key];
-            }
-        }
-
-        /// <summary>
-        /// Loads a new language given the Microsoft language identifier.
+        ///     Loads a new language given the Microsoft language identifier.
         /// </summary>
         /// <param name="identifier">the Microsoft identifier for a lanuguage</param>
-        /// <exception cref="ArgumentNullException">throw if <paramref name="identifier"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">thrown if the language specified by <paramref name="identifier"/> is not currently supported.</exception>
+        /// <exception cref="ArgumentNullException">throw if <paramref name="identifier" /> is null.</exception>
+        /// <exception cref="InvalidOperationException">
+        ///     thrown if the language specified by <paramref name="identifier" /> is not
+        ///     currently supported.
+        /// </exception>
         /// <returns>the localization language</returns>
         public Language LoadLanguage(string identifier) {
             if (identifier == null)

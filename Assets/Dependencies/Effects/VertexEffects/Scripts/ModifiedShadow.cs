@@ -1,11 +1,11 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
 
 /// <summary>
-/// The behaviour of this class is almost the same as the original except:
-/// 1. It absorbs version differences.
-/// 2. It corrects the calculation of vertex list capacity.
+///     The behaviour of this class is almost the same as the original except:
+///     1. It absorbs version differences.
+///     2. It corrects the calculation of vertex list capacity.
 /// </summary>
 public class ModifiedShadow : Shadow {
     protected new void ApplyShadow(List<UIVertex> verts, Color32 color, int start, int end, float x, float y) {
@@ -16,17 +16,17 @@ public class ModifiedShadow : Shadow {
         if (verts.Capacity < neededCpacity)
             verts.Capacity = neededCpacity;
 
-        for (int i = start; i < end; ++i) {
+        for (var i = start; i < end; ++i) {
             vt = verts[i];
             verts.Add(vt);
 
-            Vector3 v = vt.position;
+            var v = vt.position;
             v.x += x;
             v.y += y;
             vt.position = v;
             var newColor = color;
             if (useGraphicAlpha)
-                newColor.a = (byte) ((newColor.a * verts[i].color.a) / 255);
+                newColor.a = (byte) (newColor.a * verts[i].color.a / 255);
             vt.color = newColor;
             verts[i] = vt;
         }
@@ -53,10 +53,10 @@ public class ModifiedShadow : Shadow {
     public void ModifyMesh(VertexHelper vh)
 #endif
     {
-        if (!this.IsActive())
+        if (!IsActive())
             return;
 
-        List<UIVertex> list = new List<UIVertex>();
+        var list = new List<UIVertex>();
         vh.GetUIVertexStream(list);
 
         ModifyVertices(list);

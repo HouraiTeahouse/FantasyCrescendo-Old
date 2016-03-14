@@ -1,20 +1,10 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class CircleOutline : ModifiedShadow {
-    [SerializeField] int m_circleCount = 2;
-    [SerializeField] int m_firstSample = 4;
-    [SerializeField] int m_sampleIncrement = 2;
-
-#if UNITY_EDITOR
-    protected override void OnValidate() {
-        base.OnValidate();
-        circleCount = m_circleCount;
-        firstSample = m_firstSample;
-        sampleIncrement = m_sampleIncrement;
-    }
-#endif
+    [SerializeField] private int m_circleCount = 2;
+    [SerializeField] private int m_firstSample = 4;
+    [SerializeField] private int m_sampleIncrement = 2;
 
     public int circleCount {
         get { return m_circleCount; }
@@ -46,6 +36,15 @@ public class CircleOutline : ModifiedShadow {
         }
     }
 
+#if UNITY_EDITOR
+    protected override void OnValidate() {
+        base.OnValidate();
+        circleCount = m_circleCount;
+        firstSample = m_firstSample;
+        sampleIncrement = m_sampleIncrement;
+    }
+#endif
+
     public override void ModifyVertices(List<UIVertex> verts) {
         if (!IsActive())
             return;
@@ -57,12 +56,12 @@ public class CircleOutline : ModifiedShadow {
         var sampleCount = m_firstSample;
         var dx = effectDistance.x / circleCount;
         var dy = effectDistance.y / circleCount;
-        for (int i = 1; i <= m_circleCount; i++) {
+        for (var i = 1; i <= m_circleCount; i++) {
             var rx = dx * i;
             var ry = dy * i;
             var radStep = 2 * Mathf.PI / sampleCount;
-            var rad = (i % 2) * radStep * 0.5f;
-            for (int j = 0; j < sampleCount; j++) {
+            var rad = i % 2 * radStep * 0.5f;
+            for (var j = 0; j < sampleCount; j++) {
                 var next = count + original;
                 ApplyShadow(verts, effectColor, count, next, rx * Mathf.Cos(rad), ry * Mathf.Sin(rad));
                 count = next;

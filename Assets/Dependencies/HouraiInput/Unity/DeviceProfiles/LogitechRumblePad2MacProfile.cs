@@ -1,6 +1,3 @@
-using System;
-
-
 namespace HouraiTeahouse.HouraiInput {
     // @cond nodoc
     [AutoDiscover]
@@ -119,7 +116,7 @@ namespace HouraiTeahouse.HouraiInput {
                     Handle = "DPad Down",
                     Target = InputTarget.DPadDown,
                     Source = Analog5
-                },
+                }
             };
         }
     }

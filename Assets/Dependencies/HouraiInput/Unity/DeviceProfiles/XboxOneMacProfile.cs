@@ -1,6 +1,3 @@
-using System;
-
-
 namespace HouraiTeahouse.HouraiInput {
     // @cond nodoc
     [AutoDiscover]
@@ -56,7 +53,7 @@ namespace HouraiTeahouse.HouraiInput {
                 new InputMapping {
                     Handle = "DPad Down",
                     Target = InputTarget.DPadDown,
-                    Source = Button6,
+                    Source = Button6
                 },
                 new InputMapping {
                     Handle = "Left Bumper",

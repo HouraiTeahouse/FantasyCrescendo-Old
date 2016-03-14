@@ -1,10 +1,8 @@
 using UnityEngine;
-using System.Collections;
-
 
 namespace HouraiTeahouse.HouraiInput {
     public static class Utility {
-        private static Vector2[] circleVertexList = {
+        private static readonly Vector2[] circleVertexList = {
             new Vector2(+0.0000f, +1.0000f),
             new Vector2(+0.2588f, +0.9659f),
             new Vector2(+0.5000f, +0.8660f),
@@ -34,10 +32,10 @@ namespace HouraiTeahouse.HouraiInput {
 
 
         public static void DrawCircleGizmo(Vector2 center, float radius) {
-            var p = (circleVertexList[0] * radius) + center;
+            var p = circleVertexList[0] * radius + center;
             var c = circleVertexList.Length;
-            for (int i = 1; i < c; i++) {
-                Gizmos.DrawLine(p, p = (circleVertexList[i] * radius) + center);
+            for (var i = 1; i < c; i++) {
+                Gizmos.DrawLine(p, p = circleVertexList[i] * radius + center);
             }
         }
 
@@ -52,7 +50,7 @@ namespace HouraiTeahouse.HouraiInput {
             var r = size / 2.0f;
             var p = Vector2.Scale(circleVertexList[0], r) + center;
             var c = circleVertexList.Length;
-            for (int i = 1; i < c; i++) {
+            for (var i = 1; i < c; i++) {
                 Gizmos.DrawLine(p, p = Vector2.Scale(circleVertexList[i], r) + center);
             }
         }

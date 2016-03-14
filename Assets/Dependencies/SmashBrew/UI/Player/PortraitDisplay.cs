@@ -3,23 +3,22 @@ using UnityEngine.UI;
 
 namespace HouraiTeahouse.SmashBrew.UI {
     /// <summary>
-    /// A CharacterUIComponent that displays the portrait of a character on a RawImage object
+    ///     A CharacterUIComponent that displays the portrait of a character on a RawImage object
     /// </summary>
     public sealed class PortraitDisplay : CharacterUIComponent<RawImage> {
-        private RectTransform _rectTransform;
-
         [SerializeField, Tooltip("Should the character's portrait be cropped?")] private bool _cropped;
+        private Rect _cropRect;
 
-        [SerializeField, Tooltip("Tint to cover the potrait, should the character be disabled")] private Color
+        private Color _defaultColor;
+
+        [SerializeField, Tooltip("Tint to cover the potrait, should the character be disabled")] private readonly Color
             _disabledTint = Color.gray;
 
         [SerializeField, Tooltip("An offset to move the crop rect")] private Vector2 _rectBias;
-
-        private Color _defaultColor;
-        private Rect _cropRect;
+        private RectTransform _rectTransform;
 
         /// <summary>
-        /// Unity Callback. Called on object instantiation.
+        ///     Unity Callback. Called on object instantiation.
         /// </summary>
         protected override void Awake() {
             base.Awake();
@@ -28,19 +27,19 @@ namespace HouraiTeahouse.SmashBrew.UI {
         }
 
         /// <summary>
-        /// <see cref="UIBehaviour.OnRectTransformDimensionsChange"/>
+        ///     <see cref="UIBehaviour.OnRectTransformDimensionsChange" />
         /// </summary>
         protected override void OnRectTransformDimensionsChange() {
             SetRect();
         }
 
-        void SetRect() {
+        private void SetRect() {
             if (_rectTransform == null || Component == null || Component.texture == null)
                 return;
-            Vector2 size = _rectTransform.rect.size;
-            float aspect = size.x / size.y;
-            Texture texture = Component.texture;
-            Rect imageRect = _cropRect.EnforceAspect(aspect);
+            var size = _rectTransform.rect.size;
+            var aspect = size.x / size.y;
+            var texture = Component.texture;
+            var imageRect = _cropRect.EnforceAspect(aspect);
             if (imageRect.width > texture.width || imageRect.height > texture.height) {
                 imageRect = imageRect.Restrict(texture.width, texture.height, aspect);
                 imageRect.center = texture.Center();
@@ -49,16 +48,16 @@ namespace HouraiTeahouse.SmashBrew.UI {
         }
 
         /// <summary>
-        /// <see cref="IDataComponent{T}.SetData"/>
+        ///     <see cref="IDataComponent{T}.SetData" />
         /// </summary>
         public override void SetData(CharacterData data) {
             base.SetData(data);
             if (Component == null || data == null || data.PalleteCount <= 0)
                 return;
-            int portrait = Player != null ? Player.Pallete : 0;
+            var portrait = Player != null ? Player.Pallete : 0;
             if (data.GetPortrait(portrait).Load() == null)
                 return;
-            Texture2D texture = data.GetPortrait(portrait).Asset.texture;
+            var texture = data.GetPortrait(portrait).Asset.texture;
             _cropRect = _cropped ? data.CropRect(texture) : texture.PixelRect();
             _cropRect.x += _rectBias.x * texture.width;
             _cropRect.y += _rectBias.y * texture.height;

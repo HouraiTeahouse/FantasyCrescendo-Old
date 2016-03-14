@@ -1,6 +1,3 @@
-using System;
-
-
 namespace HouraiTeahouse.HouraiInput {
     // @cond nodoc
     [AutoDiscover]
@@ -10,11 +7,11 @@ namespace HouraiTeahouse.HouraiInput {
             Meta = "SteelSeries Free on Mac";
 
             SupportedPlatforms = new[] {
-                "OS X",
+                "OS X"
             };
 
             JoystickNames = new[] {
-                "Unknown Zeemote: SteelSeries FREE",
+                "Unknown Zeemote: SteelSeries FREE"
             };
 
             ButtonMappings = new[] {
@@ -74,7 +71,7 @@ namespace HouraiTeahouse.HouraiInput {
                 new InputMapping {
                     Handle = "Left Stick X",
                     Target = InputTarget.LeftStickX,
-                    Source = Analog0,
+                    Source = Analog0
                 },
                 new InputMapping {
                     Handle = "Left Stick Y",

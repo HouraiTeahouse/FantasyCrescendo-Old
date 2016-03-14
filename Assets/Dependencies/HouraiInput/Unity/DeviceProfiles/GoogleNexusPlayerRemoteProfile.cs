@@ -1,5 +1,4 @@
-using System;
-
+using UnityEngine;
 
 namespace HouraiTeahouse.HouraiInput {
     [AutoDiscover]
@@ -25,7 +24,7 @@ namespace HouraiTeahouse.HouraiInput {
                 new InputMapping {
                     Handle = "Back",
                     Target = InputTarget.Back,
-                    Source = KeyCodeButton(UnityEngine.KeyCode.Escape)
+                    Source = KeyCodeButton(KeyCode.Escape)
                 }
             };
 
@@ -59,7 +58,7 @@ namespace HouraiTeahouse.HouraiInput {
                     Source = Analog5,
                     SourceRange = InputMapping.Range.Positive,
                     TargetRange = InputMapping.Range.Positive
-                },
+                }
             };
         }
     }

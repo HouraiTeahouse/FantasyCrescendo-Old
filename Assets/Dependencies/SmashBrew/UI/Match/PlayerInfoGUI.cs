@@ -1,26 +1,26 @@
-using UnityEngine;
 using HouraiTeahouse.Events;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace HouraiTeahouse.SmashBrew.UI {
     /// <summary>
-    /// A PrefabFactoryEventHandler that creates 
+    ///     A PrefabFactoryEventHandler that creates
     /// </summary>
     public sealed class PlayerInfoGUI : PrefabFactoryEventHandler<RectTransform, PlayerSpawnEvent> {
         /// <summary>
-        /// The parent RectTransform to attach the spawned objects to.
+        ///     The parent RectTransform to attach the spawned objects to.
         /// </summary>
         [SerializeField] private RectTransform _container;
-
-        /// <summary>
-        /// The space prefabs to place before and after all of the elements to keep them centered.
-        /// </summary>
-        [SerializeField] private RectTransform _spacePrefab;
 
         private RectTransform _finalSpace;
 
         /// <summary>
-        /// Unity callback. Called on object instantiation.
+        ///     The space prefabs to place before and after all of the elements to keep them centered.
+        /// </summary>
+        [SerializeField] private RectTransform _spacePrefab;
+
+        /// <summary>
+        ///     Unity callback. Called on object instantiation.
         /// </summary>
         protected override void Awake() {
             base.Awake();
@@ -31,7 +31,7 @@ namespace HouraiTeahouse.SmashBrew.UI {
             if (!_spacePrefab)
                 return;
 
-            RectTransform initialSpace = Instantiate(_spacePrefab);
+            var initialSpace = Instantiate(_spacePrefab);
             _finalSpace = Instantiate(_spacePrefab);
 
             initialSpace.SetParent(_container.transform);
@@ -42,18 +42,18 @@ namespace HouraiTeahouse.SmashBrew.UI {
         }
 
         /// <summary>
-        /// <see cref="AbstractFactoryEventHandler{T,TEvent}.ShouldCreate"/>
+        ///     <see cref="AbstractFactoryEventHandler{T,TEvent}.ShouldCreate" />
         /// </summary>
         protected override bool ShouldCreate(PlayerSpawnEvent eventArgs) {
             return base.ShouldCreate(eventArgs) && eventArgs.Player != null;
         }
 
         /// <summary>
-        /// <see cref="AbstractFactoryEventHandler{T,TEvent}.Create"/>
+        ///     <see cref="AbstractFactoryEventHandler{T,TEvent}.Create" />
         /// </summary>
         protected override RectTransform Create(PlayerSpawnEvent eventArgs) {
-            Player player = eventArgs.Player;
-            RectTransform display = base.Create(eventArgs);
+            var player = eventArgs.Player;
+            var display = base.Create(eventArgs);
             display.transform.SetParent(_container.transform, false);
             LayoutRebuilder.MarkLayoutForRebuild(display);
             display.GetComponentsInChildren<IDataComponent<Player>>().SetData(player);

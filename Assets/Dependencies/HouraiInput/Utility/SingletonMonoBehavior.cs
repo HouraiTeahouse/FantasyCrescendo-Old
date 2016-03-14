@@ -1,17 +1,15 @@
 using UnityEngine;
 
-
 namespace HouraiTeahouse.HouraiInput {
     public class SingletonMonoBehavior<T> : MonoBehaviour where T : MonoBehaviour {
+        private static readonly object _lock = new object();
         public static T Instance { get; private set; }
-
-        private static object _lock = new object();
 
 
         protected void SetSingletonInstance() {
             lock (_lock) {
                 if (Instance == null) {
-                    var instances = FindObjectsOfType<T>() as T[];
+                    var instances = FindObjectsOfType<T>();
                     if (instances.Length > 0) {
                         Instance = instances[0];
 

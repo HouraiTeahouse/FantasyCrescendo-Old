@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace HouraiTeahouse.SmashBrew {
     /// <summary>
-    /// A AnimationBehaviour that cancels all vertical momentum on entry into a state
+    ///     A AnimationBehaviour that cancels all vertical momentum on entry into a state
     /// </summary>
     public class DisableGravity : BaseAnimationBehaviour<Rigidbody> {
         private RigidbodyConstraints _oldConstraints;
@@ -12,7 +12,7 @@ namespace HouraiTeahouse.SmashBrew {
                 return;
             _oldConstraints = Target.constraints;
             Target.constraints = _oldConstraints | RigidbodyConstraints.FreezePositionY;
-            Vector3 velocity = Target.velocity;
+            var velocity = Target.velocity;
             velocity.y = 0f;
             Target.velocity = velocity;
         }

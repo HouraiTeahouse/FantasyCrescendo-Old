@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 #if UNITY_EDITOR
@@ -10,9 +11,9 @@ namespace HouraiTeahouse {
     public class BGMGroup : ScriptableObject {
         [SerializeField, Tooltip("The name of the BGM group")] private string _name;
 
-        [SerializeField] private BGMData[] backgroundMusicData;
-
         private WeightedRNG<BGMData> _selection;
+
+        [SerializeField] private BGMData[] backgroundMusicData;
 
         public string Name {
             get { return _name; }
@@ -22,7 +23,7 @@ namespace HouraiTeahouse {
             _selection = new WeightedRNG<BGMData>();
             if (backgroundMusicData == null)
                 return;
-            foreach (BGMData bgmData in backgroundMusicData) {
+            foreach (var bgmData in backgroundMusicData) {
                 bgmData.Initialize(Name);
                 _selection[bgmData] = bgmData.Weight;
             }
@@ -41,39 +42,32 @@ namespace HouraiTeahouse {
 #endif
     }
 
-    [System.Serializable]
+    [Serializable]
     public class BGMData {
         private const string delimiter = "/";
         private const string suffix = "weight";
 
-        [SerializeField] [Tooltip("The name of the BGM.")] private string _name;
-
         [SerializeField] [Tooltip("The artist who created this piece of music")] private string _artist;
 
-        [SerializeField, Resource(typeof (AudioClip))] private string _bgm;
+        [SerializeField, Range(0f, 1f)] private readonly float _baseWeight = 1f;
 
-        [SerializeField, Range(0f, 1f)] private float _baseWeight = 1f;
-
-        [SerializeField] [Tooltip("The sample number of the start point the loop.")] private int _loopStart;
+        [SerializeField, Resource(typeof (AudioClip))] private readonly string _bgm;
 
         [SerializeField] [Tooltip("The sample number of the end point the loop.")] private int _loopEnd;
 
-        private Resource<AudioClip> _bgmResource;
-        private float _weight;
-        private string playerPrefsKey;
+        [SerializeField] [Tooltip("The sample number of the start point the loop.")] private int _loopStart;
 
-        public Resource<AudioClip> BGM {
-            get { return _bgmResource; }
-        }
+        [SerializeField] [Tooltip("The name of the BGM.")] private string _name;
+        private string playerPrefsKey;
 
         public BGMData(string path, float weight) {
             _bgm = path;
             _baseWeight = weight;
         }
 
-        public float Weight {
-            get { return _weight; }
-        }
+        public Resource<AudioClip> BGM { get; private set; }
+
+        public float Weight { get; private set; }
 
         public int LoopStart {
             get { return _loopStart; }
@@ -84,14 +78,14 @@ namespace HouraiTeahouse {
         }
 
         public void Initialize(string stageName) {
-            _bgmResource = new Resource<AudioClip>(_bgm);
+            BGM = new Resource<AudioClip>(_bgm);
             playerPrefsKey = stageName + delimiter + _bgm + "_" + suffix;
 
             if (Prefs.HasKey(playerPrefsKey))
-                _weight = Prefs.GetFloat(playerPrefsKey);
+                Weight = Prefs.GetFloat(playerPrefsKey);
             else {
                 Prefs.SetFloat(playerPrefsKey, _baseWeight);
-                _weight = _baseWeight;
+                Weight = _baseWeight;
             }
         }
 

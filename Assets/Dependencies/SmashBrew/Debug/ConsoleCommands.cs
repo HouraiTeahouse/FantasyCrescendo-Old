@@ -3,58 +3,55 @@ using HouraiTeahouse.Console;
 using HouraiTeahouse.Events;
 using HouraiTeahouse.Localization;
 using UnityEngine;
-using HouraiTeahouse.HouraiInput;
 
 namespace HouraiTeahouse.SmashBrew {
     /// <summary>
-    /// Debug mode to turn on and off the rendering of hitboxes
+    ///     Debug mode to turn on and off the rendering of hitboxes
     /// </summary>
     public class ConsoleCommands : MonoBehaviour {
-        void OnEnable() {
+        private void OnEnable() {
             GameConsole.RegisterCommand("hitbox", HitboxCommand);
             GameConsole.RegisterCommand("language", LanguageCommand);
             GameConsole.RegisterCommand("kill", KillCommand);
             GameConsole.RegisterCommand("damage", DamageCommand);
         }
 
-        void OnDisable() {
+        private void OnDisable() {
             GameConsole.UnregisterCommand("hitbox", HitboxCommand);
             GameConsole.UnregisterCommand("language", LanguageCommand);
             GameConsole.UnregisterCommand("kill", KillCommand);
             GameConsole.UnregisterCommand("damage", DamageCommand);
         }
 
-        void ChangeHitboxes(bool state) {
+        private void ChangeHitboxes(bool state) {
             Hitbox.DrawHitboxes = state;
             GameConsole.Log("Hitbox drawing: {0}", Hitbox.DrawHitboxes);
         }
 
-        bool ArgLengthCheck(int count, string[] args, string name) {
-            bool check = args.Length >= 1;
+        private bool ArgLengthCheck(int count, string[] args, string name) {
+            var check = args.Length >= 1;
             if (!check) {
                 GameConsole.Log("The command \"{0}\" requires at least {1} parameters.", name, count);
             }
             return check;
         }
 
-        int? IntParse(string src) {
-            int val = 0;
+        private int? IntParse(string src) {
+            var val = 0;
             if (int.TryParse(src, out val))
                 return val;
-            else
-                return null;
+            return null;
         }
 
-        float? FloatParse(string src) {
+        private float? FloatParse(string src) {
             float val = 0;
             if (float.TryParse(src, out val))
                 return val;
-            else
-                return null;
+            return null;
         }
 
-        Player GetPlayer(string playerNumber) {
-            int? playerNum = IntParse(playerNumber);
+        private Player GetPlayer(string playerNumber) {
+            var playerNum = IntParse(playerNumber);
             if (playerNum != null) {
                 if (playerNum <= 0 || playerNum > Player.MaxPlayers) {
                     GameConsole.Log("There is no Player #{0}, try between 1 and {1}", playerNum, Player.MaxPlayers);
@@ -69,22 +66,22 @@ namespace HouraiTeahouse.SmashBrew {
             return null;
         }
 
-        void KillCommand(string[] args) {
+        private void KillCommand(string[] args) {
             if (!ArgLengthCheck(1, args, "kill"))
                 return;
-            Player player = GetPlayer(args[0]);
+            var player = GetPlayer(args[0]);
             if (player == null)
                 return;
             GlobalMediator.Instance.Publish(new PlayerDieEvent {Player = player});
         }
 
-        void DamageCommand(string[] args) {
+        private void DamageCommand(string[] args) {
             if (!ArgLengthCheck(2, args, "damage"))
                 return;
-            Player player = GetPlayer(args[0]);
+            var player = GetPlayer(args[0]);
             if (player == null)
                 return;
-            float? damage = FloatParse(args[1]);
+            var damage = FloatParse(args[1]);
             if (damage == null) {
                 GameConsole.Log("The term {0} cannot be converted into a damage value.", args[1]);
                 return;
@@ -92,7 +89,7 @@ namespace HouraiTeahouse.SmashBrew {
             player.PlayerObject.Damage(this, damage.Value);
         }
 
-        void LanguageCommand(string[] args) {
+        private void LanguageCommand(string[] args) {
             if (!ArgLengthCheck(1, args, "language"))
                 return;
             try {
@@ -104,7 +101,7 @@ namespace HouraiTeahouse.SmashBrew {
             }
         }
 
-        void HitboxCommand(string[] args) {
+        private void HitboxCommand(string[] args) {
             if (!ArgLengthCheck(1, args, "hitbox"))
                 return;
             switch (args[0].ToLower()) {

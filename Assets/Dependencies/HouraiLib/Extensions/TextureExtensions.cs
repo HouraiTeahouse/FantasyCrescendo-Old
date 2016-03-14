@@ -37,7 +37,7 @@ namespace HouraiTeahouse {
         public static Rect PixelToUVRect(this Texture texture, Rect pixelRect) {
             if (texture == null)
                 throw new NullReferenceException();
-            Rect uvRect = new Rect();
+            var uvRect = new Rect();
             if (texture.width != 0) {
                 uvRect.x = pixelRect.x / texture.width;
                 uvRect.width = pixelRect.width / texture.width;

@@ -17,12 +17,14 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Copys the position and rotation of another transform onto one.
+        ///     Copys the position and rotation of another transform onto one.
         /// </summary>
         /// <param name="transform"></param>
         /// <param name="target"></param>
-        /// <exception cref="ArgumentNullException">thrown if <paramref name="transform"/>
-        ///  or <paramref name="target"/> are null</exception>
+        /// <exception cref="ArgumentNullException">
+        ///     thrown if <paramref name="transform" />
+        ///     or <paramref name="target" /> are null
+        /// </exception>
         public static void Copy(this Transform transform, Transform target) {
             if (!transform || !target)
                 throw new ArgumentNullException();
@@ -31,8 +33,8 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Finds the lowest common ancestor between two Transforms.
-        /// Returns null if either are null or both are not part of the same Transform hiearchy.
+        ///     Finds the lowest common ancestor between two Transforms.
+        ///     Returns null if either are null or both are not part of the same Transform hiearchy.
         /// </summary>
         /// <param name="transform">the first transform</param>
         /// <param name="other">the second transform</param>
@@ -61,10 +63,10 @@ namespace HouraiTeahouse {
             return null;
         }
 
-        static void SetPositionLocation(this Transform transform, int component, float value, bool local) {
+        private static void SetPositionLocation(this Transform transform, int component, float value, bool local) {
             if (!transform)
                 throw new ArgumentNullException();
-            Vector3 position = local ? transform.localPosition : transform.position;
+            var position = local ? transform.localPosition : transform.position;
             position[component] = value;
             if (local)
                 transform.localPosition = position;

@@ -3,23 +3,25 @@ using UnityEngine.UI;
 
 namespace HouraiTeahouse.SmashBrew.UI {
     /// <summary>
-    /// UI element that shows where players are
+    ///     UI element that shows where players are
     /// </summary>
     [RequireComponent(typeof (Text), typeof (PlayerUIColor))]
     public sealed class PlayerIndicator : PlayerUIComponent {
-        [SerializeField, Tooltip("Real world position bias for the indicator's position")] private Vector3 _positionBias
-            = new Vector3(0f, 1f, 0f);
-
-        // the indicator's RectTransform
-        private RectTransform _rTransform;
+        private CapsuleCollider _collider;
         // the canvas's RectTransform
         private RectTransform _cTransform;
 
+        [SerializeField, Tooltip("Real world position bias for the indicator's position")] private readonly Vector3
+            _positionBias
+                = new Vector3(0f, 1f, 0f);
+
+        // the indicator's RectTransform
+        private RectTransform _rTransform;
+
         private Player _target;
-        private CapsuleCollider _collider;
 
         /// <summary>
-        /// The Player for the PlayerIndicator to follow.
+        ///     The Player for the PlayerIndicator to follow.
         /// </summary>
         public Player Target {
             get { return _target; }
@@ -27,7 +29,7 @@ namespace HouraiTeahouse.SmashBrew.UI {
         }
 
         /// <summary>
-        /// Unity callback. Called on object instantiation.  
+        ///     Unity callback. Called on object instantiation.
         /// </summary>
         protected override void Awake() {
             base.Awake();
@@ -37,13 +39,13 @@ namespace HouraiTeahouse.SmashBrew.UI {
         }
 
         /// <summary>
-        /// Unity callback. Called once every frame, after all Update calls are processed.
+        ///     Unity callback. Called once every frame, after all Update calls are processed.
         /// </summary>
-        void LateUpdate() {
+        private void LateUpdate() {
             if (Target == null)
                 return;
-            Bounds bounds = _collider.bounds;
-            Vector3 worldPosition = bounds.center + new Vector3(0f, bounds.extents.y, 0f) + _positionBias;
+            var bounds = _collider.bounds;
+            var worldPosition = bounds.center + new Vector3(0f, bounds.extents.y, 0f) + _positionBias;
 
             //then you calculate the position of the UI element
             //0,0 for the canvas is at the center of the screen, whereas WorldToViewPortPoint treats the lower left corner as 0,0. Because of this,
@@ -55,12 +57,12 @@ namespace HouraiTeahouse.SmashBrew.UI {
         }
 
         /// <summary>
-        /// <see cref="IDataComponent{T}.SetData"/>
+        ///     <see cref="IDataComponent{T}.SetData" />
         /// </summary>
         public override void SetData(Player data) {
             base.SetData(data);
             _target = data;
-            _collider = (_target != null) ? _target.PlayerObject.MovementCollider : null;
+            _collider = _target != null ? _target.PlayerObject.MovementCollider : null;
         }
     }
 }

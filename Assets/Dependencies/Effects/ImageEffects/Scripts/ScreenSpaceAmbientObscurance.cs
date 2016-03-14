@@ -1,21 +1,19 @@
-using System;
 using UnityEngine;
 
 namespace UnityStandardAssets.ImageEffects {
     [ExecuteInEditMode]
     [RequireComponent(typeof (Camera))]
     [AddComponentMenu("Image Effects/Rendering/Screen Space Ambient Obscurance")]
-    class ScreenSpaceAmbientObscurance : PostEffectsBase {
+    internal class ScreenSpaceAmbientObscurance : PostEffectsBase {
+        private Material aoMaterial;
+        public Shader aoShader = null;
+        [Range(0, 5)] public float blurFilterDistance = 1.25f;
+        [Range(0, 3)] public int blurIterations = 1;
+        [Range(0, 1)] public int downsample = 0;
         [Range(0, 3)] public float intensity = 0.5f;
         [Range(0.1f, 3)] public float radius = 0.2f;
-        [Range(0, 3)] public int blurIterations = 1;
-        [Range(0, 5)] public float blurFilterDistance = 1.25f;
-        [Range(0, 1)] public int downsample = 0;
 
         public Texture2D rand = null;
-        public Shader aoShader = null;
-
-        private Material aoMaterial = null;
 
         public override bool CheckResources() {
             CheckSupport(true);
@@ -27,26 +25,26 @@ namespace UnityStandardAssets.ImageEffects {
             return isSupported;
         }
 
-        void OnDisable() {
+        private void OnDisable() {
             if (aoMaterial)
                 DestroyImmediate(aoMaterial);
             aoMaterial = null;
         }
 
         [ImageEffectOpaque]
-        void OnRenderImage(RenderTexture source, RenderTexture destination) {
+        private void OnRenderImage(RenderTexture source, RenderTexture destination) {
             if (CheckResources() == false) {
                 Graphics.Blit(source, destination);
                 return;
             }
 
-            Matrix4x4 P = GetComponent<Camera>().projectionMatrix;
+            var P = GetComponent<Camera>().projectionMatrix;
             var invP = P.inverse;
-            Vector4 projInfo = new Vector4
-                ((-2.0f / (Screen.width * P[0])),
-                    (-2.0f / (Screen.height * P[5])),
-                    ((1.0f - P[2]) / P[0]),
-                    ((1.0f + P[6]) / P[5]));
+            var projInfo = new Vector4
+                (-2.0f / (Screen.width * P[0]),
+                    -2.0f / (Screen.height * P[5]),
+                    (1.0f - P[2]) / P[0],
+                    (1.0f + P[6]) / P[5]);
 
             aoMaterial.SetVector("_ProjInfo", projInfo); // used for unprojection
             aoMaterial.SetMatrix("_ProjectionInv", invP); // only used for reference
@@ -56,10 +54,10 @@ namespace UnityStandardAssets.ImageEffects {
             aoMaterial.SetFloat("_Intensity", intensity);
             aoMaterial.SetFloat("_BlurFilterDistance", blurFilterDistance);
 
-            int rtW = source.width;
-            int rtH = source.height;
+            var rtW = source.width;
+            var rtH = source.height;
 
-            RenderTexture tmpRt = RenderTexture.GetTemporary(rtW >> downsample, rtH >> downsample);
+            var tmpRt = RenderTexture.GetTemporary(rtW >> downsample, rtH >> downsample);
             RenderTexture tmpRt2;
 
             Graphics.Blit(source, tmpRt, aoMaterial, 0);
@@ -74,7 +72,7 @@ namespace UnityStandardAssets.ImageEffects {
                 //  instead with a bilat-upsample afterwards ...
             }
 
-            for (int i = 0; i < blurIterations; i++) {
+            for (var i = 0; i < blurIterations; i++) {
                 aoMaterial.SetVector("_Axis", new Vector2(1.0f, 0.0f));
                 tmpRt2 = RenderTexture.GetTemporary(rtW, rtH);
                 Graphics.Blit(tmpRt, tmpRt2, aoMaterial, 1);

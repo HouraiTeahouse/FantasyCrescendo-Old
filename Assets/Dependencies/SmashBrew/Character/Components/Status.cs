@@ -1,24 +1,8 @@
-using UnityEngine;
 using System;
+using UnityEngine;
 
 namespace HouraiTeahouse.SmashBrew {
     public abstract class Status : HouraiBehaviour {
-        public static T Apply<T>(GameObject target, float duration = -1f) where T : Status {
-            if (!target)
-                throw new ArgumentNullException("target");
-            T instance = target.GetComponent<T>();
-            if (instance == null)
-                instance = target.AddComponent<T>();
-            instance.StartStatus(duration);
-            return instance;
-        }
-
-        public static T Apply<T>(Component target, float duration = -1f) where T : Status {
-            if (!target)
-                throw new ArgumentNullException("target");
-            return Apply<T>(target.gameObject, duration);
-        }
-
         private float _duration = Mathf.Infinity;
 
         public float EllapsedTime { get; private set; }
@@ -31,6 +15,22 @@ namespace HouraiTeahouse.SmashBrew {
             }
         }
 
+        public static T Apply<T>(GameObject target, float duration = -1f) where T : Status {
+            if (!target)
+                throw new ArgumentNullException("target");
+            var instance = target.GetComponent<T>();
+            if (instance == null)
+                instance = target.AddComponent<T>();
+            instance.StartStatus(duration);
+            return instance;
+        }
+
+        public static T Apply<T>(Component target, float duration = -1f) where T : Status {
+            if (!target)
+                throw new ArgumentNullException("target");
+            return Apply<T>(target.gameObject, duration);
+        }
+
         protected virtual void Start() {
             enabled = false;
         }
@@ -39,19 +39,19 @@ namespace HouraiTeahouse.SmashBrew {
             return DeltaTime;
         }
 
-        void Update() {
-            float dt = GetDeltaTime();
+        private void Update() {
+            var dt = GetDeltaTime();
             EllapsedTime += dt;
             OnStatusUpdate(dt);
             enabled = EllapsedTime < Duration;
         }
 
-        void OnEnable() {
+        private void OnEnable() {
             EllapsedTime = 0f;
             OnStatusStart();
         }
 
-        void OnDisable() {
+        private void OnDisable() {
             OnStatusEnd();
         }
 

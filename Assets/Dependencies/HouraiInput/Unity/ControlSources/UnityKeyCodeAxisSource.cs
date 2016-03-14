@@ -1,11 +1,9 @@
-using System;
 using UnityEngine;
-
 
 namespace HouraiTeahouse.HouraiInput {
     public class UnityKeyCodeAxisSource : InputControlSource {
-        KeyCode negativeKeyCode;
-        KeyCode positiveKeyCode;
+        private readonly KeyCode negativeKeyCode;
+        private readonly KeyCode positiveKeyCode;
 
 
         public UnityKeyCodeAxisSource(KeyCode negativeKeyCode, KeyCode positiveKeyCode) {
@@ -15,7 +13,7 @@ namespace HouraiTeahouse.HouraiInput {
 
 
         public float GetValue(InputDevice inputDevice) {
-            int axisValue = 0;
+            var axisValue = 0;
 
             if (Input.GetKey(negativeKeyCode)) {
                 axisValue--;

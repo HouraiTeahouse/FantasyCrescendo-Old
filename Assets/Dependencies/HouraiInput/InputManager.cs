@@ -7,34 +7,60 @@ namespace HouraiTeahouse.HouraiInput {
     public static class InputManager {
         public static readonly VersionInfo Version = VersionInfo.InControlVersion();
 
+        private static readonly List<InputDeviceManager> inputDeviceManagers = new List<InputDeviceManager>();
+
+        private static InputDevice activeDevice = InputDevice.Null;
+        private static readonly List<InputDevice> devices = new List<InputDevice>();
+        public static ReadOnlyCollection<InputDevice> Devices;
+        public static bool InvertYAxis;
+
+        private static bool isSetup;
+
+        private static float initialTime;
+        private static float currentTime;
+        private static float lastUpdateTime;
+
+        private static ulong currentTick;
+
+        private static VersionInfo? unityVersion;
+
+        public static string Platform { get; private set; }
+        public static bool MenuWasPressed { get; private set; }
+
+
+        private static InputDevice DefaultActiveDevice {
+            get { return devices.Count > 0 ? devices[0] : InputDevice.Null; }
+        }
+
+
+        public static InputDevice ActiveDevice {
+            get { return activeDevice == null ? InputDevice.Null : activeDevice; }
+
+            private set { activeDevice = value == null ? InputDevice.Null : value; }
+        }
+
+
+        public static bool EnableXInput { get; set; }
+
+
+        public static VersionInfo UnityVersion {
+            get {
+                if (!unityVersion.HasValue) {
+                    unityVersion = VersionInfo.UnityVersion();
+                }
+
+                return unityVersion.Value;
+            }
+        }
+
         public static event Action OnSetup;
         public static event Action<ulong, float> OnUpdate;
         public static event Action<InputDevice> OnDeviceAttached;
         public static event Action<InputDevice> OnDeviceDetached;
         public static event Action<InputDevice> OnActiveDeviceChanged;
 
-        static List<InputDeviceManager> inputDeviceManagers = new List<InputDeviceManager>();
-
-        static InputDevice activeDevice = InputDevice.Null;
-        static List<InputDevice> devices = new List<InputDevice>();
-        public static ReadOnlyCollection<InputDevice> Devices;
-
-        public static string Platform { get; private set; }
-        public static bool MenuWasPressed { get; private set; }
-        public static bool InvertYAxis;
-
-        static bool isSetup;
-
-        static float initialTime;
-        static float currentTime;
-        static float lastUpdateTime;
-
-        static ulong currentTick;
-
-        static VersionInfo? unityVersion;
-
         /// <summary>
-        /// DEPRECATED: Use the InControlManager component instead.
+        ///     DEPRECATED: Use the InControlManager component instead.
         /// </summary>
         [Obsolete("Calling InputManager.Setup() manually is deprecated. Use the InControlManager component instead.")]
         public static void Setup() {
@@ -83,7 +109,7 @@ namespace HouraiTeahouse.HouraiInput {
 
 
         /// <summary>
-        /// DEPRECATED: Use the InControlManager component instead.
+        ///     DEPRECATED: Use the InControlManager component instead.
         /// </summary>
         [Obsolete("Calling InputManager.Reset() manually is deprecated. Use the InControlManager component instead.")]
         public static void Reset() {
@@ -105,7 +131,7 @@ namespace HouraiTeahouse.HouraiInput {
         }
 
 
-        static void AssertIsSetup() {
+        private static void AssertIsSetup() {
             if (!isSetup) {
                 throw new Exception("InputManager is not initialized. Call InputManager.Setup() first.");
             }
@@ -113,7 +139,7 @@ namespace HouraiTeahouse.HouraiInput {
 
 
         /// <summary>
-        /// DEPRECATED: Use the InControlManager component instead.
+        ///     DEPRECATED: Use the InControlManager component instead.
         /// </summary>
         [Obsolete("Calling InputManager.Update() manually is deprecated. Use the InControlManager component instead.")]
         public static void Update() {
@@ -129,7 +155,7 @@ namespace HouraiTeahouse.HouraiInput {
 
             currentTick++;
             UpdateCurrentTime();
-            float deltaTime = currentTime - lastUpdateTime;
+            var deltaTime = currentTime - lastUpdateTime;
 
             UpdateDeviceManagers(deltaTime);
 
@@ -146,12 +172,12 @@ namespace HouraiTeahouse.HouraiInput {
         internal static void OnApplicationFocus(bool focusState) {
             if (focusState)
                 return;
-            int deviceCount = devices.Count;
+            var deviceCount = devices.Count;
             for (var i = 0; i < deviceCount; i++) {
-                InputControl[] inputControls = devices[i].Controls;
-                int inputControlCount = inputControls.Length;
+                var inputControls = devices[i].Controls;
+                var inputControlCount = inputControls.Length;
                 for (var j = 0; j < inputControlCount; j++) {
-                    InputControl inputControl = inputControls[j];
+                    var inputControl = inputControls[j];
                     if (inputControl != null) {
                         inputControl.SetZeroTick();
                     }
@@ -168,12 +194,12 @@ namespace HouraiTeahouse.HouraiInput {
         }
 
 
-        static void UpdateActiveDevice() {
-            InputDevice lastActiveDevice = ActiveDevice;
+        private static void UpdateActiveDevice() {
+            var lastActiveDevice = ActiveDevice;
 
-            int deviceCount = devices.Count;
+            var deviceCount = devices.Count;
             for (var i = 0; i < deviceCount; i++) {
-                InputDevice inputDevice = devices[i];
+                var inputDevice = devices[i];
                 if (ActiveDevice == InputDevice.Null ||
                     inputDevice.LastChangedAfter(ActiveDevice)) {
                     ActiveDevice = inputDevice;
@@ -202,7 +228,7 @@ namespace HouraiTeahouse.HouraiInput {
 
 
         public static bool HasDeviceManager<T>() where T : InputDeviceManager {
-            int inputDeviceManagerCount = inputDeviceManagers.Count;
+            var inputDeviceManagerCount = inputDeviceManagers.Count;
             for (var i = 0; i < inputDeviceManagerCount; i++) {
                 if (inputDeviceManagers[i] is T) {
                     return true;
@@ -213,7 +239,7 @@ namespace HouraiTeahouse.HouraiInput {
         }
 
 
-        static void UpdateCurrentTime() {
+        private static void UpdateCurrentTime() {
             // Have to do this hack since Time.realtimeSinceStartup is not set until AFTER Awake().
             if (initialTime < float.Epsilon) {
                 initialTime = Time.realtimeSinceStartup;
@@ -223,29 +249,29 @@ namespace HouraiTeahouse.HouraiInput {
         }
 
 
-        static void UpdateDeviceManagers(float deltaTime) {
-            int inputDeviceManagerCount = inputDeviceManagers.Count;
+        private static void UpdateDeviceManagers(float deltaTime) {
+            var inputDeviceManagerCount = inputDeviceManagers.Count;
             for (var i = 0; i < inputDeviceManagerCount; i++) {
-                InputDeviceManager inputDeviceManager = inputDeviceManagers[i];
+                var inputDeviceManager = inputDeviceManagers[i];
                 inputDeviceManager.Update(currentTick, deltaTime);
             }
         }
 
 
-        static void PreUpdateDevices(float deltaTime) {
+        private static void PreUpdateDevices(float deltaTime) {
             MenuWasPressed = false;
 
-            int deviceCount = devices.Count;
-            for (int i = 0; i < deviceCount; i++) {
+            var deviceCount = devices.Count;
+            for (var i = 0; i < deviceCount; i++) {
                 var device = devices[i];
                 device.PreUpdate(currentTick, deltaTime);
             }
         }
 
 
-        static void UpdateDevices(float deltaTime) {
-            int deviceCount = devices.Count;
-            for (int i = 0; i < deviceCount; i++) {
+        private static void UpdateDevices(float deltaTime) {
+            var deviceCount = devices.Count;
+            for (var i = 0; i < deviceCount; i++) {
                 var device = devices[i];
                 device.Update(currentTick, deltaTime);
             }
@@ -256,9 +282,9 @@ namespace HouraiTeahouse.HouraiInput {
         }
 
 
-        static void PostUpdateDevices(float deltaTime) {
-            int deviceCount = devices.Count;
-            for (int i = 0; i < deviceCount; i++) {
+        private static void PostUpdateDevices(float deltaTime) {
+            var deviceCount = devices.Count;
+            for (var i = 0; i < deviceCount; i++) {
                 var device = devices[i];
 
                 device.PostUpdate(currentTick, deltaTime);
@@ -314,32 +340,6 @@ namespace HouraiTeahouse.HouraiInput {
 #endif
             {
                 UnityInputDeviceProfile.Hide(type);
-            }
-        }
-
-
-        static InputDevice DefaultActiveDevice {
-            get { return (devices.Count > 0) ? devices[0] : InputDevice.Null; }
-        }
-
-
-        public static InputDevice ActiveDevice {
-            get { return (activeDevice == null) ? InputDevice.Null : activeDevice; }
-
-            private set { activeDevice = (value == null) ? InputDevice.Null : value; }
-        }
-
-
-        public static bool EnableXInput { get; set; }
-
-
-        public static VersionInfo UnityVersion {
-            get {
-                if (!unityVersion.HasValue) {
-                    unityVersion = VersionInfo.UnityVersion();
-                }
-
-                return unityVersion.Value;
             }
         }
     }

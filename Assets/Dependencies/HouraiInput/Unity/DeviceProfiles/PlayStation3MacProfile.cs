@@ -1,6 +1,3 @@
-using System;
-
-
 namespace HouraiTeahouse.HouraiInput {
     // @cond nodoc
     [AutoDiscover]
@@ -103,7 +100,7 @@ namespace HouraiTeahouse.HouraiInput {
                     Handle = "System",
                     Target = InputTarget.System,
                     Source = Button16
-                },
+                }
             };
 
             AnalogMappings = new[] {

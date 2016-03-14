@@ -1,6 +1,3 @@
-using System;
-
-
 namespace HouraiTeahouse.HouraiInput {
     // @cond nodoc
     [AutoDiscover]
@@ -10,11 +7,11 @@ namespace HouraiTeahouse.HouraiInput {
             Meta = "MOGA Pro Controller on Windows";
 
             SupportedPlatforms = new[] {
-                "Windows",
+                "Windows"
             };
 
             JoystickNames = new[] {
-                "Android Controller Gen-2(ACC)",
+                "Android Controller Gen-2(ACC)"
             };
 
             ButtonMappings = new[] {
@@ -74,7 +71,7 @@ namespace HouraiTeahouse.HouraiInput {
                 new InputMapping {
                     Handle = "Left Stick X",
                     Target = InputTarget.LeftStickX,
-                    Source = Analog0,
+                    Source = Analog0
                 },
                 new InputMapping {
                     Handle = "Left Stick Y",

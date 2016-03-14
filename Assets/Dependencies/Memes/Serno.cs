@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System;
 
 public class Serno {
     public bool IsBaka {
@@ -14,12 +13,12 @@ public class Serno {
         get { throw new NoBusesInGensokyoException("There are no buses in Gensokyo!"); }
     }
 
-    override public string ToString() {
+    public override string ToString() {
         return "⑨";
     }
 }
 
-public class NoBusesInGensokyoException : System.Exception {
+public class NoBusesInGensokyoException : Exception {
     public NoBusesInGensokyoException(string e) {
     }
 }

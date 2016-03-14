@@ -1,7 +1,4 @@
-﻿using System;
-
-
-namespace HouraiTeahouse.HouraiInput {
+﻿namespace HouraiTeahouse.HouraiInput {
     // Tested with ADT-1
     // Profile by Artūras 'arturaz' Šlajus <arturas@tinylabproductions.com>
     //
@@ -59,7 +56,7 @@ namespace HouraiTeahouse.HouraiInput {
                     SourceRange = InputMapping.Range.Positive,
                     TargetRange = InputMapping.Range.Positive,
                     Invert = true
-                },
+                }
             };
         }
     }

@@ -4,10 +4,6 @@ using UnityEngine;
 
 namespace HouraiTeahouse.SmashBrew {
     public class DamageType {
-        public string Suffix { get; private set; }
-        public float MinDamage { get; private set; }
-        public float MaxDamage { get; private set; }
-
         public static readonly DamageType Percent = new DamageType {
             Change = (currentDamage, delta) => currentDamage + delta,
             Suffix = "%",
@@ -23,24 +19,27 @@ namespace HouraiTeahouse.SmashBrew {
         };
 
         private Func<float, float, float> Change;
+        public string Suffix { get; private set; }
+        public float MinDamage { get; private set; }
+        public float MaxDamage { get; private set; }
 
         public float Damage(float currentDamage, float delta) {
-            float newDamage = Change(currentDamage, Mathf.Abs(delta));
+            var newDamage = Change(currentDamage, Mathf.Abs(delta));
             return Mathf.Clamp(newDamage, MinDamage, MaxDamage);
         }
 
         public float Heal(float currentDamage, float delta) {
-            float newDamage = Change(currentDamage, -Mathf.Abs(delta));
+            var newDamage = Change(currentDamage, -Mathf.Abs(delta));
             return Mathf.Clamp(newDamage, MinDamage, MaxDamage);
         }
     }
 
     /// <summary>
-    /// A MonoBehaviour that handles all of the damage dealt and recieved by a character.
+    ///     A MonoBehaviour that handles all of the damage dealt and recieved by a character.
     /// </summary>
     public partial class Character {
         /// <summary>
-        /// The current internal damage value. Used for knockback calculations.
+        ///     The current internal damage value. Used for knockback calculations.
         /// </summary>
         public float CurrentDamage { get; set; }
 
@@ -49,14 +48,6 @@ namespace HouraiTeahouse.SmashBrew {
         public DamageType DamageType { get; set; }
         public ModifierGroup<object> DamageModifiers { get; private set; }
         public ModifierGroup<object> HealingModifiers { get; private set; }
-
-        internal float ModifyDamage(float baseDamage, object source = null) {
-            return DamageModifiers.Out.Modifiy(source, baseDamage);
-        }
-
-        public void Damage(float damage) {
-            Damage(null, damage);
-        }
 
         public void Damage(object source, float damage) {
             damage = Mathf.Abs(damage);
@@ -71,10 +62,6 @@ namespace HouraiTeahouse.SmashBrew {
             CharacterEvents.Publish(new PlayerDamageEvent {Damage = damage, CurrentDamage = CurrentDamage});
         }
 
-        public void Heal(float healing) {
-            Heal(null, healing);
-        }
-
         public void Heal(object source, float healing) {
             healing = Mathf.Abs(healing);
 
@@ -84,6 +71,18 @@ namespace HouraiTeahouse.SmashBrew {
             CurrentDamage = DamageType.Heal(CurrentDamage, healing);
 
             CharacterEvents.Publish(new PlayerHealEvent {Healing = healing, CurrentDamage = CurrentDamage});
+        }
+
+        internal float ModifyDamage(float baseDamage, object source = null) {
+            return DamageModifiers.Out.Modifiy(source, baseDamage);
+        }
+
+        public void Damage(float damage) {
+            Damage(null, damage);
+        }
+
+        public void Heal(float healing) {
+            Heal(null, healing);
         }
     }
 }

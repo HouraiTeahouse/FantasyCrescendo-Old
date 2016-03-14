@@ -3,25 +3,21 @@ using UnityEngine;
 namespace HouraiTeahouse {
     [RequireComponent(typeof (AudioSource))]
     public sealed class SoundEffect : HouraiBehaviour {
-        private AudioSource _audio;
-
-        public AudioSource Audio {
-            get { return _audio; }
-        }
-
         private bool destroyOnFinish;
+
+        public AudioSource Audio { get; private set; }
 
         public float Pitch { get; set; }
 
         protected override void Awake() {
             base.Awake();
-            _audio = GetComponent<AudioSource>();
-            Pitch = _audio.pitch;
+            Audio = GetComponent<AudioSource>();
+            Pitch = Audio.pitch;
         }
 
-        void Update() {
-            _audio.pitch = EffectiveTimeScale * Pitch;
-            if (destroyOnFinish && !_audio.isPlaying)
+        private void Update() {
+            Audio.pitch = EffectiveTimeScale * Pitch;
+            if (destroyOnFinish && !Audio.isPlaying)
                 Destroy(gameObject);
         }
 
@@ -30,7 +26,7 @@ namespace HouraiTeahouse {
         }
 
         public AudioSource Play(float volume) {
-            AudioSource audioSource = Play();
+            var audioSource = Play();
             audioSource.volume = volume;
             return audioSource;
         }
@@ -42,7 +38,7 @@ namespace HouraiTeahouse {
         }
 
         public AudioSource Play(float volume, Vector3 position) {
-            AudioSource audioSource = Play(position);
+            var audioSource = Play(position);
             audioSource.volume = volume;
             return audioSource;
         }

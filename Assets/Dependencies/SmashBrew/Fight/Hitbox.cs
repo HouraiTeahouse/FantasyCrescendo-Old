@@ -10,24 +10,31 @@ namespace HouraiTeahouse.SmashBrew {
     [DisallowMultipleComponent]
     [RequireComponent(typeof (Collider))]
     public sealed class Hitbox : MonoBehaviour {
-        private static Table2D<Type, Action<Hitbox, Hitbox>> ReactionMatrix;
-
-        static void ExecuteInterface<T>(Type typeCheck, Hitbox src, Hitbox dst, Predicate<Hitbox> check,
-            Action<T, object> action) {
-            ;
-            if (!check(src))
-                return;
-            foreach (T t in src.GetComponents<T>())
-                action(t, dst);
+        public enum Type {
+            // The values here are used as priority mulitpliers
+            Offensive = 1,
+            Damageable = 2,
+            Invincible = 3,
+            Intangible = 4,
+            Shield = 10000,
+            Absorb = 20000,
+            Reflective = 30000
         }
 
-        static void DrawEffect(Hitbox src, Hitbox dst) {
-            throw new NotImplementedException();
-        }
+        private static readonly Table2D<Type, Action<Hitbox, Hitbox>> ReactionMatrix;
 
-        public static void Resolve(Hitbox src, Hitbox dst) {
-            ReactionMatrix[src.CurrentType, dst.CurrentType](src, dst);
-        }
+        [SerializeField] [HideInInspector] private Mesh _capsule;
+
+        //TODO: Add triggers for on hit effects and SFX
+        //private ParticleSystem _effect;
+        //private AudioSource _soundEffect;
+        private Collider[] _colliders;
+
+        [SerializeField] [HideInInspector] private Mesh _cube;
+
+        [SerializeField] [HideInInspector] private Material _material;
+
+        [SerializeField] [HideInInspector] private Mesh _sphere;
 
         static Hitbox() {
             ReactionMatrix = new Table2D<Type, Action<Hitbox, Hitbox>>();
@@ -51,59 +58,45 @@ namespace HouraiTeahouse.SmashBrew {
         }
 
         /// <summary>
-        /// Whether hitboxes should be drawn or not.
+        ///     Whether hitboxes should be drawn or not.
         /// </summary>
         public static bool DrawHitboxes { get; set; }
-
-        public enum Type {
-            // The values here are used as priority mulitpliers
-            Offensive = 1,
-            Damageable = 2,
-            Invincible = 3,
-            Intangible = 4,
-            Shield = 10000,
-            Absorb = 20000,
-            Reflective = 30000
-        }
-
-        [SerializeField] [HideInInspector] private Mesh _sphere;
-
-        [SerializeField] [HideInInspector] private Mesh _cube;
-
-        [SerializeField] [HideInInspector] private Mesh _capsule;
-
-        [SerializeField] [HideInInspector] private Material _material;
-
-        //TODO: Add triggers for on hit effects and SFX
-        //private ParticleSystem _effect;
-        //private AudioSource _soundEffect;
-        private Collider[] _colliders;
 
         // Represents the source Character that owns this Hitbox
         // If this is a Offensive type hitbox, this ensures that the Character doesn't damage themselves
         // If this is a Damageable type Hitbox (AKA a Hurtbox) this is the character that the damage and knockback is applied to.
         public Character Source { get; set; }
 
-        private IDamageable _damageable;
-        private IKnockbackable _knockbackable;
+        public IDamageable Damageable { get; private set; }
 
-        public IDamageable Damageable {
-            get { return _damageable; }
+        public IKnockbackable Knockbackable { get; private set; }
+
+        private static void ExecuteInterface<T>(Type typeCheck, Hitbox src, Hitbox dst, Predicate<Hitbox> check,
+            Action<T, object> action) {
+            ;
+            if (!check(src))
+                return;
+            foreach (var t in src.GetComponents<T>())
+                action(t, dst);
         }
 
-        public IKnockbackable Knockbackable {
-            get { return _knockbackable; }
+        private static void DrawEffect(Hitbox src, Hitbox dst) {
+            throw new NotImplementedException();
+        }
+
+        public static void Resolve(Hitbox src, Hitbox dst) {
+            ReactionMatrix[src.CurrentType, dst.CurrentType](src, dst);
         }
 
         #region Unity Callbacks
 
         /// <summary>
-        /// Unity callback. Called on object instantiation.
+        ///     Unity callback. Called on object instantiation.
         /// </summary>
-        void Awake() {
+        private void Awake() {
             Source = GetComponentInParent<Character>();
-            _damageable = GetComponentInParent<IDamageable>();
-            _knockbackable = GetComponentInParent<IKnockbackable>();
+            Damageable = GetComponentInParent<IDamageable>();
+            Knockbackable = GetComponentInParent<IKnockbackable>();
             //_effect = GetComponent<ParticleSystem>();
             //_soundEffect = GetComponent<AudioSource>();
 
@@ -118,24 +111,24 @@ namespace HouraiTeahouse.SmashBrew {
                     break;
             }
             _colliders = GetComponents<Collider>();
-            foreach (Collider col in _colliders)
+            foreach (var col in _colliders)
                 col.isTrigger = true;
         }
 
 #if UNITY_EDITOR
-        void OnDrawGizmos() {
+        private void OnDrawGizmos() {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
                 return;
             GizmoUtil.DrawColliders(GetComponents<Collider>(), Config.Instance.GetHitboxColor(type), true);
         }
 #endif
 
-        void OnRenderObject() {
+        private void OnRenderObject() {
             if (!DrawHitboxes)
                 return;
             if (_colliders == null)
                 _colliders = GetComponents<Collider>();
-            Color color = Config.Instance.GetHitboxColor(type);
+            var color = Config.Instance.GetHitboxColor(type);
             foreach (var col in _colliders)
                 DrawCollider(col, color);
             GL.wireframe = true;
@@ -145,16 +138,16 @@ namespace HouraiTeahouse.SmashBrew {
             GL.wireframe = false;
         }
 
-        void DrawCollider(Collider col, Color color) {
+        private void DrawCollider(Collider col, Color color) {
             if (col == null)
                 return;
             Mesh mesh = null;
             var boxCol = col as BoxCollider;
             var sphereCol = col as SphereCollider;
             var capsuleCol = col as CapsuleCollider;
-            Vector3 position = Vector3.zero;
-            Quaternion rotation = Quaternion.identity;
-            Vector3 scale = Vector3.one;
+            var position = Vector3.zero;
+            var rotation = Quaternion.identity;
+            var scale = Vector3.one;
             Matrix4x4 localToWorld;
             if (boxCol != null) {
                 mesh = _cube;
@@ -192,10 +185,10 @@ namespace HouraiTeahouse.SmashBrew {
             Graphics.DrawMeshNow(mesh, localToWorld * Matrix4x4.TRS(position, rotation, scale));
         }
 
-        void OnTriggerEnter(Collider other) {
+        private void OnTriggerEnter(Collider other) {
             if (!other.CompareTag(Tags.Hitbox))
                 return;
-            Hitbox otherHitbox = other.GetComponent<Hitbox>();
+            var otherHitbox = other.GetComponent<Hitbox>();
             if (otherHitbox == null || !ReactionMatrix.ContainsKey(type, otherHitbox.type))
                 return;
             HitboxResolver.AddCollision(this, otherHitbox);

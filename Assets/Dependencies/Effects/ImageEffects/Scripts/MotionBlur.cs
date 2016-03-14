@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 // This class implements simple ghosting type Motion Blur.
@@ -12,12 +11,11 @@ namespace UnityStandardAssets.ImageEffects {
     [AddComponentMenu("Image Effects/Blur/Motion Blur (Color Accumulation)")]
     [RequireComponent(typeof (Camera))]
     public class MotionBlur : ImageEffectBase {
+        private RenderTexture accumTexture;
         [Range(0.0f, 0.92f)] public float blurAmount = 0.8f;
         public bool extraBlur = false;
 
-        private RenderTexture accumTexture;
-
-        override protected void Start() {
+        protected override void Start() {
             if (!SystemInfo.supportsRenderTextures) {
                 enabled = false;
                 return;
@@ -25,13 +23,13 @@ namespace UnityStandardAssets.ImageEffects {
             base.Start();
         }
 
-        override protected void OnDisable() {
+        protected override void OnDisable() {
             base.OnDisable();
             DestroyImmediate(accumTexture);
         }
 
         // Called by camera to apply image effect
-        void OnRenderImage(RenderTexture source, RenderTexture destination) {
+        private void OnRenderImage(RenderTexture source, RenderTexture destination) {
             // Create the accumulation texture
             if (accumTexture == null || accumTexture.width != source.width || accumTexture.height != source.height) {
                 DestroyImmediate(accumTexture);
@@ -42,7 +40,7 @@ namespace UnityStandardAssets.ImageEffects {
 
             // If Extra Blur is selected, downscale the texture to 4x4 smaller resolution.
             if (extraBlur) {
-                RenderTexture blurbuffer = RenderTexture.GetTemporary(source.width / 4, source.height / 4, 0);
+                var blurbuffer = RenderTexture.GetTemporary(source.width / 4, source.height / 4, 0);
                 accumTexture.MarkRestoreExpected();
                 Graphics.Blit(accumTexture, blurbuffer);
                 Graphics.Blit(blurbuffer, accumTexture);

@@ -3,35 +3,41 @@ using UnityEngine;
 
 namespace HouraiTeahouse.SmashBrew {
     /// <summary>
-    /// The Match Singleton.
-    /// 
-    /// Manages the current state of the match and all of the defined Match rules.
+    ///     The Match Singleton.
+    ///     Manages the current state of the match and all of the defined Match rules.
     /// </summary>
     public class Match : MonoBehaviour {
         private Mediator _eventManager;
 
         /// <summary>
-        /// Unity Callback. Called on object instantiation.
+        ///     Gets whether there is currently a Match underway.
         /// </summary>
-        void Awake() {
+        public bool InMatch { get; private set; }
+
+        /// <summary>
+        ///     Unity Callback. Called on object instantiation.
+        /// </summary>
+        private void Awake() {
             _eventManager = GlobalMediator.Instance;
         }
 
         /// <summary>
-        /// Ends the match.
+        ///     Ends the match.
         /// </summary>
-        /// <param name="noContest">is the match ending prematurely? If set to true, no
-        ///     winner will be declared.</param>
+        /// <param name="noContest">
+        ///     is the match ending prematurely? If set to true, no
+        ///     winner will be declared.
+        /// </param>
         public void FinishMatch(bool noContest = false) {
             var rules = FindObjectsOfType<MatchRule>();
 
             var result = MatchResult.HasWinner;
             Player winner = null;
-            foreach (MatchRule rule in rules) {
+            foreach (var rule in rules) {
                 if (rule == null)
                     continue;
                 rule.enabled = false;
-                Player ruleWinner = rule.GetWinner();
+                var ruleWinner = rule.GetWinner();
                 if (ruleWinner == null || noContest)
                     continue;
                 if (winner == null) {
@@ -52,14 +58,9 @@ namespace HouraiTeahouse.SmashBrew {
         }
 
         /// <summary>
-        /// Gets whether there is currently a Match underway.
+        ///     Unity Callback. Called before the object's first frame.
         /// </summary>
-        public bool InMatch { get; private set; }
-
-        /// <summary>
-        /// Unity Callback. Called before the object's first frame.
-        /// </summary>
-        void Start() {
+        private void Start() {
             // Don't restart a match if it is still in progress
             if (InMatch)
                 return;

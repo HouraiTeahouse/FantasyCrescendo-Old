@@ -3,19 +3,32 @@ using UnityEngine.UI;
 
 namespace HouraiTeahouse.SmashBrew.UI {
     /// <summary>
-    /// A custom layout group created for controlling the layout of the
-    /// individual character select squares on the character select screen
+    ///     A custom layout group created for controlling the layout of the
+    ///     individual character select squares on the character select screen
     /// </summary>
     public class CharacterLayoutGroup : LayoutGroup, ILayoutSelfController {
-        [SerializeField, Tooltip("The spacing between child elements, in pixels")] private Vector2 _spacing;
+        [SerializeField, Tooltip("The target aspect ratio for the individual children")] private float _childAspectRatio;
 
         [SerializeField, Tooltip("The target aspect ratio for the overall layout")] private float _selfAspectRatio;
+        [SerializeField, Tooltip("The spacing between child elements, in pixels")] private Vector2 _spacing;
 
-        [SerializeField, Tooltip("The target aspect ratio for the individual children")] private float _childAspectRatio;
+        /// <summary>
+        ///     <see cref="LayoutGroup.SetLayoutHorizontal" />
+        /// </summary>
+        public override void SetLayoutHorizontal() {
+            SetLayout(true);
+        }
+
+        /// <summary>
+        ///     <see cref="LayoutGroup.SetLayoutVertical" />
+        /// </summary>
+        public override void SetLayoutVertical() {
+            SetLayout(false);
+        }
 
 
         /// <summary>
-        /// <see cref="LayoutGroup.CalculateLayoutInputHorizontal"/>
+        ///     <see cref="LayoutGroup.CalculateLayoutInputHorizontal" />
         /// </summary>
         public override void CalculateLayoutInputHorizontal() {
             base.CalculateLayoutInputHorizontal();
@@ -23,47 +36,33 @@ namespace HouraiTeahouse.SmashBrew.UI {
         }
 
         /// <summary>
-        /// <see cref="LayoutGroup.CalculateLayoutInputVertical"/>
+        ///     <see cref="LayoutGroup.CalculateLayoutInputVertical" />
         /// </summary>
         public override void CalculateLayoutInputVertical() {
             SetLayoutInputForAxis(padding.vertical, padding.vertical, -1, 1);
         }
 
         /// <summary>
-        /// <see cref="LayoutGroup.SetLayoutHorizontal"/>
-        /// </summary>
-        public override void SetLayoutHorizontal() {
-            SetLayout(true);
-        }
-
-        /// <summary>
-        /// <see cref="LayoutGroup.SetLayoutVertical"/>
-        /// </summary>
-        public override void SetLayoutVertical() {
-            SetLayout(false);
-        }
-
-        /// <summary>
-        /// Builds the full layout of all children along one axis.
+        ///     Builds the full layout of all children along one axis.
         /// </summary>
         /// <param name="axis">which axis to build on, true if vertical, false if horizontal</param>
-        void SetLayout(bool axis) {
+        private void SetLayout(bool axis) {
             // Givens
             // Child Aspect Ratio
-            Vector2 availableSpace = rectTransform.rect.size;
-            int count = rectChildren.Count;
+            var availableSpace = rectTransform.rect.size;
+            var count = rectChildren.Count;
 
             if (availableSpace.x / availableSpace.y > _selfAspectRatio) {
                 availableSpace.x = availableSpace.y * _selfAspectRatio;
             }
 
             // Calculated
-            int bestRows = 1;
-            int bestCols = 1;
-            Vector2 itemSize = Vector2.zero;
-            bool isPrime = count <= 3;
-            int effectiveCount = count;
-            float maxArea = float.MaxValue;
+            var bestRows = 1;
+            var bestCols = 1;
+            var itemSize = Vector2.zero;
+            var isPrime = count <= 3;
+            var effectiveCount = count;
+            var maxArea = float.MaxValue;
 
             // Prime numbers tend to generate very poorly made layouts.
             // Repeat until the the layout is generated with a non-prime count
@@ -74,12 +73,12 @@ namespace HouraiTeahouse.SmashBrew.UI {
                     if (effectiveCount % rows != 0)
                         continue;
                     isPrime |= rows != 1 && rows != effectiveCount;
-                    int cols = effectiveCount / rows;
-                    Vector2 effectiveSpace = availableSpace -
-                                             new Vector2(Mathf.Max(0, cols - 1) * _spacing.x,
-                                                 Mathf.Max(0, rows - 1) * _spacing.y);
-                    Vector2 size = new Vector2(effectiveSpace.x / cols, effectiveSpace.y / rows);
-                    float area = Mathf.Abs(rows * size.x - cols * size.y * _childAspectRatio);
+                    var cols = effectiveCount / rows;
+                    var effectiveSpace = availableSpace -
+                                         new Vector2(Mathf.Max(0, cols - 1) * _spacing.x,
+                                             Mathf.Max(0, rows - 1) * _spacing.y);
+                    var size = new Vector2(effectiveSpace.x / cols, effectiveSpace.y / rows);
+                    var area = Mathf.Abs(rows * size.x - cols * size.y * _childAspectRatio);
                     if (area >= maxArea)
                         continue;
                     maxArea = area;
@@ -90,13 +89,13 @@ namespace HouraiTeahouse.SmashBrew.UI {
                 effectiveCount++;
             } while (!isPrime);
 
-            Vector2 delta = itemSize + _spacing;
+            var delta = itemSize + _spacing;
 
             // Only set the sizes when invoked for horizontal axis, not the positions.
 
             if (axis) {
-                for (int i = 0; i < rectChildren.Count; i++) {
-                    RectTransform rect = rectChildren[i];
+                for (var i = 0; i < rectChildren.Count; i++) {
+                    var rect = rectChildren[i];
 
                     m_Tracker.Add(this, rect,
                         DrivenTransformProperties.Anchors |
@@ -110,19 +109,19 @@ namespace HouraiTeahouse.SmashBrew.UI {
                 return;
             }
 
-            Vector2 center = rectTransform.rect.size / 2;
-            Vector2 extents = 0.5f * new Vector2(bestCols * itemSize.x + Mathf.Max(0, bestCols - 1) * _spacing.x,
+            var center = rectTransform.rect.size / 2;
+            var extents = 0.5f * new Vector2(bestCols * itemSize.x + Mathf.Max(0, bestCols - 1) * _spacing.x,
                 bestRows * itemSize.y + Mathf.Max(0, bestRows - 1) * _spacing.y);
-            Vector2 start = center - extents;
+            var start = center - extents;
 
             for (var i = 0; i < bestRows; i++) {
-                float x = start.x;
-                float y = start.y + i * delta.y;
+                var x = start.x;
+                var y = start.y + i * delta.y;
                 if (count - i * bestCols < bestCols)
                     x = center.x - 0.5f * (count % bestCols * itemSize.x);
 
                 for (var j = 0; j < bestCols; j++) {
-                    int index = bestCols * i + j;
+                    var index = bestCols * i + j;
                     if (index >= count)
                         break;
 

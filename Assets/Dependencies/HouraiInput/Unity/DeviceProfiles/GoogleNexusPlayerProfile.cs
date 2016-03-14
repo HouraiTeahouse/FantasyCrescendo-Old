@@ -1,5 +1,4 @@
-using System;
-
+using UnityEngine;
 
 namespace HouraiTeahouse.HouraiInput {
     // @cond nodoc
@@ -10,11 +9,11 @@ namespace HouraiTeahouse.HouraiInput {
             Meta = "Google Nexus Player Controller on Android";
 
             SupportedPlatforms = new[] {
-                "Android",
+                "Android"
             };
 
             JoystickNames = new[] {
-                "ASUS Gamepad",
+                "ASUS Gamepad"
             };
 
             ButtonMappings = new[] {
@@ -61,7 +60,7 @@ namespace HouraiTeahouse.HouraiInput {
                 new InputMapping {
                     Handle = "Back",
                     Target = InputTarget.Back,
-                    Source = KeyCodeButton(UnityEngine.KeyCode.Escape)
+                    Source = KeyCodeButton(KeyCode.Escape)
                 },
                 new InputMapping {
                     Handle = "Start",
@@ -121,17 +120,17 @@ namespace HouraiTeahouse.HouraiInput {
                     Target = InputTarget.DPadDown,
                     Source = Analog5,
                     SourceRange = InputMapping.Range.Positive,
-                    TargetRange = InputMapping.Range.Positive,
+                    TargetRange = InputMapping.Range.Positive
                 },
                 new InputMapping {
                     Handle = "Left Trigger",
                     Target = InputTarget.LeftTrigger,
-                    Source = Analog12,
+                    Source = Analog12
                 },
                 new InputMapping {
                     Handle = "Right Trigger",
                     Target = InputTarget.RightTrigger,
-                    Source = Analog11,
+                    Source = Analog11
                 }
             };
         }

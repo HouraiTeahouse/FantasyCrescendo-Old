@@ -1,22 +1,19 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
-using Object = UnityEngine.Object;
 
 namespace HouraiTeahouse {
     public class CreateObject : SingleActionBehaviour {
-        [SerializeField] private Object _object;
-
         [SerializeField] private bool _copyPosiiton;
 
         [SerializeField] private bool _copyRotation;
+        [SerializeField] private Object _object;
 
-        public Action<Object> OnCreate;
+        public System.Action<Object> OnCreate;
 
         protected override void Action() {
             if (!_object)
                 return;
-            Object obj = Instantiate(_object);
+            var obj = Instantiate(_object);
             if (!_copyPosiiton && !_copyRotation)
                 return;
             var go = obj as GameObject;
@@ -28,7 +25,7 @@ namespace HouraiTeahouse {
                 objTransform = comp.transform;
             if (!objTransform)
                 return;
-            RectTransform rTransform = objTransform as RectTransform;
+            var rTransform = objTransform as RectTransform;
             if (rTransform) {
                 //if (_copyPosiiton)
                 //    rTransform.anchoredPosition3D = transform.position;

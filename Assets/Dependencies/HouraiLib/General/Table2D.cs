@@ -4,14 +4,14 @@ using System.Linq;
 
 namespace HouraiTeahouse {
     /// <summary>
-    /// A 2D HashTable. One that requires two keys to access the value.
+    ///     A 2D HashTable. One that requires two keys to access the value.
     /// </summary>
     /// <typeparam name="K1">the type of the first key</typeparam>
     /// <typeparam name="K2">the type of the second key</typeparam>
     /// <typeparam name="V">the type of the values stored</typeparam>
     public class Table2D<K1, K2, V> : Dictionary<K1, Dictionary<K2, V>> {
         /// <summary>
-        /// Gets or sets the value associated with the specified pair of keys.
+        ///     Gets or sets the value associated with the specified pair of keys.
         /// </summary>
         /// <param name="key1">the first key</param>
         /// <param name="key2">the second key</param>
@@ -26,7 +26,7 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Adds a key, key, value triplet to the table.
+        ///     Adds a key, key, value triplet to the table.
         /// </summary>
         /// <exception cref="ArgumentException">thrown if the Table2D already contains an record with those two keys</exception>
         /// <param name="key1">the first key</param>
@@ -39,7 +39,7 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Checks if the table contains a value mapped to a set of two keys
+        ///     Checks if the table contains a value mapped to a set of two keys
         /// </summary>
         /// <param name="key1">the first key</param>
         /// <param name="key2">the seocnd key</param>
@@ -49,7 +49,7 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Removes a key, key, value triplet from the table.
+        ///     Removes a key, key, value triplet from the table.
         /// </summary>
         /// <param name="key1">the first key</param>
         /// <param name="key2">the second key</param>
@@ -57,15 +57,15 @@ namespace HouraiTeahouse {
         public virtual bool Remove(K1 key1, K2 key2) {
             if (!ContainsKey(key1))
                 return false;
-            Dictionary<K2, V> row = this[key1];
-            bool success = row.Remove(key2);
+            var row = this[key1];
+            var success = row.Remove(key2);
             if (row.Count <= 0)
                 Remove(key1);
             return success;
         }
 
         /// <summary>
-        /// Removes all elements with a second key of a certain value.
+        ///     Removes all elements with a second key of a certain value.
         /// </summary>
         /// <param name="key2">the second key</param>
         /// <returns>the count of elements removed</returns>
@@ -75,7 +75,7 @@ namespace HouraiTeahouse {
     }
 
     /// <summary>
-    /// A Table2D with identical first and second key types.
+    ///     A Table2D with identical first and second key types.
     /// </summary>
     /// <typeparam name="K">the type of the keys</typeparam>
     /// <typeparam name="V">the value stored by the table</typeparam>
@@ -83,16 +83,16 @@ namespace HouraiTeahouse {
     }
 
     /// <summary>
-    /// A mirrored Table2D. The keysets are mirroed.
-    /// If the keyset (a, b) exists, then the keyset (b, a) also exists, and they both map to the
-    /// same value.
+    ///     A mirrored Table2D. The keysets are mirroed.
+    ///     If the keyset (a, b) exists, then the keyset (b, a) also exists, and they both map to the
+    ///     same value.
     /// </summary>
     /// <typeparam name="K">the type of the keys</typeparam>
     /// <typeparam name="V">the value stored by the table</typeparam>
     public class MirroredTable2D<K, V> : Table2D<K, V> {
         /// <summary>
-        /// Gets or sets the value associated with the specified pair of keys. 
-        /// If (a, b) does not exist, then (b, a) is gotten/set.
+        ///     Gets or sets the value associated with the specified pair of keys.
+        ///     If (a, b) does not exist, then (b, a) is gotten/set.
         /// </summary>
         /// <exception cref="KeyNotFoundException">thrown if both (key1, key2) and (key2, key1) do not exist when using the getter.</exception>
         /// <param name="key1">one of the keys</param>
@@ -115,7 +115,7 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Removes a key, key, value triplet from the table. 
+        ///     Removes a key, key, value triplet from the table.
         /// </summary>
         /// <param name="key1">one of the keys</param>
         /// <param name="key2">one of the keys</param>
@@ -127,11 +127,12 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Checks if the table contains a value mapped to a set of two keys
+        ///     Checks if the table contains a value mapped to a set of two keys
         /// </summary>
         /// <param name="key1">the first key</param>
         /// <param name="key2">the seocnd key</param>
-        /// <returns>true if the table contains a triplet with the keys, false otherwise</returns>>
+        /// <returns>true if the table contains a triplet with the keys, false otherwise</returns>
+        /// >
         public override bool ContainsKey(K key1, K key2) {
             return base.ContainsKey(key1, key2) || base.ContainsKey(key2, key1);
         }

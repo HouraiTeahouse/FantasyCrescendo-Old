@@ -1,6 +1,5 @@
-using System.Collections.Generic;
-using UnityConstants;
 using System.Linq;
+using UnityConstants;
 using UnityEngine;
 
 namespace HouraiTeahouse.SmashBrew {
@@ -18,38 +17,38 @@ namespace HouraiTeahouse.SmashBrew {
         [SerializeField, Tooltip("The hardness of the platform")] private HardnessSetting _hardness =
             HardnessSetting.Soft;
 
+        private Collider[] _toIgnore;
+
         public HardnessSetting Hardness {
             get { return _hardness; }
             set { _hardness = value; }
         }
 
-        private Collider[] _toIgnore;
-
         /// <summary>
-        /// Unity callback. Called on object instantiation.
+        ///     Unity callback. Called on object instantiation.
         /// </summary>
-        void Awake() {
+        private void Awake() {
             _toIgnore = GetComponentsInChildren<Collider>().Where(col => col && col.isTrigger).ToArray();
         }
 
         /// <summary>
-        /// Changes the ignore state of 
+        ///     Changes the ignore state of
         /// </summary>
         /// <param name="target"></param>
         /// <param name="state"></param>
-        void ChangeIgnore(Collider target, bool state) {
+        private void ChangeIgnore(Collider target, bool state) {
             if (target == null || !target.CompareTag(Tags.Player))
                 return;
 
-            foreach (Collider col in _toIgnore)
+            foreach (var col in _toIgnore)
                 Physics.IgnoreCollision(col, target, state);
         }
 
         /// <summary>
-        /// Check if the 
+        ///     Check if the
         /// </summary>
         /// <param name="col"></param>
-        static void Check(Component col) {
+        private static void Check(Component col) {
             if (!col.CompareTag(Tags.Player))
                 return;
 
@@ -64,31 +63,31 @@ namespace HouraiTeahouse.SmashBrew {
         }
 
         /// <summary>
-        /// Unity callback. Called when another collider enters an attached trigger collider.
+        ///     Unity callback. Called when another collider enters an attached trigger collider.
         /// </summary>
-        void OnTriggerEnter(Collider other) {
+        private void OnTriggerEnter(Collider other) {
             ChangeIgnore(other, true);
         }
 
         /// <summary>
-        /// Unity callback. Called when another collider exits an attached trigger collider.
+        ///     Unity callback. Called when another collider exits an attached trigger collider.
         /// </summary>
-        void OnTriggerExit(Collider other) {
+        private void OnTriggerExit(Collider other) {
             ChangeIgnore(other, false);
         }
 
         /// <summary>
-        /// Unity callback. Called every physics loop for each for each .
+        ///     Unity callback. Called every physics loop for each for each .
         /// </summary>
-        void OnCollisionStay(Collision col) {
+        private void OnCollisionStay(Collision col) {
             if (Hardness <= HardnessSetting.Soft)
                 Check(col.collider);
         }
 
         /// <summary>
-        /// Unity callback. Called when another collider enters an attached trigger collider.
+        ///     Unity callback. Called when another collider enters an attached trigger collider.
         /// </summary>
-        void OnCollisionEnter(Collision col) {
+        private void OnCollisionEnter(Collision col) {
             if (Hardness <= HardnessSetting.Soft)
                 Check(col.collider);
         }

@@ -1,33 +1,33 @@
 using System;
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace HouraiTeahouse {
     /// <summary>
-    /// Component that marks a unique object.
-    /// Objects instantiated with this attached only allows one to exist.
-    /// Trying to create/instantiate more copies will have the object destroyed instantly.
+    ///     Component that marks a unique object.
+    ///     Objects instantiated with this attached only allows one to exist.
+    ///     Trying to create/instantiate more copies will have the object destroyed instantly.
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class UniqueObject : MonoBehaviour {
         /// <summary>
-        /// A collection of all of the UniqueObjects currently in the game.
+        ///     A collection of all of the UniqueObjects currently in the game.
         /// </summary>
         private static Dictionary<string, UniqueObject> _allIds;
 
         [SerializeField, ReadOnly, Tooltip("The unique id for this object")] private string _id;
 
         /// <summary>
-        /// The unique ID of the object.
+        ///     The unique ID of the object.
         /// </summary>
         public string ID {
             get { return _id; }
         }
 
         /// <summary>
-        /// Unity Callback. Called on object instantiation.
+        ///     Unity Callback. Called on object instantiation.
         /// </summary>
-        void Awake() {
+        private void Awake() {
             if (_allIds == null)
                 _allIds = new Dictionary<string, UniqueObject>();
             if (_allIds.ContainsKey(ID)) {
@@ -38,9 +38,9 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Unity callback. Called on object destruction.
+        ///     Unity callback. Called on object destruction.
         /// </summary>
-        void OnDestroy() {
+        private void OnDestroy() {
             if (_allIds == null || _allIds[ID] != this)
                 return;
             _allIds.Remove(ID);
@@ -49,9 +49,9 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Unity callback. Called on editor reset.
+        ///     Unity callback. Called on editor reset.
         /// </summary>
-        void Reset() {
+        private void Reset() {
             _id = Guid.NewGuid().ToString();
         }
     }

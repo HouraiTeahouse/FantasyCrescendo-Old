@@ -2,11 +2,11 @@ using UnityEngine;
 
 namespace HouraiTeahouse {
     /// <summary>
-    /// Extension methods for the UnityEngine Vector structs.
+    ///     Extension methods for the UnityEngine Vector structs.
     /// </summary>
     public static class VectorExtensions {
         /// <summary>
-        /// Computes the Hadamard product between two 2D vectors.
+        ///     Computes the Hadamard product between two 2D vectors.
         /// </summary>
         /// <param name="a">the first vector</param>
         /// <param name="b">the second vector</param>
@@ -16,7 +16,7 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Computes the Hadamard product between two 3D vectors.
+        ///     Computes the Hadamard product between two 3D vectors.
         /// </summary>
         /// <param name="a">the first vector</param>
         /// <param name="b">the second vector</param>
@@ -26,7 +26,7 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Computes the Hadamard product between two 4D vectors.
+        ///     Computes the Hadamard product between two 4D vectors.
         /// </summary>
         /// <param name="a">the first vector</param>
         /// <param name="b">the second vector</param>
@@ -36,7 +36,7 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Computes the largest component of a 2D vector.
+        ///     Computes the largest component of a 2D vector.
         /// </summary>
         /// <param name="v">the source vector</param>
         /// <returns>the largest componet's value</returns>
@@ -45,7 +45,7 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Computes the largest component of a 2D vector.
+        ///     Computes the largest component of a 2D vector.
         /// </summary>
         /// <param name="v">the source vector</param>
         /// <returns>the largest componet's value</returns>
@@ -54,7 +54,7 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Computes the largest component of a 2D vector.
+        ///     Computes the largest component of a 2D vector.
         /// </summary>
         /// <param name="v">the source vector</param>
         /// <returns>the largest componet's value</returns>
@@ -63,7 +63,7 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Computes the smallest component of a 2D vector.
+        ///     Computes the smallest component of a 2D vector.
         /// </summary>
         /// <param name="v">the source vector</param>
         /// <returns>the smallest componet's value</returns>
@@ -72,7 +72,7 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Computes the smallest component of a 2D vector.
+        ///     Computes the smallest component of a 2D vector.
         /// </summary>
         /// <param name="v">the source vector</param>
         /// <returns>the smallest componet's value</returns>
@@ -81,7 +81,7 @@ namespace HouraiTeahouse {
         }
 
         /// <summary>
-        /// Computes the smallest component of a 2D vector.
+        ///     Computes the smallest component of a 2D vector.
         /// </summary>
         /// <param name="v">the source vector</param>
         /// <returns>the smallest componet's value</returns>

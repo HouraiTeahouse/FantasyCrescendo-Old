@@ -1,15 +1,9 @@
 #if UNITY_STANDALONE_WIN || UNITY_EDITOR
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using XInputDotNetPure;
-
 
 namespace HouraiTeahouse.HouraiInput {
     public class XInputDevice : InputDevice {
-        public int DeviceIndex { get; private set; }
-        GamePadState state;
+        private GamePadState state;
 
 
         public XInputDevice(int deviceIndex)
@@ -47,6 +41,13 @@ namespace HouraiTeahouse.HouraiInput {
             AddControl(InputTarget.Back, "Back");
 
             QueryState();
+        }
+
+        public int DeviceIndex { get; private set; }
+
+
+        public bool IsConnected {
+            get { return state.IsConnected; }
         }
 
 
@@ -90,13 +91,8 @@ namespace HouraiTeahouse.HouraiInput {
         }
 
 
-        void QueryState() {
+        private void QueryState() {
             state = GamePad.GetState((PlayerIndex) DeviceIndex, GamePadDeadZone.Circular);
-        }
-
-
-        public bool IsConnected {
-            get { return state.IsConnected; }
         }
     }
 }

@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-
 
 namespace HouraiTeahouse.HouraiInput {
     // @cond nodoc
@@ -76,23 +74,23 @@ namespace HouraiTeahouse.HouraiInput {
                 new InputMapping {
                     Handle = "DPad Left",
                     Target = InputTarget.DPadLeft,
-                    Source = Button10,
+                    Source = Button10
                 },
                 new InputMapping {
                     Handle = "DPad Right",
                     Target = InputTarget.DPadRight,
-                    Source = Button11,
+                    Source = Button11
                 },
                 new InputMapping {
                     Handle = "DPad Up",
                     Target = InputTarget.DPadUp,
-                    Source = Button8,
+                    Source = Button8
                 },
                 new InputMapping {
                     Handle = "DPad Down",
                     Target = InputTarget.DPadDown,
-                    Source = Button9,
-                },
+                    Source = Button9
+                }
             };
 
             AnalogMappings = new[] {

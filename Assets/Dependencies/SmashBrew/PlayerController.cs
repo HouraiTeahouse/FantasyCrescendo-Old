@@ -1,23 +1,21 @@
-using HouraiTeahouse.HouraiInput;
 using UnityEngine;
 
 namespace HouraiTeahouse.SmashBrew {
     [DisallowMultipleComponent]
     public class PlayerController : HouraiBehaviour {
-        public Player PlayerData { get; set; }
-
         private Character _character;
+        public Player PlayerData { get; set; }
 
         protected override void Awake() {
             base.Awake();
             _character = GetComponent<Character>();
         }
 
-        void Update() {
+        private void Update() {
             if (PlayerData == null || PlayerData.Controller == null || _character == null)
                 return;
 
-            InputDevice input = PlayerData.Controller;
+            var input = PlayerData.Controller;
 
             //Ensure that the character is walking in the right direction
             if ((input.LeftStickX > 0 && _character.Direction) ||

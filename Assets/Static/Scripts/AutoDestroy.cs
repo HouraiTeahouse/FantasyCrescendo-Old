@@ -6,14 +6,14 @@ namespace HouraiTeahouse {
         private AudioSource _audio;
         private ParticleSystem _particleSystem;
 
-        void Awake() {
+        private void Awake() {
             _animation = GetComponent<Animation>();
             _audio = GetComponent<AudioSource>();
             _particleSystem = GetComponent<ParticleSystem>();
         }
 
         // Update is called once per frame
-        void Update() {
+        private void Update() {
             if (_animation && _animation.isPlaying)
                 return;
             if (_audio && _audio.isPlaying)

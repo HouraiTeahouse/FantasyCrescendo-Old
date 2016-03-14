@@ -1,20 +1,20 @@
-using UnityEngine;
 using HouraiTeahouse.HouraiInput;
+using UnityEngine;
 
 namespace HouraiTeahouse.SmashBrew.UI {
     public class MenuWiggle : MonoBehaviour {
-        [SerializeField] private InputTarget _horizontalAxis = InputTarget.RightStickX;
-
-        [SerializeField] private InputTarget _verticalAxis = InputTarget.RightStickY;
+        [SerializeField] private readonly InputTarget _horizontalAxis = InputTarget.RightStickX;
 
         [SerializeField] private Vector2 _scale = new Vector2(30, 30);
 
+        [SerializeField] private readonly InputTarget _verticalAxis = InputTarget.RightStickY;
+
         /// <summary>
-        /// Unity Callback. Called once every frame.
+        ///     Unity Callback. Called once every frame.
         /// </summary>
-        void Update() {
-            Vector2 distortion = Vector2.zero;
-            foreach (InputDevice device in InputManager.Devices) {
+        private void Update() {
+            var distortion = Vector2.zero;
+            foreach (var device in InputManager.Devices) {
                 if (device == null)
                     continue;
                 float x = device.GetControl(_verticalAxis);

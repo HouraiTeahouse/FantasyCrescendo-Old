@@ -1,13 +1,12 @@
-using System;
 using UnityEngine;
 
 namespace UnityStandardAssets.ImageEffects {
     [ExecuteInEditMode]
     [RequireComponent(typeof (Camera))]
     public class PostEffectsBase : MonoBehaviour {
-        protected bool supportHDRTextures = true;
-        protected bool supportDX11 = false;
         protected bool isSupported = true;
+        protected bool supportDX11;
+        protected bool supportHDRTextures = true;
 
         protected Material CheckShaderAndCreateMaterial(Shader s, Material m2Create) {
             if (!s) {
@@ -21,17 +20,15 @@ namespace UnityStandardAssets.ImageEffects {
 
             if (!s.isSupported) {
                 NotSupported();
-                Debug.Log("The shader " + s.ToString() + " on effect " + ToString() +
+                Debug.Log("The shader " + s + " on effect " + ToString() +
                           " is not supported on this platform!");
                 return null;
             }
-            else {
-                m2Create = new Material(s);
-                m2Create.hideFlags = HideFlags.DontSave;
-                if (m2Create)
-                    return m2Create;
-                else return null;
-            }
+            m2Create = new Material(s);
+            m2Create.hideFlags = HideFlags.DontSave;
+            if (m2Create)
+                return m2Create;
+            return null;
         }
 
 
@@ -41,22 +38,20 @@ namespace UnityStandardAssets.ImageEffects {
                 return null;
             }
 
-            if (m2Create && (m2Create.shader == s) && (s.isSupported))
+            if (m2Create && (m2Create.shader == s) && s.isSupported)
                 return m2Create;
 
             if (!s.isSupported) {
                 return null;
             }
-            else {
-                m2Create = new Material(s);
-                m2Create.hideFlags = HideFlags.DontSave;
-                if (m2Create)
-                    return m2Create;
-                else return null;
-            }
+            m2Create = new Material(s);
+            m2Create.hideFlags = HideFlags.DontSave;
+            if (m2Create)
+                return m2Create;
+            return null;
         }
 
-        void OnEnable() {
+        private void OnEnable() {
             isSupported = true;
         }
 
@@ -120,23 +115,20 @@ namespace UnityStandardAssets.ImageEffects {
         }
 
         // deprecated but needed for old effects to survive upgrading
-        bool CheckShader(Shader s) {
-            Debug.Log("The shader " + s.ToString() + " on effect " + ToString() +
+        private bool CheckShader(Shader s) {
+            Debug.Log("The shader " + s + " on effect " + ToString() +
                       " is not part of the Unity 3.2+ effects suite anymore. For best performance and quality, please ensure you are using the latest Standard Assets Image Effects (Pro only) package.");
             if (!s.isSupported) {
                 NotSupported();
                 return false;
             }
-            else {
-                return false;
-            }
+            return false;
         }
 
 
         protected void NotSupported() {
             enabled = false;
             isSupported = false;
-            return;
         }
 
 
@@ -147,12 +139,12 @@ namespace UnityStandardAssets.ImageEffects {
             float y2;
 
             RenderTexture.active = dest;
-            bool invertY = true; // source.texelSize.y < 0.0ff;
+            var invertY = true; // source.texelSize.y < 0.0ff;
             // Set up the simple Matrix
             GL.PushMatrix();
             GL.LoadOrtho();
 
-            for (int i = 0; i < material.passCount; i++) {
+            for (var i = 0; i < material.passCount; i++) {
                 material.SetPass(i);
 
                 float y1_;

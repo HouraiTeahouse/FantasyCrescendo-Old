@@ -1,12 +1,11 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class BoxOutline : ModifiedShadow {
-    const int maxHalfSampleCount = 20;
+    private const int maxHalfSampleCount = 20;
 
-    [SerializeField] [Range(1, maxHalfSampleCount)] int m_halfSampleCountX = 1;
-    [SerializeField] [Range(1, maxHalfSampleCount)] int m_halfSampleCountY = 1;
+    [SerializeField] [Range(1, maxHalfSampleCount)] private int m_halfSampleCountX = 1;
+    [SerializeField] [Range(1, maxHalfSampleCount)] private int m_halfSampleCountY = 1;
 
     public int halfSampleCountX {
         get { return m_halfSampleCountX; }
@@ -37,8 +36,8 @@ public class BoxOutline : ModifiedShadow {
         var count = 0;
         var dx = effectDistance.x / m_halfSampleCountX;
         var dy = effectDistance.y / m_halfSampleCountY;
-        for (int x = -m_halfSampleCountX; x <= m_halfSampleCountX; x++) {
-            for (int y = -m_halfSampleCountY; y <= m_halfSampleCountY; y++) {
+        for (var x = -m_halfSampleCountX; x <= m_halfSampleCountX; x++) {
+            for (var y = -m_halfSampleCountY; y <= m_halfSampleCountY; y++) {
                 if (!(x == 0 && y == 0)) {
                     var next = count + original;
                     ApplyShadow(verts, effectColor, count, next, dx * x, dy * y);

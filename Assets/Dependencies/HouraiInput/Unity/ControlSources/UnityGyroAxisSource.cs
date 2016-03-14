@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-
 
 namespace HouraiTeahouse.HouraiInput {
     // This is kind of "beta"... while it works on iOS, gyro controls are
@@ -11,12 +9,12 @@ namespace HouraiTeahouse.HouraiInput {
     public class UnityGyroAxisSource : InputControlSource {
         public enum GyroAxis {
             X = 0,
-            Y = 1,
+            Y = 1
         }
 
-        int axis;
+        private static Quaternion zeroAttitude;
 
-        static Quaternion zeroAttitude;
+        private readonly int axis;
 
 
         public UnityGyroAxisSource(GyroAxis axis) {
@@ -26,7 +24,7 @@ namespace HouraiTeahouse.HouraiInput {
 
 
         public float GetValue(InputDevice inputDevice) {
-            return GetAxis()[(int) axis];
+            return GetAxis()[axis];
         }
 
 
@@ -35,12 +33,12 @@ namespace HouraiTeahouse.HouraiInput {
         }
 
 
-        static Quaternion GetAttitude() {
+        private static Quaternion GetAttitude() {
             return Quaternion.Inverse(zeroAttitude) * Input.gyro.attitude;
         }
 
 
-        static Vector3 GetAxis() {
+        private static Vector3 GetAxis() {
             var gv = GetAttitude() * Vector3.forward;
             var gx = ApplyDeadZone(Mathf.Clamp(gv.x, -1.0f, 1.0f));
             var gy = ApplyDeadZone(Mathf.Clamp(gv.y, -1.0f, 1.0f));
@@ -48,7 +46,7 @@ namespace HouraiTeahouse.HouraiInput {
         }
 
 
-        static float ApplyDeadZone(float value) {
+        private static float ApplyDeadZone(float value) {
             return Mathf.InverseLerp(0.05f, 1.0f, Mathf.Abs(value)) * Mathf.Sign(value);
         }
 

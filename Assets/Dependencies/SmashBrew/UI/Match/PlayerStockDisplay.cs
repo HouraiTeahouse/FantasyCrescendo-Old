@@ -2,10 +2,14 @@ using UnityEngine;
 
 namespace HouraiTeahouse.SmashBrew.UI {
     /// <summary>
-    /// A behaviour used to display a Player's remaining stock
+    ///     A behaviour used to display a Player's remaining stock
     /// </summary>
     //TODO: Change to be event based 
     public class PlayerStockDisplay : MonoBehaviour, IDataComponent<Player> {
+        private Player _player;
+
+        private StockMatch _stockMatch;
+
         [SerializeField,
          Tooltip("The Text object used to display the additional stock beyond shown by the simple indicators")] private
             NumberText ExcessDisplay;
@@ -13,28 +17,32 @@ namespace HouraiTeahouse.SmashBrew.UI {
         [SerializeField, Tooltip("The standard indicators to show current stock values")] private GameObject[]
             standardIndicators;
 
-        private StockMatch _stockMatch;
-        private Player _player;
+        /// <summary>
+        ///     <see cref="IDataComponent{T}.SetData" />
+        /// </summary>
+        public void SetData(Player data) {
+            _player = data;
+        }
 
         /// <summary>
-        /// Unity Callback. Called before the object's first frame.
+        ///     Unity Callback. Called before the object's first frame.
         /// </summary>
-        void Start() {
+        private void Start() {
             _stockMatch = FindObjectOfType<StockMatch>();
             DisableCheck();
         }
 
         /// <summary>
-        /// Unity Callback. Called once per frame.
+        ///     Unity Callback. Called once per frame.
         /// </summary>
-        void Update() {
+        private void Update() {
             DisableCheck();
 
             if (_stockMatch == null)
                 return;
 
-            int stock = _stockMatch[_player];
-            bool excess = stock > standardIndicators.Length;
+            var stock = _stockMatch[_player];
+            var excess = stock > standardIndicators.Length;
             if (ExcessDisplay)
                 ExcessDisplay.gameObject.SetActive(excess);
             if (excess) {
@@ -51,7 +59,7 @@ namespace HouraiTeahouse.SmashBrew.UI {
             }
         }
 
-        void DisableCheck() {
+        private void DisableCheck() {
             if (_stockMatch != null && _stockMatch.enabled || _player == null)
                 return;
             if (ExcessDisplay)
@@ -60,13 +68,6 @@ namespace HouraiTeahouse.SmashBrew.UI {
                 if (indicator)
                     indicator.SetActive(false);
             enabled = false;
-        }
-
-        /// <summary>
-        /// <see cref="IDataComponent{T}.SetData"/>
-        /// </summary>
-        public void SetData(Player data) {
-            _player = data;
         }
     }
 }
