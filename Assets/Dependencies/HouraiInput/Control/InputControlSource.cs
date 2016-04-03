@@ -2,7 +2,7 @@ using System;
 
 
 namespace HouraiTeahouse.HouraiInput {
-    public interface InputControlSource {
+    public interface InputSource {
         float GetValue(InputDevice inputDevice);
         bool GetState(InputDevice inputDevice);
     }

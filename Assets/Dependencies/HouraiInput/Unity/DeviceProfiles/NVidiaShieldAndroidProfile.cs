@@ -1,6 +1,6 @@
 namespace HouraiTeahouse.HouraiInput {
-    // @cond nodoc
-    [AutoDiscover]
+
+
     public class NVidiaShieldAndroidProfile : UnityInputDeviceProfile {
         public NVidiaShieldAndroidProfile() {
             Name = "NVIDIA Shield Controller";

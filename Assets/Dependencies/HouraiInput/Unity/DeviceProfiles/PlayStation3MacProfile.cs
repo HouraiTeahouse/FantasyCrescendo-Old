@@ -1,6 +1,4 @@
 namespace HouraiTeahouse.HouraiInput {
-    // @cond nodoc
-    [AutoDiscover]
     public class PlayStation3MacProfile : UnityInputDeviceProfile {
         public PlayStation3MacProfile() {
             Name = "PlayStation 3 Controller";

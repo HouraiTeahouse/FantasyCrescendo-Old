@@ -1,6 +1,6 @@
 namespace HouraiTeahouse.HouraiInput {
-    // @cond nodoc
-    [AutoDiscover]
+
+
     public class XboxOneMacProfile : UnityInputDeviceProfile {
         public XboxOneMacProfile() {
             Name = "XBox One Controller";

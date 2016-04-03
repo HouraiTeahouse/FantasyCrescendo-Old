@@ -38,7 +38,7 @@ namespace HouraiTeahouse.HouraiInput {
             get {
                 var x = DPadLeft.State ? -DPadLeft.Value : DPadRight.Value;
                 var t = DPadUp.State ? DPadUp.Value : -DPadDown.Value;
-                var y = InputManager.InvertYAxis ? -t : t;
+                var y = HInput.InvertYAxis ? -t : t;
                 return new Vector2(x, y).normalized;
             }
         }
@@ -196,57 +196,47 @@ namespace HouraiTeahouse.HouraiInput {
 
 
         public void UpdateWithState(InputTarget inputTarget, bool state, ulong updateTick) {
-            GetControl(inputTarget).UpdateWithState(state, updateTick);
+            GetControl(inputTarget).Update(state, updateTick);
         }
 
 
         public void UpdateWithValue(InputTarget inputTarget, float value, ulong updateTick) {
-            GetControl(inputTarget).UpdateWithValue(value, updateTick);
+            GetControl(inputTarget).Update(value, updateTick);
         }
 
 
         public void PreUpdate(ulong updateTick, float deltaTime) {
-            var controlCount = Controls.GetLength(0);
-            for (var i = 0; i < controlCount; i++) {
-                var control = Controls[i];
+            foreach(InputControl control in Controls) {
                 if (control != null) {
                     control.PreUpdate(updateTick);
                 }
             }
         }
 
-
         public virtual void Update(ulong updateTick, float deltaTime) {
             // Implemented by subclasses.
         }
 
-
         public void PostUpdate(ulong updateTick, float deltaTime) {
             // Apply post-processing to controls.
-            var controlCount = Controls.GetLength(0);
-            for (var i = 0; i < controlCount; i++) {
-                var control = Controls[i];
-                if (control != null) {
-                    if (control.RawValue.HasValue) {
-                        control.UpdateWithValue(control.RawValue.Value, updateTick);
-                    }
-                    else if (control.PreValue.HasValue) {
-                        control.UpdateWithValue(ProcessAnalogControlValue(control, deltaTime), updateTick);
-                    }
+            foreach (InputControl control in Controls) {
+                if (control == null) continue;
+                if (control.RawValue.HasValue) 
+                    control.Update(control.RawValue.Value, updateTick);
+                else if (control.PreValue.HasValue) 
+                    control.Update(ProcessAnalogControlValue(control, deltaTime), updateTick);
 
-                    control.PostUpdate(updateTick);
+                control.PostUpdate(updateTick);
 
-                    if (control.HasChanged) {
-                        LastChangeTick = updateTick;
-                    }
-                }
+                if (control.HasChanged)
+                    LastChangeTick = updateTick;
             }
 
             // Update two-axis controls.
             LeftStick.Update(LeftStickX, LeftStickY, updateTick);
             RightStick.Update(RightStickX, RightStickY, updateTick);
 
-            var dpv = DPadVector;
+            Vector2 dpv = DPadVector;
             DPad.Update(dpv.x, dpv.y, updateTick);
         }
 
@@ -254,16 +244,14 @@ namespace HouraiTeahouse.HouraiInput {
         private float ProcessAnalogControlValue(InputControl control, float deltaTime) {
             var analogValue = control.PreValue.Value;
 
-            var obverseTarget = control.Obverse;
+            InputTarget? obverseTarget = control.Obverse;
             if (obverseTarget.HasValue) {
                 var obverseControl = GetControl(obverseTarget.Value);
-                if (obverseControl.PreValue.HasValue) {
+                if (obverseControl.PreValue.HasValue)
                     analogValue = ApplyCircularDeadZone(analogValue, obverseControl.PreValue.Value,
                         control.LowerDeadZone, control.UpperDeadZone);
-                }
-                else {
+                else
                     analogValue = ApplyDeadZone(analogValue, control.LowerDeadZone, control.UpperDeadZone);
-                }
             }
             else {
                 analogValue = ApplyDeadZone(analogValue, control.LowerDeadZone, control.UpperDeadZone);
@@ -272,45 +260,38 @@ namespace HouraiTeahouse.HouraiInput {
             return ApplySmoothing(analogValue, control.LastValue, deltaTime, control.Sensitivity);
         }
 
-
-        private float ApplyDeadZone(float value, float lowerDeadZone, float upperDeadZone) {
+        private static float ApplyDeadZone(float value, float lowerDeadZone, float upperDeadZone) {
             return Mathf.InverseLerp(lowerDeadZone, upperDeadZone, Mathf.Abs(value)) * Mathf.Sign(value);
         }
 
-
-        private float ApplyCircularDeadZone(float axisValue1, float axisValue2, float lowerDeadZone, float upperDeadZone) {
+        private static float ApplyCircularDeadZone(float axisValue1, float axisValue2, float lowerDeadZone, float upperDeadZone) {
             var axisVector = new Vector2(axisValue1, axisValue2);
-            var magnitude = Mathf.InverseLerp(lowerDeadZone, upperDeadZone, axisVector.magnitude);
+            float magnitude = Mathf.InverseLerp(lowerDeadZone, upperDeadZone, axisVector.magnitude);
             return (axisVector.normalized * magnitude).x;
         }
 
-
-        private float ApplySmoothing(float thisValue, float lastValue, float deltaTime, float sensitivity) {
+        private static float ApplySmoothing(float thisValue, float lastValue, float deltaTime, float sensitivity) {
             // 1.0f and above is instant (no smoothing).
             if (Mathf.Approximately(sensitivity, 1.0f)) {
                 return thisValue;
             }
 
             // Apply sensitivity (how quickly the value adapts to changes).
-            var maxDelta = deltaTime * sensitivity * 100.0f;
+            float maxDelta = deltaTime * sensitivity * 100.0f;
 
             // Snap to zero when changing direction quickly.
-            if (Mathf.Sign(lastValue) != Mathf.Sign(thisValue)) {
+            if (Mathf.Sign(lastValue) != Mathf.Sign(thisValue))
                 lastValue = 0.0f;
-            }
 
             return Mathf.MoveTowards(lastValue, thisValue, maxDelta);
         }
-
-
+        
         public bool LastChangedAfter(InputDevice otherDevice) {
             return LastChangeTick > otherDevice.LastChangeTick;
         }
 
-
         public virtual void Vibrate(float leftMotor, float rightMotor) {
         }
-
 
         public void Vibrate(float intensity) {
             Vibrate(intensity, intensity);

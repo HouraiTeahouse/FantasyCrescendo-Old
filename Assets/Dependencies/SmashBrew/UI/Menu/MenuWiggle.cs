@@ -14,7 +14,7 @@ namespace HouraiTeahouse.SmashBrew.UI {
         /// </summary>
         private void Update() {
             var distortion = Vector2.zero;
-            foreach (var device in InputManager.Devices) {
+            foreach (var device in HInput.Devices) {
                 if (device == null)
                     continue;
                 float x = device.GetControl(_verticalAxis);

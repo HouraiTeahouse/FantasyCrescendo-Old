@@ -1,6 +1,4 @@
 namespace HouraiTeahouse.HouraiInput {
-    // @cond nodoc
-    [AutoDiscover]
     public class GameStickProfile : UnityInputDeviceProfile {
         public GameStickProfile() {
             Name = "GameStick Controller";

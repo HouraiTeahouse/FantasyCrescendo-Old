@@ -1,6 +1,6 @@
 namespace HouraiTeahouse.HouraiInput {
-    // @cond nodoc
-    [AutoDiscover]
+
+
     public class ValveStreamingWinProfile : UnityInputDeviceProfile {
         public ValveStreamingWinProfile() {
             Name = "Valve Streaming Gamepad";

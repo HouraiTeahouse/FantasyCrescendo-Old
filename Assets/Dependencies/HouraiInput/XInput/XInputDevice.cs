@@ -3,8 +3,8 @@ using XInputDotNetPure;
 
 namespace HouraiTeahouse.HouraiInput {
     public class XInputDevice : InputDevice {
-        private GamePadState state;
-
+        public int DeviceIndex { get; private set; }
+        private GamePadState _state;
 
         public XInputDevice(int deviceIndex)
             : base("XInput Controller") {
@@ -43,56 +43,50 @@ namespace HouraiTeahouse.HouraiInput {
             QueryState();
         }
 
-        public int DeviceIndex { get; private set; }
-
-
-        public bool IsConnected {
-            get { return state.IsConnected; }
-        }
-
-
         public override void Update(ulong updateTick, float deltaTime) {
             QueryState();
 
-            UpdateWithValue(InputTarget.LeftStickX, state.ThumbSticks.Left.X, updateTick);
-            UpdateWithValue(InputTarget.LeftStickY, state.ThumbSticks.Left.Y, updateTick);
-            UpdateWithValue(InputTarget.RightStickX, state.ThumbSticks.Right.X, updateTick);
-            UpdateWithValue(InputTarget.RightStickY, state.ThumbSticks.Right.Y, updateTick);
+            UpdateWithValue(InputTarget.LeftStickX, _state.ThumbSticks.Left.X, updateTick);
+            UpdateWithValue(InputTarget.LeftStickY, _state.ThumbSticks.Left.Y, updateTick);
+            UpdateWithValue(InputTarget.RightStickX, _state.ThumbSticks.Right.X, updateTick);
+            UpdateWithValue(InputTarget.RightStickY, _state.ThumbSticks.Right.Y, updateTick);
 
-            UpdateWithValue(InputTarget.LeftTrigger, state.Triggers.Left, updateTick);
-            UpdateWithValue(InputTarget.RightTrigger, state.Triggers.Right, updateTick);
+            UpdateWithValue(InputTarget.LeftTrigger, _state.Triggers.Left, updateTick);
+            UpdateWithValue(InputTarget.RightTrigger, _state.Triggers.Right, updateTick);
 
-            UpdateWithState(InputTarget.DPadUp, state.DPad.Up == ButtonState.Pressed, updateTick);
-            UpdateWithState(InputTarget.DPadDown, state.DPad.Down == ButtonState.Pressed, updateTick);
-            UpdateWithState(InputTarget.DPadLeft, state.DPad.Left == ButtonState.Pressed, updateTick);
-            UpdateWithState(InputTarget.DPadRight, state.DPad.Right == ButtonState.Pressed, updateTick);
+            UpdateWithState(InputTarget.DPadUp, _state.DPad.Up == ButtonState.Pressed, updateTick);
+            UpdateWithState(InputTarget.DPadDown, _state.DPad.Down == ButtonState.Pressed, updateTick);
+            UpdateWithState(InputTarget.DPadLeft, _state.DPad.Left == ButtonState.Pressed, updateTick);
+            UpdateWithState(InputTarget.DPadRight, _state.DPad.Right == ButtonState.Pressed, updateTick);
 
-            UpdateWithState(InputTarget.Action1, state.Buttons.A == ButtonState.Pressed, updateTick);
-            UpdateWithState(InputTarget.Action2, state.Buttons.B == ButtonState.Pressed, updateTick);
-            UpdateWithState(InputTarget.Action3, state.Buttons.X == ButtonState.Pressed, updateTick);
-            UpdateWithState(InputTarget.Action4, state.Buttons.Y == ButtonState.Pressed, updateTick);
+            UpdateWithState(InputTarget.Action1, _state.Buttons.A == ButtonState.Pressed, updateTick);
+            UpdateWithState(InputTarget.Action2, _state.Buttons.B == ButtonState.Pressed, updateTick);
+            UpdateWithState(InputTarget.Action3, _state.Buttons.X == ButtonState.Pressed, updateTick);
+            UpdateWithState(InputTarget.Action4, _state.Buttons.Y == ButtonState.Pressed, updateTick);
 
-            UpdateWithState(InputTarget.LeftBumper, state.Buttons.LeftShoulder == ButtonState.Pressed, updateTick);
-            UpdateWithState(InputTarget.RightBumper, state.Buttons.RightShoulder == ButtonState.Pressed,
+            UpdateWithState(InputTarget.LeftBumper, _state.Buttons.LeftShoulder == ButtonState.Pressed, updateTick);
+            UpdateWithState(InputTarget.RightBumper, _state.Buttons.RightShoulder == ButtonState.Pressed,
                 updateTick);
 
-            UpdateWithState(InputTarget.LeftStickButton, state.Buttons.LeftStick == ButtonState.Pressed,
+            UpdateWithState(InputTarget.LeftStickButton, _state.Buttons.LeftStick == ButtonState.Pressed,
                 updateTick);
-            UpdateWithState(InputTarget.RightStickButton, state.Buttons.RightStick == ButtonState.Pressed,
+            UpdateWithState(InputTarget.RightStickButton, _state.Buttons.RightStick == ButtonState.Pressed,
                 updateTick);
 
-            UpdateWithState(InputTarget.Start, state.Buttons.Start == ButtonState.Pressed, updateTick);
-            UpdateWithState(InputTarget.Back, state.Buttons.Back == ButtonState.Pressed, updateTick);
+            UpdateWithState(InputTarget.Start, _state.Buttons.Start == ButtonState.Pressed, updateTick);
+            UpdateWithState(InputTarget.Back, _state.Buttons.Back == ButtonState.Pressed, updateTick);
         }
-
 
         public override void Vibrate(float leftMotor, float rightMotor) {
             GamePad.SetVibration((PlayerIndex) DeviceIndex, leftMotor, rightMotor);
         }
 
-
         private void QueryState() {
-            state = GamePad.GetState((PlayerIndex) DeviceIndex, GamePadDeadZone.Circular);
+            _state = GamePad.GetState((PlayerIndex) DeviceIndex, GamePadDeadZone.Circular);
+        }
+
+        public bool IsConnected {
+            get { return _state.IsConnected; }
         }
     }
 }

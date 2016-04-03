@@ -1,6 +1,6 @@
 namespace HouraiTeahouse.HouraiInput {
-    // @cond nodoc
-    [AutoDiscover]
+
+
     public class LogitechWingManWinProfile : UnityInputDeviceProfile {
         public LogitechWingManWinProfile() {
             Name = "Logitech WingMan Controller";

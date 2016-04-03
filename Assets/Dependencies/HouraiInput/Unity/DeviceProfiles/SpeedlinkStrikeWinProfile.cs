@@ -1,6 +1,6 @@
 namespace HouraiTeahouse.HouraiInput {
-    // @cond nodoc
-    [AutoDiscover]
+
+
     public class SpeedlinkStrikeWinProfile : UnityInputDeviceProfile {
         public SpeedlinkStrikeWinProfile() {
             Name = "Speedlink Strike Controller";

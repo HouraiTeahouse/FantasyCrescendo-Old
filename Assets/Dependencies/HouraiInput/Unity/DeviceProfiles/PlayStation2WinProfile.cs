@@ -1,6 +1,6 @@
 namespace HouraiTeahouse.HouraiInput {
-    // @cond nodoc
-    [AutoDiscover]
+
+
     public class PlayStation2WinProfile : UnityInputDeviceProfile {
         public PlayStation2WinProfile() {
             Name = "PlayStation DualShock 2 Controller";

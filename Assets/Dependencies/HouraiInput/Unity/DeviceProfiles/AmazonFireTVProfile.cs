@@ -1,8 +1,6 @@
 using UnityEngine;
 
 namespace HouraiTeahouse.HouraiInput {
-    // @cond nodoc
-    [AutoDiscover]
     public class AmazonFireTVProfile : UnityInputDeviceProfile {
         public AmazonFireTVProfile() {
             Name = "Amazon Fire Controller";
@@ -99,6 +97,7 @@ namespace HouraiTeahouse.HouraiInput {
                 new InputMapping {
                     Handle = "DPad Right",
                     Target = InputTarget.DPadRight,
+
                     Source = Analog4,
                     SourceRange = InputMapping.Range.Positive,
                     TargetRange = InputMapping.Range.Positive

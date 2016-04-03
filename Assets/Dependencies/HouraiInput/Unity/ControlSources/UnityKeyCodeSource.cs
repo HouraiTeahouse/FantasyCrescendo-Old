@@ -1,12 +1,11 @@
 using UnityEngine;
 
 namespace HouraiTeahouse.HouraiInput {
-    public class UnityKeyCodeSource : InputControlSource {
-        private readonly KeyCode[] keyCodeList;
-
+    public class UnityKeyCodeSource : InputSource {
+        private readonly KeyCode[] _keyCodeList;
 
         public UnityKeyCodeSource(params KeyCode[] keyCodeList) {
-            this.keyCodeList = keyCodeList;
+            this._keyCodeList = keyCodeList;
         }
 
 
@@ -16,8 +15,8 @@ namespace HouraiTeahouse.HouraiInput {
 
 
         public bool GetState(InputDevice inputDevice) {
-            for (var i = 0; i < keyCodeList.Length; i++) {
-                if (Input.GetKey(keyCodeList[i])) {
+            for (var i = 0; i < _keyCodeList.Length; i++) {
+                if (Input.GetKey(_keyCodeList[i])) {
                     return true;
                 }
             }

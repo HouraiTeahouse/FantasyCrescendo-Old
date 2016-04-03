@@ -1,6 +1,6 @@
 namespace HouraiTeahouse.HouraiInput {
-    // @cond nodoc
-    [AutoDiscover]
+
+
     public class PlayStationVitaPSMProfile : UnityInputDeviceProfile {
         public PlayStationVitaPSMProfile() {
             Name = "PlayStation Mobile";

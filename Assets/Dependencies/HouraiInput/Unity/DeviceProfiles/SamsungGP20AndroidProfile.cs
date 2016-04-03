@@ -1,6 +1,6 @@
 namespace HouraiTeahouse.HouraiInput {
-    // @cond nodoc
-    [AutoDiscover]
+
+
     public class SamsungGP20AndroidProfile : UnityInputDeviceProfile {
         public SamsungGP20AndroidProfile() {
             Name = "Samgsung Game Pad EI-GP20";

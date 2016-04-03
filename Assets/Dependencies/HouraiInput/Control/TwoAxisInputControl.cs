@@ -46,7 +46,7 @@ namespace HouraiTeahouse.HouraiInput {
             Left.UpdateWithValue(Mathf.Clamp01(-X), updateTick, StateThreshold);
             Right.UpdateWithValue(Mathf.Clamp01(X), updateTick, StateThreshold);
 
-            if (InputManager.InvertYAxis) {
+            if (HInput.InvertYAxis) {
                 Up.UpdateWithValue(Mathf.Clamp01(-Y), updateTick, StateThreshold);
                 Down.UpdateWithValue(Mathf.Clamp01(Y), updateTick, StateThreshold);
             }

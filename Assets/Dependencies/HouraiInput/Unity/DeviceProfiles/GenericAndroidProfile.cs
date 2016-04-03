@@ -1,6 +1,4 @@
 namespace HouraiTeahouse.HouraiInput {
-    // @cond nodoc
-    [AutoDiscover]
     public class GenericAndroidProfile : UnityInputDeviceProfile {
         public GenericAndroidProfile() {
             Name = "Generic Controller";

@@ -1,6 +1,6 @@
 namespace HouraiTeahouse.HouraiInput {
-    // @cond nodoc
-    [AutoDiscover]
+
+
     public class LogitechF310ModeXWinProfile : UnityInputDeviceProfile {
         public LogitechF310ModeXWinProfile() {
             Name = "Logitech F310 Controller";

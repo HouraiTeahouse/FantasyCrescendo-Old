@@ -1,6 +1,4 @@
 namespace HouraiTeahouse.HouraiInput {
-    // @cond nodoc
-    [AutoDiscover]
     public class GenericBlackBerryProfile : UnityInputDeviceProfile {
         public GenericBlackBerryProfile() {
             Name = "Generic Gamepad";

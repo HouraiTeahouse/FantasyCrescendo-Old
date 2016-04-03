@@ -1,6 +1,6 @@
 namespace HouraiTeahouse.HouraiInput {
-    // @cond nodoc
-    [AutoDiscover]
+
+
     public class SteelSeriesFreeWinProfile : UnityInputDeviceProfile {
         public SteelSeriesFreeWinProfile() {
             Name = "SteelSeries Free";
