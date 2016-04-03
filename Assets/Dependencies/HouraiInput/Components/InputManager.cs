@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace HouraiTeahouse.HouraiInput {
-    public class InControlManager : MonoBehaviour {
+    public class InputManager : MonoBehaviour {
         public bool logDebugInfo = false;
         public bool invertYAxis = false;
         public bool enableXInput = false;
@@ -14,13 +14,12 @@ namespace HouraiTeahouse.HouraiInput {
 
         private void OnEnable() {
             if (logDebugInfo) {
-                Debug.Log("InControl (version " + InputManager.Version + ")");
                 Logger.OnLogMessage += HandleOnLogMessage;
             }
 
-            InputManager.InvertYAxis = invertYAxis;
-            InputManager.EnableXInput = enableXInput;
-            InputManager.SetupInternal();
+            HInput.InvertYAxis = invertYAxis;
+            HInput.EnableXInput = enableXInput;
+            HInput.SetupInternal();
 
             foreach (var className in customProfiles) {
                 var classType = Type.GetType(className);
@@ -29,7 +28,7 @@ namespace HouraiTeahouse.HouraiInput {
                 }
                 else {
                     var customProfileInstance = Activator.CreateInstance(classType) as UnityInputDeviceProfile;
-                    InputManager.AttachDevice(new UnityInputDevice(customProfileInstance));
+                    HInput.AttachDevice(new UnityInputDevice(customProfileInstance));
                 }
             }
 
@@ -38,11 +37,9 @@ namespace HouraiTeahouse.HouraiInput {
             }
         }
 
-
         private void OnDisable() {
-            InputManager.ResetInternal();
+            HInput.ResetInternal();
         }
-
 
 #if UNITY_ANDROID && INCONTROL_OUYA && !UNITY_EDITOR
 		void Start()
@@ -65,32 +62,21 @@ namespace HouraiTeahouse.HouraiInput {
 
         private void Update() {
             if (!useFixedUpdate || Mathf.Approximately(Time.timeScale, 0.0f)) {
-                InputManager.UpdateInternal();
+                HInput.UpdateInternal();
             }
         }
 
 
         private void FixedUpdate() {
             if (useFixedUpdate) {
-                InputManager.UpdateInternal();
+                HInput.UpdateInternal();
             }
         }
 
 
         private void OnApplicationFocus(bool focusState) {
-            InputManager.OnApplicationFocus(focusState);
+            HInput.OnApplicationFocus(focusState);
         }
-
-
-        private void OnApplicationPause(bool pauseState) {
-            InputManager.OnApplicationPause(pauseState);
-        }
-
-
-        private void OnApplicationQuit() {
-            InputManager.OnApplicationQuit();
-        }
-
 
         private void HandleOnLogMessage(LogMessage logMessage) {
             switch (logMessage.type) {

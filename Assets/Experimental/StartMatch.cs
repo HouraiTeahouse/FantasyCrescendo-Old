@@ -10,7 +10,7 @@ public class StartMatch : MonoBehaviour {
 
     // Update is called once per frame
     private void Update() {
-        foreach (var device in InputManager.Devices)
+        foreach (var device in HInput.Devices)
             if (device.GetControl(button).WasPressed)
                 SceneManager.LoadScene(scene);
     }

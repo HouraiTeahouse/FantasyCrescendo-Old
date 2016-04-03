@@ -19,12 +19,11 @@ namespace HouraiTeahouse.HouraiInput {
         /// </summary>
         public bool IsButton { get; protected set; }
 
-        InputSource _thisSource;
-        InputSource _lastSource;
-        InputSource _tempSource;
+        private InputState _currentState;
+        private InputState _lastState;
+        private InputState _tempState;
 
-        ulong zeroTick;
-
+        private ulong _zeroTick;
 
         private InputControl(string handle) {
             Handle = handle;
@@ -32,7 +31,6 @@ namespace HouraiTeahouse.HouraiInput {
             LowerDeadZone = 0.0f;
             UpperDeadZone = 1.0f;
         }
-
 
         public InputControl(string handle, InputTarget target) {
             Handle = handle;
@@ -42,126 +40,100 @@ namespace HouraiTeahouse.HouraiInput {
                        (target >= InputTarget.Button0 && target <= InputTarget.Button19);
         }
 
-
-        public void UpdateWithState(bool state, ulong updateTick) {
-            if (IsNull) {
+        public void Update(bool state, ulong updateTick) {
+            if (IsNull)
                 throw new InvalidOperationException("A null control cannot be updated.");
-            }
 
-            if (UpdateTick > updateTick) {
+            if (UpdateTick > updateTick)
                 throw new InvalidOperationException("A control cannot be updated with an earlier tick.");
-            }
 
-            _tempSource.Set(state || _tempSource.State);
+            _tempState |= state;
         }
 
-
-        public void UpdateWithValue(float value, ulong updateTick) {
-            if (IsNull) {
+        public void Update(float value, ulong updateTick) {
+            if (IsNull) 
                 throw new InvalidOperationException("A null control cannot be updated.");
-            }
 
-            if (UpdateTick > updateTick) {
+            if (UpdateTick > updateTick)
                 throw new InvalidOperationException("A control cannot be updated with an earlier tick.");
-            }
 
-            if (Mathf.Abs(value) > Mathf.Abs(_tempSource.Value)) {
-                _tempSource.Set(value);
-            }
+            if (Mathf.Abs(value) > Mathf.Abs(_tempState.Value))
+                _tempState = value;
         }
-
 
         internal void PreUpdate(ulong updateTick) {
             RawValue = null;
             PreValue = null;
 
-            _lastSource = _thisSource;
-            _tempSource.Reset();
+            _lastState = _currentState;
+            _tempState.Reset();
         }
-
 
         internal void PostUpdate(ulong updateTick) {
-            _thisSource = _tempSource;
-            if (_thisSource != _lastSource) {
+            _currentState = _tempState;
+            if (_currentState != _lastState) 
                 UpdateTick = updateTick;
-            }
         }
-
 
         internal void SetZeroTick() {
-            zeroTick = UpdateTick;
+            _zeroTick = UpdateTick;
         }
-
 
         internal bool IsOnZeroTick {
-            get { return UpdateTick == zeroTick; }
+            get { return UpdateTick == _zeroTick; }
         }
-
 
         public bool State {
-            get { return _thisSource.State; }
+            get { return _currentState.State; }
         }
-
 
         public bool LastState {
-            get { return _lastSource.State; }
+            get { return _lastState.State; }
         }
-
 
         public float Value {
-            get { return _thisSource.Value; }
+            get { return _currentState.Value; }
         }
-
 
         public float LastValue {
-            get { return _lastSource.Value; }
+            get { return _lastState.Value; }
         }
-
 
         public bool HasChanged {
-            get { return _thisSource != _lastSource; }
+            get { return _currentState != _lastState; }
         }
-
 
         public bool IsPressed {
-            get { return _thisSource.State; }
+            get { return _currentState.State; }
         }
-
 
         public bool WasPressed {
-            get { return _thisSource && !_lastSource; }
+            get { return _currentState && !_lastState; }
         }
-
 
         public bool WasReleased {
-            get { return !_thisSource && _lastSource; }
+            get { return !_currentState && _lastState; }
         }
-
 
         public bool IsNull {
             get { return this == Null; }
         }
 
-
         public bool IsNotNull {
             get { return this != Null; }
         }
-
 
         public override string ToString() {
             return string.Format("[InputControl: Handle={0}, Value={1}]", Handle, Value);
         }
 
-
         public static implicit operator bool(InputControl control) {
             return control.State;
         }
 
-
         public static implicit operator float(InputControl control) {
             return control.Value;
         }
-
 
         public InputTarget? Obverse {
             get {

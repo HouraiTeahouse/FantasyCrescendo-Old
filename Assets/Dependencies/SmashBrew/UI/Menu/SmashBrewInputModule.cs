@@ -57,7 +57,7 @@ namespace HouraiTeahouse.SmashBrew.UI {
             var x = Input.GetAxisRaw(_horizontalKeyboard);
             var y = Input.GetAxisRaw(_verticalKeyboard);
             var count = 1;
-            foreach (var device in InputManager.Devices) {
+            foreach (InputDevice device in HInput.Devices) {
                 if (device == null)
                     continue;
                 x += device.GetControl(_horizontalGamepad);

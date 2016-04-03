@@ -1,6 +1,6 @@
 namespace HouraiTeahouse.HouraiInput {
-    // @cond nodoc
-    [AutoDiscover]
+
+
     public class Xbox360LinuxProfile : UnityInputDeviceProfile {
         public Xbox360LinuxProfile() {
             Name = "XBox 360 Controller";
@@ -16,8 +16,6 @@ namespace HouraiTeahouse.HouraiInput {
             };
 
             LastResortRegex = "360";
-
-            MaxUnityVersion = new VersionInfo(4, 9);
 
             ButtonMappings = new[] {
                 new InputMapping {

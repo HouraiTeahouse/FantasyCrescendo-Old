@@ -1,6 +1,6 @@
 namespace HouraiTeahouse.HouraiInput {
-    // @cond nodoc
-    [AutoDiscover]
+
+
     public class LogitechRumblePad2MacProfile : UnityInputDeviceProfile {
         public LogitechRumblePad2MacProfile() {
             Name = "Logitech RumblePad 2 Controller";

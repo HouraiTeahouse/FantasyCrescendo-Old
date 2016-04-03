@@ -5,54 +5,45 @@ namespace HouraiTeahouse.HouraiInput {
     // inconsistent and are usually fine tuned to the games that use them
     // which is somewhat beyond the scope of this project. But, if you 
     // are curious how to go about it, here you go.
-    //
-    public class UnityGyroAxisSource : InputControlSource {
+    public class UnityGyroAxisSource : InputSource {
         public enum GyroAxis {
             X = 0,
             Y = 1
         }
 
-        private static Quaternion zeroAttitude;
-
-        private readonly int axis;
-
+        private readonly GyroAxis _axis;
+        private static Quaternion _zeroAttitude;
 
         public UnityGyroAxisSource(GyroAxis axis) {
-            this.axis = (int) axis;
+            _axis = axis;
             Calibrate();
         }
 
-
         public float GetValue(InputDevice inputDevice) {
-            return GetAxis()[axis];
+            return GetAxis()[(int) _axis];
         }
-
 
         public bool GetState(InputDevice inputDevice) {
             return !Mathf.Approximately(GetValue(inputDevice), 0.0f);
         }
 
-
         private static Quaternion GetAttitude() {
-            return Quaternion.Inverse(zeroAttitude) * Input.gyro.attitude;
+            return Quaternion.Inverse(_zeroAttitude) * Input.gyro.attitude;
         }
-
 
         private static Vector3 GetAxis() {
-            var gv = GetAttitude() * Vector3.forward;
-            var gx = ApplyDeadZone(Mathf.Clamp(gv.x, -1.0f, 1.0f));
-            var gy = ApplyDeadZone(Mathf.Clamp(gv.y, -1.0f, 1.0f));
+            Vector3 gv = GetAttitude() * Vector3.forward;
+            float gx = ApplyDeadZone(Mathf.Clamp(gv.x, -1.0f, 1.0f));
+            float gy = ApplyDeadZone(Mathf.Clamp(gv.y, -1.0f, 1.0f));
             return new Vector3(gx, gy);
         }
-
 
         private static float ApplyDeadZone(float value) {
             return Mathf.InverseLerp(0.05f, 1.0f, Mathf.Abs(value)) * Mathf.Sign(value);
         }
 
-
         public static void Calibrate() {
-            zeroAttitude = Input.gyro.attitude;
+            _zeroAttitude = Input.gyro.attitude;
         }
     }
 }

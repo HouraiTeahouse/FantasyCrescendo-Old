@@ -140,9 +140,9 @@ namespace HouraiTeahouse.SmashBrew {
 
         public InputDevice Controller {
             get {
-                if (PlayerNumber < 0 || PlayerNumber >= InputManager.Devices.Count)
+                if (PlayerNumber < 0 || PlayerNumber >= HInput.Devices.Count)
                     return null;
-                return InputManager.Devices[PlayerNumber];
+                return HInput.Devices[PlayerNumber];
             }
         }
 

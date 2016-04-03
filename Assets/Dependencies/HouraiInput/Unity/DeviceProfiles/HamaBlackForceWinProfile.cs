@@ -1,6 +1,6 @@
 namespace HouraiTeahouse.HouraiInput {
-    // @cond nodoc
-    [AutoDiscover]
+
+
     public class HamaBlackForceWinProfile : UnityInputDeviceProfile {
         public HamaBlackForceWinProfile() {
             Name = "Hama Black Force Controller";

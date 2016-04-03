@@ -1,8 +1,8 @@
 using UnityEngine;
 
 namespace HouraiTeahouse.HouraiInput {
-    // @cond nodoc
-    [AutoDiscover]
+
+
     public class PlayStation3AndroidProfile : UnityInputDeviceProfile {
         public PlayStation3AndroidProfile() {
             Name = "PlayStation 3 Controller";

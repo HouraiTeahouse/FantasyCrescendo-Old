@@ -1,7 +1,7 @@
 using UnityEngine;
 
 namespace HouraiTeahouse.HouraiInput {
-    [AutoDiscover]
+
     public class GoogleNexusPlayerRemoteProfile : UnityInputDeviceProfile {
         public GoogleNexusPlayerRemoteProfile() {
             Name = "Google Nexus Player Remote";

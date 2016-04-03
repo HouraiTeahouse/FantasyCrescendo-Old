@@ -1,6 +1,6 @@
 namespace HouraiTeahouse.HouraiInput {
-    // @cond nodoc
-    [AutoDiscover]
+
+
     public class MogaProWinProfile : UnityInputDeviceProfile {
         public MogaProWinProfile() {
             Name = "MOGA Pro Controller";

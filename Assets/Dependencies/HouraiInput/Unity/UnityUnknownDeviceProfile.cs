@@ -2,9 +2,8 @@ namespace HouraiTeahouse.HouraiInput {
     public class UnityUnknownDeviceProfile : UnityInputDeviceProfile {
         public UnityUnknownDeviceProfile(string joystickName) {
             Name = "Unknown Device";
-            if (joystickName != "") {
-                Name += " (" + joystickName + ")";
-            }
+            if (!string.IsNullOrEmpty(joystickName))
+                Name += string.Format(" ({0})", joystickName);
 
             Meta = "";
             Sensitivity = 1.0f;
@@ -31,7 +30,6 @@ namespace HouraiTeahouse.HouraiInput {
                 };
             }
         }
-
 
         public override bool IsKnown {
             get { return false; }

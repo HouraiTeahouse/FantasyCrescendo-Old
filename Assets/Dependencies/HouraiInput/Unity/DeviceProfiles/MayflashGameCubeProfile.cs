@@ -1,6 +1,6 @@
 namespace HouraiTeahouse.HouraiInput {
-    // @cond nodoc
-    [AutoDiscover]
+
+
     public class MayflashGameCubeWinProfile : UnityInputDeviceProfile {
         public MayflashGameCubeWinProfile() {
             // Gamecube Controller Adapter for PC USB

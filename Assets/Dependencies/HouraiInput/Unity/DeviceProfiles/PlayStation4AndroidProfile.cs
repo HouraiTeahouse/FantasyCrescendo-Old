@@ -1,7 +1,5 @@
 namespace HouraiTeahouse.HouraiInput {
-    // @cond nodoc
     // Tested with Samsung Galaxy Note 2 connected by OTG cable.
-    [AutoDiscover]
     public class PlayStation4AndroidProfile : UnityInputDeviceProfile {
         public PlayStation4AndroidProfile() {
             Name = "PlayStation 4 Controller";

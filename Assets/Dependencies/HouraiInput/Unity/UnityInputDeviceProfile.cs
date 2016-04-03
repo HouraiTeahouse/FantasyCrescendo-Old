@@ -5,9 +5,6 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace HouraiTeahouse.HouraiInput {
-    public sealed class AutoDiscover : Attribute {
-    }
-
 
     public class UnityInputDeviceProfile {
         private static readonly HashSet<Type> hideList = new HashSet<Type>();
@@ -17,25 +14,24 @@ namespace HouraiTeahouse.HouraiInput {
         protected string LastResortRegex;
         private float lowerDeadZone;
 
-        private float sensitivity;
+        private static readonly HashSet<Type> HiddenTypes = new HashSet<Type>();
 
-        protected string[] SupportedPlatforms;
-        private float upperDeadZone;
+        private float _sensitivity;
+        private float _lowerDeadZone;
+        private float _upperDeadZone;
 
+        protected string[] SupportedPlatforms { get; set; }
 
         public UnityInputDeviceProfile() {
             Name = "";
             Meta = "";
 
-            sensitivity = 1.0f;
-            lowerDeadZone = 0.2f;
-            upperDeadZone = 0.9f;
+            _sensitivity = 1.0f;
+            _lowerDeadZone = 0.2f;
+            _upperDeadZone = 0.9f;
 
             AnalogMappings = new InputMapping[0];
             ButtonMappings = new InputMapping[0];
-
-            MinUnityVersion = new VersionInfo(3);
-            MaxUnityVersion = new VersionInfo(9);
         }
 
         public string Name { get; protected set; }
@@ -44,56 +40,28 @@ namespace HouraiTeahouse.HouraiInput {
         public InputMapping[] AnalogMappings { get; protected set; }
         public InputMapping[] ButtonMappings { get; protected set; }
 
-        public VersionInfo MinUnityVersion { get; protected set; }
-        public VersionInfo MaxUnityVersion { get; protected set; }
-
-
         public float Sensitivity {
-            get { return sensitivity; }
-            protected set { sensitivity = Mathf.Clamp01(value); }
+            get { return _sensitivity; }
+            protected set { _sensitivity = Mathf.Clamp01(value); }
         }
-
 
         public float LowerDeadZone {
-            get { return lowerDeadZone; }
-            protected set { lowerDeadZone = Mathf.Clamp01(value); }
+            get { return _lowerDeadZone; }
+            protected set { _lowerDeadZone = Mathf.Clamp01(value); }
         }
-
 
         public float UpperDeadZone {
-            get { return upperDeadZone; }
-            protected set { upperDeadZone = Mathf.Clamp01(value); }
+            get { return _upperDeadZone; }
+            protected set { _upperDeadZone = Mathf.Clamp01(value); }
         }
-
 
         public bool IsSupportedOnThisPlatform {
             get {
-                if (!IsSupportedOnThisVersionOfUnity) {
-                    return false;
-                }
-
-                if (SupportedPlatforms == null || SupportedPlatforms.Length == 0) {
+                if (SupportedPlatforms == null || SupportedPlatforms.Length == 0)
                     return true;
-                }
-
-                foreach (var platform in SupportedPlatforms) {
-                    if (InputManager.Platform.Contains(platform.ToUpper())) {
-                        return true;
-                    }
-                }
-
-                return false;
+                return SupportedPlatforms.Any(platform => HInput.Platform.Contains(platform.ToUpper()));
             }
         }
-
-
-        public bool IsSupportedOnThisVersionOfUnity {
-            get {
-                var unityVersion = VersionInfo.UnityVersion();
-                return unityVersion >= MinUnityVersion && unityVersion <= MaxUnityVersion;
-            }
-        }
-
 
         public bool IsJoystick {
             get {
@@ -103,148 +71,122 @@ namespace HouraiTeahouse.HouraiInput {
             }
         }
 
-
-        public bool IsNotJoystick {
-            get { return !IsJoystick; }
-        }
-
-
-        public bool IsHidden {
-            get { return hideList.Contains(GetType()); }
-        }
-
-
-        public virtual bool IsKnown {
-            get { return true; }
-        }
-
-
-        public int AnalogCount {
-            get { return AnalogMappings.Length; }
-        }
-
-
-        public int ButtonCount {
-            get { return ButtonMappings.Length; }
-        }
-
-
         public bool HasJoystickName(string joystickName) {
-            if (IsNotJoystick) {
+            if (!IsJoystick)
                 return false;
-            }
 
-            if (JoystickNames != null) {
-                if (JoystickNames.Contains(joystickName, StringComparer.OrdinalIgnoreCase)) {
-                    return true;
-                }
-            }
+            if (JoystickNames != null && JoystickNames.Contains(joystickName, StringComparer.OrdinalIgnoreCase))
+                return true;
 
-            if (JoystickRegex != null) {
-                for (var i = 0; i < JoystickRegex.Length; i++) {
-                    if (Regex.IsMatch(joystickName, JoystickRegex[i], RegexOptions.IgnoreCase)) {
-                        return true;
-                    }
-                }
-            }
+            if (JoystickRegex != null)
+                return JoystickRegex.Any(t => Regex.IsMatch(joystickName, t, RegexOptions.IgnoreCase));
 
             return false;
         }
 
 
         public bool HasLastResortRegex(string joystickName) {
-            if (IsNotJoystick) {
+            if (!IsJoystick)
                 return false;
-            }
 
-            if (LastResortRegex == null) {
-                return false;
-            }
-
-            return Regex.IsMatch(joystickName, LastResortRegex, RegexOptions.IgnoreCase);
+            return LastResortRegex != null && Regex.IsMatch(joystickName, LastResortRegex, RegexOptions.IgnoreCase);
         }
-
 
         public bool HasJoystickOrRegexName(string joystickName) {
             return HasJoystickName(joystickName) || HasLastResortRegex(joystickName);
         }
 
-
         public static void Hide(Type type) {
-            hideList.Add(type);
+            HiddenTypes.Add(type);
         }
 
-        #region InputControlSource Helpers
+        public bool IsHidden {
+            get { return HiddenTypes.Contains(GetType()); }
+        }
 
-        protected static InputControlSource Button(int index) {
+        public virtual bool IsKnown {
+            get { return true; }
+        }
+
+        public int AnalogCount {
+            get { return AnalogMappings.Length; }
+        }
+
+        public int ButtonCount {
+            get { return ButtonMappings.Length; }
+        }
+
+        #region InputSource Helpers
+
+        protected static InputSource Button(int index) {
             return new UnityButtonSource(index);
         }
 
-        protected static InputControlSource Analog(int index) {
+        protected static InputSource Analog(int index) {
             return new UnityAnalogSource(index);
         }
 
-        protected static InputControlSource KeyCodeButton(params KeyCode[] keyCodeList) {
+        protected static InputSource KeyCodeButton(params KeyCode[] keyCodeList) {
             return new UnityKeyCodeSource(keyCodeList);
         }
 
-        protected static InputControlSource KeyCodeComboButton(params KeyCode[] keyCodeList) {
+        protected static InputSource KeyCodeComboButton(params KeyCode[] keyCodeList) {
             return new UnityKeyCodeComboSource(keyCodeList);
         }
 
-        protected static InputControlSource KeyCodeAxis(KeyCode negativeKeyCode, KeyCode positiveKeyCode) {
+        protected static InputSource KeyCodeAxis(KeyCode negativeKeyCode, KeyCode positiveKeyCode) {
             return new UnityKeyCodeAxisSource(negativeKeyCode, positiveKeyCode);
         }
 
-        protected static InputControlSource Button0 = Button(0);
-        protected static InputControlSource Button1 = Button(1);
-        protected static InputControlSource Button2 = Button(2);
-        protected static InputControlSource Button3 = Button(3);
-        protected static InputControlSource Button4 = Button(4);
-        protected static InputControlSource Button5 = Button(5);
-        protected static InputControlSource Button6 = Button(6);
-        protected static InputControlSource Button7 = Button(7);
-        protected static InputControlSource Button8 = Button(8);
-        protected static InputControlSource Button9 = Button(9);
-        protected static InputControlSource Button10 = Button(10);
-        protected static InputControlSource Button11 = Button(11);
-        protected static InputControlSource Button12 = Button(12);
-        protected static InputControlSource Button13 = Button(13);
-        protected static InputControlSource Button14 = Button(14);
-        protected static InputControlSource Button15 = Button(15);
-        protected static InputControlSource Button16 = Button(16);
-        protected static InputControlSource Button17 = Button(17);
-        protected static InputControlSource Button18 = Button(18);
-        protected static InputControlSource Button19 = Button(19);
+        protected static InputSource Button0 = Button(0);
+        protected static InputSource Button1 = Button(1);
+        protected static InputSource Button2 = Button(2);
+        protected static InputSource Button3 = Button(3);
+        protected static InputSource Button4 = Button(4);
+        protected static InputSource Button5 = Button(5);
+        protected static InputSource Button6 = Button(6);
+        protected static InputSource Button7 = Button(7);
+        protected static InputSource Button8 = Button(8);
+        protected static InputSource Button9 = Button(9);
+        protected static InputSource Button10 = Button(10);
+        protected static InputSource Button11 = Button(11);
+        protected static InputSource Button12 = Button(12);
+        protected static InputSource Button13 = Button(13);
+        protected static InputSource Button14 = Button(14);
+        protected static InputSource Button15 = Button(15);
+        protected static InputSource Button16 = Button(16);
+        protected static InputSource Button17 = Button(17);
+        protected static InputSource Button18 = Button(18);
+        protected static InputSource Button19 = Button(19);
 
-        protected static InputControlSource Analog0 = Analog(0);
-        protected static InputControlSource Analog1 = Analog(1);
-        protected static InputControlSource Analog2 = Analog(2);
-        protected static InputControlSource Analog3 = Analog(3);
-        protected static InputControlSource Analog4 = Analog(4);
-        protected static InputControlSource Analog5 = Analog(5);
-        protected static InputControlSource Analog6 = Analog(6);
-        protected static InputControlSource Analog7 = Analog(7);
-        protected static InputControlSource Analog8 = Analog(8);
-        protected static InputControlSource Analog9 = Analog(9);
-        protected static InputControlSource Analog10 = Analog(10);
-        protected static InputControlSource Analog11 = Analog(11);
-        protected static InputControlSource Analog12 = Analog(12);
-        protected static InputControlSource Analog13 = Analog(13);
-        protected static InputControlSource Analog14 = Analog(14);
-        protected static InputControlSource Analog15 = Analog(15);
-        protected static InputControlSource Analog16 = Analog(16);
-        protected static InputControlSource Analog17 = Analog(17);
-        protected static InputControlSource Analog18 = Analog(18);
-        protected static InputControlSource Analog19 = Analog(19);
+        protected static InputSource Analog0 = Analog(0);
+        protected static InputSource Analog1 = Analog(1);
+        protected static InputSource Analog2 = Analog(2);
+        protected static InputSource Analog3 = Analog(3);
+        protected static InputSource Analog4 = Analog(4);
+        protected static InputSource Analog5 = Analog(5);
+        protected static InputSource Analog6 = Analog(6);
+        protected static InputSource Analog7 = Analog(7);
+        protected static InputSource Analog8 = Analog(8);
+        protected static InputSource Analog9 = Analog(9);
+        protected static InputSource Analog10 = Analog(10);
+        protected static InputSource Analog11 = Analog(11);
+        protected static InputSource Analog12 = Analog(12);
+        protected static InputSource Analog13 = Analog(13);
+        protected static InputSource Analog14 = Analog(14);
+        protected static InputSource Analog15 = Analog(15);
+        protected static InputSource Analog16 = Analog(16);
+        protected static InputSource Analog17 = Analog(17);
+        protected static InputSource Analog18 = Analog(18);
+        protected static InputSource Analog19 = Analog(19);
 
-        protected static InputControlSource MouseButton0 = new UnityMouseButtonSource(0);
-        protected static InputControlSource MouseButton1 = new UnityMouseButtonSource(1);
-        protected static InputControlSource MouseButton2 = new UnityMouseButtonSource(2);
+        protected static InputSource MouseButton0 = new UnityMouseButtonSource(0);
+        protected static InputSource MouseButton1 = new UnityMouseButtonSource(1);
+        protected static InputSource MouseButton2 = new UnityMouseButtonSource(2);
 
-        protected static InputControlSource MouseXAxis = new UnityMouseAxisSource("x");
-        protected static InputControlSource MouseYAxis = new UnityMouseAxisSource("y");
-        protected static InputControlSource MouseScrollWheel = new UnityMouseAxisSource("z");
+        protected static InputSource MouseXAxis = new UnityMouseAxisSource("x");
+        protected static InputSource MouseYAxis = new UnityMouseAxisSource("y");
+        protected static InputSource MouseScrollWheel = new UnityMouseAxisSource("z");
 
         #endregion
     }

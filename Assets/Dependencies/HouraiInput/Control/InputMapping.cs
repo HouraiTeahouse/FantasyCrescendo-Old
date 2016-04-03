@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-
 
 namespace HouraiTeahouse.HouraiInput {
     public class InputMapping {
@@ -14,7 +12,7 @@ namespace HouraiTeahouse.HouraiInput {
         }
 
 
-        public InputControlSource Source;
+        public InputSource Source;
         public InputTarget Target;
 
         // Invert the final mapped value.
@@ -56,7 +54,7 @@ namespace HouraiTeahouse.HouraiInput {
                 targetValue = Mathf.Lerp(TargetRange.Minimum, TargetRange.Maximum, sourceValue);
             }
 
-            if (Invert ^ (IsYAxis && InputManager.InvertYAxis)) {
+            if (Invert ^ (IsYAxis && HInput.InvertYAxis)) {
                 targetValue = -targetValue;
             }
 

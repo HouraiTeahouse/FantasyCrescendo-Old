@@ -1,6 +1,4 @@
 namespace HouraiTeahouse.HouraiInput {
-    // @cond nodoc
-    [AutoDiscover]
     public class PlayStation3WinProfile : UnityInputDeviceProfile {
         public PlayStation3WinProfile() {
             Name = "PlayStation 3 Controller";
