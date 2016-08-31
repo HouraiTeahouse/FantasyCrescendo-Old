@@ -12,7 +12,8 @@
 		_Emission("Emission", Range(0,1)) = 0.0
 	}
 	SubShader {
-		Tags { "RenderType"="Opaque" }
+		//Tags { "RenderType"="Opaque" "Queue" = "Geometry+2" }
+		Tags{ "Queue" = "Geometry+2" }
 		LOD 200
 		
 		CGPROGRAM

@@ -349,6 +349,21 @@ ModelImporter:
     100682: tree4_
     100684: tree4_001
     100686: tree4_002
+    100688: Box034
+    100690: Box035
+    100692: Box036
+    100694: Box037
+    100696: Box038
+    100698: Box039
+    100700: Box040
+    100702: Box043
+    100704: Box044
+    100706: Box045
+    100708: Cylinder004
+    100710: Cylinder005
+    100712: Group001
+    100714: Line003
+    100716: Line005
     400000: Arc001
     400002: Arc002
     400004: Box030
@@ -693,6 +708,21 @@ ModelImporter:
     400682: tree4_
     400684: tree4_001
     400686: tree4_002
+    400688: Box034
+    400690: Box035
+    400692: Box036
+    400694: Box037
+    400696: Box038
+    400698: Box039
+    400700: Box040
+    400702: Box043
+    400704: Box044
+    400706: Box045
+    400708: Cylinder004
+    400710: Cylinder005
+    400712: Group001
+    400714: Line003
+    400716: Line005
     2300000: Arc001
     2300002: Arc002
     2300004: Box030
@@ -1016,6 +1046,20 @@ ModelImporter:
     2300640: tree039
     2300642: tree040
     2300644: tree041
+    2300646: Box034
+    2300648: Box035
+    2300650: Box036
+    2300652: Box037
+    2300654: Box038
+    2300656: Box039
+    2300658: Box040
+    2300660: Box043
+    2300662: Box044
+    2300664: Box045
+    2300666: Cylinder004
+    2300668: Cylinder005
+    2300670: Line003
+    2300672: Line005
     3300000: Arc001
     3300002: Arc002
     3300004: Box030
@@ -1339,6 +1383,20 @@ ModelImporter:
     3300640: tree039
     3300642: tree040
     3300644: tree041
+    3300646: Box034
+    3300648: Box035
+    3300650: Box036
+    3300652: Box037
+    3300654: Box038
+    3300656: Box039
+    3300658: Box040
+    3300660: Box043
+    3300662: Box044
+    3300664: Box045
+    3300666: Cylinder004
+    3300668: Cylinder005
+    3300670: Line003
+    3300672: Line005
     4300000: Line001
     4300002: Line002
     4300004: Cylinder002
@@ -1662,6 +1720,20 @@ ModelImporter:
     4300640: Plane2908
     4300642: Plane2909
     4300644: tree041
+    4300646: Cylinder004
+    4300648: Box036
+    4300650: Box037
+    4300652: Line003
+    4300654: Box038
+    4300656: Box039
+    4300658: Box040
+    4300660: Box043
+    4300662: Line005
+    4300664: Cylinder005
+    4300666: Box044
+    4300668: Box034
+    4300670: Box035
+    4300672: Box045
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -1670,7 +1742,7 @@ ModelImporter:
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
-    resampleRotations: 1
+    resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
     animationImportErrors: 

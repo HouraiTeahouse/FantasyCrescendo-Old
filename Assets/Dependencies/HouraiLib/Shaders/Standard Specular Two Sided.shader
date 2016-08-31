@@ -4,7 +4,7 @@ Shader "Standard Specular Two Sided"
 	{
 		_Color("Color", Color) = (1,1,1,1)
 		_MainTex("Albedo", 2D) = "white" {}
-		
+	_EdgeColor("Occlusion Color", Color) = (0,0,1,1)
 		_Cutoff("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
 
 		_Glossiness("Smoothness", Range(0.0, 1.0)) = 0.5
@@ -43,11 +43,134 @@ Shader "Standard Specular Two Sided"
 		#define UNITY_SETUP_BRDF_INPUT SpecularSetup
 	ENDCG
 
-	SubShader
+			SubShader{
+			//Tags{ "Queue" = "Geometry+5" }
+			// occluded pass
+			Pass{
+			/*ZWrite Off
+			Blend One Zero
+			ZTest Greater
+			Color[_OccludeColor]
+			}*/
+			Tags{ "RenderType" = "Transparent" "Queue" = "Geometry-100" }
+			Stencil
+		{
+			Ref 1
+			Comp equal
+			Pass keep
+		}
+
+			ZWrite Off
+			//ZTest Always
+			Blend One One
+			//Color[_OccludeColor]
+
+			CGPROGRAM
+
+			#pragma vertex vert
+			#pragma fragment frag
+			
+			#include "UnityCG.cginc"
+
+			struct appdata
+			{
+				float4 vertex : POSITION;
+				float2 uv : TEXCOORD0;
+				float3 normal : NORMAL;
+			};
+
+			struct v2f
+			{
+				float2 uv : TEXCOORD0;
+				float4 vertex : SV_POSITION;
+				float3 normal : NORMAL;
+				float3 viewDir : TEXCOORD1;
+			};
+
+			v2f vert (appdata v)
+			{
+				v2f o;
+				o.vertex = mul(UNITY_MATRIX_MVP, v.vertex);
+				o.uv = v.uv;
+				o.normal = UnityObjectToWorldNormal(v.normal);
+				o.viewDir = normalize(_WorldSpaceCameraPos.xyz - mul(unity_ObjectToWorld, v.vertex).xyz);
+				return o;
+			}
+
+			float4 _EdgeColor;
+
+			fixed4 frag (v2f i) : SV_Target
+			{
+				float NdotV = 1 - dot(i.normal, i.viewDir) * 1.5;
+				return _EdgeColor * NdotV;
+			}
+
+			ENDCG
+
+
+			}
+			// Vertex lights
+			Pass{
+
+			Name "FORWARD"
+			Tags{ "LightMode" = "ForwardBase" }
+			Cull Off
+			ZTest LEqual
+			Blend[_SrcBlend][_DstBlend]
+			ZWrite[_ZWrite]
+
+			//Tags{ "LightMode" = "Vertex" }
+			//ZTest LEqual
+			//Lighting On
+			//SeparateSpecular On
+			//Emission On
+			//Material{
+			//Diffuse[_Color]
+			//Ambient[_Color]
+			//Emission [_EmissionColor]
+		//}
+			//SetTexture[_MainTex]{
+			//ConstantColor[_Color]
+			//Combine texture * primary DOUBLE, texture * constant
+		//}
+			CGPROGRAM
+			#pragma target 3.0
+			// TEMPORARY: GLES2.0 temporarily disabled to prevent errors spam on devices without textureCubeLodEXT
+			#pragma exclude_renderers gles
+			
+			// -------------------------------------
+					
+			#pragma shader_feature _NORMALMAP
+			#pragma shader_feature _ _ALPHATEST_ON _ALPHABLEND_ON _ALPHAPREMULTIPLY_ON
+			#pragma shader_feature _EMISSION
+			#pragma shader_feature _SPECGLOSSMAP
+			#pragma shader_feature ___ _DETAIL_MULX2
+			#pragma shader_feature _PARALLAXMAP
+			
+			/*#pragma multi_compile ___ UNITY_HDR_ON
+			#pragma multi_compile LIGHTMAP_OFF LIGHTMAP_ON
+			#pragma multi_compile DIRLIGHTMAP_OFF DIRLIGHTMAP_COMBINED DIRLIGHTMAP_SEPARATE
+			#pragma multi_compile DYNAMICLIGHTMAP_OFF DYNAMICLIGHTMAP_ON
+
+			*/
+			
+			#pragma multi_compile_fwdbase
+			#pragma multi_compile_fog
+				
+			#pragma vertex vertForwardBase
+			#pragma fragment fragForwardBase
+
+			#include "UnityStandardCore.cginc"
+
+			ENDCG
+		}
+		}
+			
+	/*SubShader
 	{
 		Tags { "RenderType"="Opaque" "PerformanceChecks"="False" }
 		LOD 300
-	
+			
 
 		// ------------------------------------------------------------------
 		//  Base forward pass (directional light, emission, lightmaps, ...)
@@ -84,6 +207,10 @@ Shader "Standard Specular Two Sided"
 
 			ENDCG
 		}
+
+			
+
+
 		// ------------------------------------------------------------------
 		//  Additive forward pass (one light per pass)
 		Pass
@@ -204,6 +331,8 @@ Shader "Standard Specular Two Sided"
 		}
 	}
 
+
+
 	SubShader
 	{
 		Tags { "RenderType"="Opaque" "PerformanceChecks"="False" }
@@ -315,8 +444,16 @@ Shader "Standard Specular Two Sided"
 			#include "UnityStandardMeta.cginc"
 			ENDCG
 		}
-	}
+			
+			
 
+	}*/
+
+
+
+	
+	
 	FallBack "VertexLit"
-	CustomEditor "StandardShaderGUI"
+	  //FallBack "Diffuse", 1
+	//CustomEditor "StandardShaderGUI"
 }
