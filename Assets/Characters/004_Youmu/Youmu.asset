@@ -126,7 +126,7 @@ MonoBehaviour:
   - Name: JumpStart
     Data:
       AnimationClip: {fileID: 7400002, guid: 55afce5ced792a44b9eaa84338c4bb6a, type: 3}
-      Length: 0.25
+      Length: 0.1
       MovementSpeed:
         _min: 0
         _max: 0
@@ -148,7 +148,7 @@ MonoBehaviour:
   - Name: Land
     Data:
       AnimationClip: {fileID: 7400000, guid: a04d73ffa41e4dd4099fbbebfe00a948, type: 3}
-      Length: 0.25
+      Length: 0.1
       MovementSpeed:
         _min: 0
         _max: 0
