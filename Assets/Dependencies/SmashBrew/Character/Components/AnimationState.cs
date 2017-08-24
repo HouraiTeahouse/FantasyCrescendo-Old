@@ -22,46 +22,47 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         [SerializeField]
         PlayableDirector _director;
 
-        [SerializeField]
-        Animator _animator;
-
         Dictionary<int, CharacterState> _states;
+        double _loopTime;
+        double _stateTime;
         float _updateTimer;
-
-        public Animator Animator {
-            get { return _animator; }
-            private set { _animator = value; }
-        }
 
         protected override void Awake() {
             base.Awake();
             _updateTimer = 0f;
-            Animator = this.CachedGetComponent(Animator, () => GetComponentInChildren<Animator>());
-            if (Animator == null)
-                throw new InvalidOperationException("No animator found on character: {0}".With(name));
+            _stateTime = 0f;
             if (Character != null)
-                Character.StateController.OnStateChange += (b, a) => {
-                    if (Animator != null)
-                        Animator.CrossFade(a.AnimatorHash, 2/60f, 0, _transitionTime);
-                };
+                Character.StateController.OnStateChange += (b, a) => PlayState(a);
         }
 
         void Start() {
-            ValidateAnimator();
+            BuildStateMap();
         }
 
         /// <summary>
         /// Update is called every frame, if the MonoBehaviour is enabled.
         /// </summary>
         void Update() {
+            UpdateStateTime();
             if (!hasAuthority)
                 return;
             _updateTimer += Time.unscaledDeltaTime;
             if (_updateTimer <= UpdateRate)
                 return;
             _updateTimer = 0f;
-            var animState = Animator.GetCurrentAnimatorStateInfo(StateLayer);
-            CmdChangeState(animState.shortNameHash,  animState.normalizedTime);
+            CmdChangeState(CurrentState.AnimatorHash, (float)(_director.time / _director.duration));
+        }
+
+        void UpdateStateTime() {
+            if (_director == null)
+                return;
+            if (_director.time < _stateTime) {
+                // Time has looped at least once
+                _stateTime += (_director.duration - _loopTime) + _director.time;
+            } else {
+                _stateTime += Math.Abs(_director.time - _loopTime);
+                _loopTime = _director.time;
+            }
         }
 
         public override void OnStartAuthority() {
@@ -86,35 +87,34 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             //TODO(james7132): This gives local players complete control over their networked state. The server should be authoritative on this.
             if (hasAuthority)
                 return;
-            if (CurrentState.AnimatorHash != animHash) {
-                CharacterState newState;
-                if (!_states.TryGetValue(animHash, out newState)) {
-                    Log.Error("Server attempted to set state to one with hash {0}, which has no matching client state.", animHash);
-                } else {
-                    Character.StateController.SetState(newState);
-                }
+            CharacterState newState;
+            if (!_states.TryGetValue(animHash, out newState)) {
+                Log.Error("Server attempted to set state to one with hash {0}, which has no matching client state.", animHash);
+                return;
             }
-            var animState = Animator.GetCurrentAnimatorStateInfo(StateLayer);
-            if (animState.shortNameHash != animHash) {
-                Log.Debug("HASH MISMATCH: {0} {1}", animState.shortNameHash, animHash);
-                Animator.Play(animHash, StateLayer, normalizedTime);
-            }
+            Character.StateController.SetState(newState);
+            PlayState(newState);
         }
 
-        void ValidateAnimator() {
+        void PlayState(CharacterState state, float time = 0f) {
+            if (_director == null || state.Data.Timeline == null)
+                return;
+            _director.Play(state.Data.Timeline);
+            _director.time = (time % 1f) * _director.duration;
+            _director.Evaluate();
+            _stateTime = time;
+        }
+
+        void BuildStateMap() {
             if (Character == null)
                 return;
-            foreach (var state in Character.StateController.States) {
-                if (!Animator.HasState(0, state.AnimatorHash))
-                    Log.Error("The animator for {0} does not have the state {1} ({2})".With(name, state.Name, state.AnimatorHash));
-            }
             _states = Character.StateController.States.ToDictionary(s => s.AnimatorHash);
         }
 
         public override void UpdateStateContext(CharacterStateContext context) {
-            if (Animator == null)
+            if (_director == null || _director.duration == 0f)
                 return;
-            context.NormalizedAnimationTime = Animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+            context.NormalizedAnimationTime = (float)(_stateTime / _director.duration);
         }
 
         public override void ResetState() {
