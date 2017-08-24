@@ -57,7 +57,6 @@ namespace HouraiTeahouse {
             });
             rect.y += LabelPadding;
             foreach (var element in set) {
-                Log.Debug((element as SerializedObject).targetObject.name);
                 var isUnityObject = element is UnityEngine.Object;
                 EditorGUI.BeginChangeCheck();
                 DrawRow(ref rect, area.width, (col, colRect) => col.Draw(colRect, element));
