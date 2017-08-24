@@ -32,7 +32,10 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             _updateTimer = 0f;
             _stateTime = 0f;
             if (Character != null)
-                Character.StateController.OnStateChange += (b, a) => PlayState(a);
+                Character.StateController.OnStateChange += (b, a) => {
+                    PlayState(a);
+                    _loopTime = 0f;
+                };
         }
 
         void Start() {
