@@ -95,6 +95,7 @@ namespace HouraiTeahouse.SmashBrew {
             Config.Load();
             LocalPlayers = new PlayerSet();
             MatchPlayers = new PlayerSet();
+            PlayerMap = new Dictionary<PlayerConnection, Player>();
             //TODO(james7132): Have this filled out externally.
             DataManager.LoadTask.Then(() => {
                 var player = LocalPlayers.Get(0);
@@ -222,8 +223,7 @@ namespace HouraiTeahouse.SmashBrew {
                 };
                 PlayerMap[playerConnection] = player;
                 playerObj.GetComponentsInChildren<IDataComponent<Player>>().SetData(player);
-                //player.Changed += () => playerObj.GetComponentInChildren<IDataComponent<Player>>().SetData(player);
-            });
+            }).Done();
         }
 
         void RemovePlayer(NetworkConnection conn, PlayerController controller) {
