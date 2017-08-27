@@ -22,6 +22,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
                 _currentDamage = value; 
             }
         }
+
         public float DefaultDamage { get; set; }
 
         public ModifierGroup<object, float> DamageModifiers { get; private set; }

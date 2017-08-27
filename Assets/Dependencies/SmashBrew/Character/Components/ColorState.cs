@@ -79,7 +79,9 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         [SerializeField]
         Swap[] _swaps;
 
-        /// <summary> Gets the number of pallete swaps are available </summary>
+        /// <summary> 
+        /// Gets the number of pallete swaps are available 
+        /// </summary>
         public int Count {
             get { return !_swaps.IsNullOrEmpty() ? _swaps.Max(s => s.Count) : 0; }
         }
@@ -90,7 +92,8 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         }
 
         public override void OnStartClient() {
-            if(!isServer)
+            // Can be both client and server if hosting
+            if (!isServer)
                 ChangeColor(_color);
         }
 

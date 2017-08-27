@@ -27,6 +27,9 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         double _stateTime;
         float _updateTimer;
 
+        /// <summary>
+        /// Awake is called when the script instance is being loaded.
+        /// </summary>
         protected override void Awake() {
             base.Awake();
             _updateTimer = 0f;
@@ -38,6 +41,10 @@ namespace HouraiTeahouse.SmashBrew.Characters {
                 };
         }
 
+        /// <summary>
+        /// Start is called on the frame when a script is enabled just before
+        /// any of the Update methods is called the first time.
+        /// </summary>
         void Start() {
             BuildStateMap();
         }
@@ -53,7 +60,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             if (_updateTimer <= UpdateRate)
                 return;
             _updateTimer = 0f;
-            CmdChangeState(CurrentState.AnimatorHash, (float)(_director.time / _director.duration));
+            // CmdChangeState(CurrentState.AnimatorHash, (float)(_director.time / _director.duration));
         }
 
         void UpdateStateTime() {
@@ -66,37 +73,6 @@ namespace HouraiTeahouse.SmashBrew.Characters {
                 _stateTime += Math.Abs(_director.time - _loopTime);
                 _loopTime = _director.time;
             }
-        }
-
-        public override void OnStartAuthority() {
-            // Update server when the local client has changed.
-            Character.StateController.OnStateChange += (b, a) => CmdChangeState(a.AnimatorHash, 0f);
-        }
-
-        [Command]
-        void CmdChangeState(int animHash, float normalizedTime) {
-            //TODO(james7132): Make proper verfications server side
-            if (_states == null)
-                return;
-            if (!_states.ContainsKey(animHash)) {
-                Log.Error("Client attempted to set state to one with hash {0}, which has no matching server state.", animHash);
-                return;
-            }
-            RpcChangeState(animHash, normalizedTime);
-        }
-
-        [ClientRpc]
-        void RpcChangeState(int animHash, float normalizedTime) {
-            //TODO(james7132): This gives local players complete control over their networked state. The server should be authoritative on this.
-            if (hasAuthority)
-                return;
-            CharacterState newState;
-            if (!_states.TryGetValue(animHash, out newState)) {
-                Log.Error("Server attempted to set state to one with hash {0}, which has no matching client state.", animHash);
-                return;
-            }
-            Character.StateController.SetState(newState);
-            PlayState(newState);
         }
 
         void PlayState(CharacterState state, float time = 0f) {
@@ -114,6 +90,14 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             _states = Character.StateController.States.ToDictionary(s => s.AnimatorHash);
         }
 
+        public override void OnStartAuthority() {
+            // Update server when the local client has changed.
+            Character.StateController.OnStateChange += (b, a) =>  {
+                if (hasAuthority)
+                    CmdChangeState(a.AnimatorHash, 0f);
+            };
+        }
+
         public override void UpdateStateContext(CharacterStateContext context) {
             if (_director == null || _director.duration == 0f)
                 return;
@@ -122,6 +106,38 @@ namespace HouraiTeahouse.SmashBrew.Characters {
 
         public override void ResetState() {
             //TODO(james7132): implement
+        }
+
+        // -------------------------------------------------------
+        // Client Code
+        // -------------------------------------------------------
+        [Command]
+        void CmdChangeState(int animHash, float normalizedTime) {
+            //TODO(james7132): Make proper verfications server side
+            if (_states == null)
+                return;
+            if (!_states.ContainsKey(animHash)) {
+                Log.Error("Client attempted to set state to one with hash {0}, which has no matching server state.", animHash);
+                return;
+            }
+            RpcChangeState(animHash, normalizedTime);
+        }
+
+        // -------------------------------------------------------
+        // Server Code
+        // -------------------------------------------------------
+        [ClientRpc]
+        void RpcChangeState(int animHash, float normalizedTime) {
+            //TODO(james7132): This gives local players complete control over their networked state. The server should be authoritative on this.
+            if (hasAuthority)
+                return;
+            CharacterState newState;
+            if (!_states.TryGetValue(animHash, out newState)) {
+                Log.Error("Server attempted to set state to one with hash {0}, which has no matching client state.", animHash);
+                return;
+            }
+            Character.StateController.SetState(newState);
+            PlayState(newState);
         }
 
     }
