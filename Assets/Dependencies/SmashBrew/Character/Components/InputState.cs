@@ -69,7 +69,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             get {
                 var val = !IsInvalid && _controlMapping.Jump(Player.Controller);
                 val |= _controlMapping.TapJump && Smash.y > DirectionalInput.DeadZone;
-                return val || GetKeysDown(KeyCode.W, KeyCode.UpArrow);
+                return val || GetKeys(KeyCode.W, KeyCode.UpArrow);
             }
         }
 
@@ -81,16 +81,18 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             return Mathf.Abs(a) > Mathf.Abs(b) ? a : b;
         }
 
-        public override void UpdateStateContext(CharacterStateContext context) {
-            InputContext input = context.Input;
-            input.Movement = Movement;
-            input.Smash = Smash;
+        public InputSlice GetInput(InputSlice oldInput = null) {
+            InputSlice input = oldInput;
+            if (input == null)
+                input = new InputSlice();
             var valid = !IsInvalid;
-            input.Attack.Update(valid && (GetKeys(KeyCode.E) || _controlMapping.Attack(Player.Controller)));
-            input.Special.Update(valid && (GetKeys(KeyCode.S) || _controlMapping.Special(Player.Controller)));
-            input.Shield.Update(valid && (GetKeys(KeyCode.LeftShift) || _controlMapping.Shield(Player.Controller)));
-            input.Jump.Update(Jump);
-            context.Input = input;
+            input.Movement = this.Movement;
+            input.Smash = this.Smash;
+            input.Attack = valid && (GetKeys(KeyCode.E) || _controlMapping.Attack(Player.Controller));
+            input.Special = valid && (GetKeys(KeyCode.S) || _controlMapping.Special(Player.Controller));
+            input.Shield = valid && (GetKeys(KeyCode.LeftShift) || _controlMapping.Shield(Player.Controller));
+            input.Jump = this.Jump;
+            return input;
         }
 
         void IDataComponent<Player>.SetData(Player data) {
@@ -107,22 +109,24 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             return keys.Any(Input.GetKey);
         }
 
-        bool GetKeysDown(params KeyCode[] keys) {
-            return keys.Any(Input.GetKeyDown);
-        }
-
         float ButtonAxis(bool neg, bool pos) {
             var val = neg ? -1f : 0f;
             return val + (pos ? 1f : 0f);
         }
 
-        void Update() {
-            _tapHistory[_tapIndex] = _tapDetector.Process(GetControllerMovement(), Time.deltaTime);
+        /// <summary>
+        /// This function is called every fixed framerate frame, if the MonoBehaviour is enabled.
+        /// </summary>
+        void FixedUpdate() {
+            _tapHistory[_tapIndex] = _tapDetector.Process(GetControllerMovement(), Time.fixedDeltaTime);
             _tapIndex++;
             if (_tapIndex >= _tapHistory.Length)
                 _tapIndex = 0;
         }
 
+        /// <summary>
+        /// Awake is called when the script instance is being loaded.
+        /// </summary>
         protected override void Awake() {
             base.Awake();
             //TODO(james7132): Generalize this 

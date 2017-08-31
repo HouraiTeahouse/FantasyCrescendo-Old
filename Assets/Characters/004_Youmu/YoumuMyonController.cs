@@ -18,7 +18,6 @@ namespace HouraiTeahouse.FantasyCrescendo {
         [Range(0f, 1f)]
         float _movementSpeed = 1f;
 
-
         [SyncVar]
         NetworkIdentity _myonInstance;
 
@@ -31,8 +30,7 @@ namespace HouraiTeahouse.FantasyCrescendo {
             Resource.Get<GameObject>(_myonPrefab).LoadAsync().Then(prefab => {
                 if (prefab == null)
                     return;
-                var myon = Instantiate(prefab).GetComponent<NetworkIdentity>();
-                myon.transform.position = _targetBone.position;
+                var myon = Instantiate(prefab, _targetBone.position, Quaternion.identity).GetComponent<NetworkIdentity>();
                 NetworkServer.SpawnWithClientAuthority(myon.gameObject, connectionToClient);
                 _myonInstance = myon;
             });

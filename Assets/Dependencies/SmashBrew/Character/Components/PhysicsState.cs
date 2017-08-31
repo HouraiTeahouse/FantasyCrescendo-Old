@@ -66,7 +66,9 @@ namespace HouraiTeahouse.SmashBrew.Characters {
 
         HashSet<Collider> _ignoredColliders;
 
-        public override void ResetState() {
+        public override void ResetState(ref CharacterStateSummary state) {
+            state.Velocity = Vector2.zero;
+            state.Acceleration = Vector2.zero;
             Velocity = Vector2.zero;
             Acceleration = Vector2.zero;
         }
@@ -95,18 +97,6 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         void Update() {
             if (!hasAuthority)
                 return;
-            var grounded = IsGrounded;
-            var acceleration = Acceleration + Vector2.down * Gravity;
-            if (CharacterController.isGrounded)
-                acceleration.y = 0;
-            Velocity += acceleration * Time.deltaTime;
-            CharacterController.Move(Velocity * Time.deltaTime);
-            if (!grounded)
-                return;
-            var originalPos = transform.position;
-            var collision = CharacterController.Move(Vector3.down * Config.Physics.GroundSnapDistance);
-            if (collision == CollisionFlags.None)
-                transform.position = originalPos;
         }
 
         /// <summary>
@@ -117,8 +107,32 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             transform.SetZ(0);
         }
 
-        public override void UpdateStateContext(CharacterStateContext context) {
-            context.IsGrounded = IsGrounded;
+        public override void Simulate(float deltaTime, ref CharacterStateSummary state) {
+            Vector3 originalPosition = transform.position;
+            transform.position = state.Position;
+            var grounded = IsGrounded;
+            state.IsGrounded = grounded;
+            var acceleration = state.Acceleration + Vector2.down * Gravity;
+            if (CharacterController.isGrounded)
+                acceleration.y = 0;
+            state.Velocity += acceleration * deltaTime;
+            CharacterController.Move(state.Velocity * deltaTime);
+            if (grounded && state.Velocity.y < 0f) {
+                var originalPos = transform.position;
+                var collision = CharacterController.Move(Vector3.down * Config.Physics.GroundSnapDistance);
+                if (collision == CollisionFlags.None)
+                    transform.position = originalPos;
+            }
+            state.Position = transform.position;
+            transform.position = originalPosition;
+        }
+
+        public override void ApplyState(ref CharacterStateSummary state) {
+            transform.position = state.Position;
+        }
+
+        public override void UpdateStateContext(ref CharacterStateSummary summary, CharacterStateContext context) {
+            context.IsGrounded = summary.IsGrounded;
         }
 
         public void IgnoreCollider(Collider collider, bool state) {

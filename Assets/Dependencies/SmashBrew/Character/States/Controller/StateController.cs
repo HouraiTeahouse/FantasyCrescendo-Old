@@ -21,16 +21,42 @@ namespace HouraiTeahouse.SmashBrew.States {
             States = new ReadOnlyCollection<T>(builder.States.ToArray());
         }
 
+        /// <summary>
+        /// Sets the current state of the StateController to the provided state.
+        /// This will not invoke the <see cref="OnStateChange"/> event.
+        /// For a version that doesn't invoke the event, use <see cref="ChangeState"/>
+        /// </summary>
+        /// <param name="state">the state to change to</param>
+        /// <exception cref="System.ArgumentException"><paramref cref="state"> is not a state of the StateController</exception>
+        /// <exception cref="System.ArgumentNullException"><paramref cref="state"> is null</exception>
         public void SetState(T state) {
             Argument.NotNull(state);
             if (!_states.Contains(state))
                 throw new ArgumentException("Cannot set a state to a state not within the controller.");
-            var oldState = CurrentState;
             CurrentState = state; 
+        }
+
+        /// <summary>
+        /// Changes the current state of the state controller to the provided state.
+        /// This is suggested to be used for what is normally seen as a state transition.
+        /// This will invoke the <see cref="OnStateChange"/> event.
+        /// For a version that doesn't invoke the event, use <see cref="SetState"/>
+        /// </summary>
+        /// <param name="state">the state to change to</param>
+        /// <exception cref="System.ArgumentException"><paramref cref="state">/ is not a state of the StateController</exception>
+        /// <exception cref="System.ArgumentNullException"><paramref cref="state"/> is null</exception>
+        public void ChangeState(T state) {
+            var oldState = CurrentState;
+            SetState(state);
             if (oldState != CurrentState)
                 OnStateChange.SafeInvoke(oldState, CurrentState);
         }
 
+        /// <summary>
+        /// Evaluates possible state transitions, and updates <see cref="CurrentState"/> approriately.
+        /// </summary>
+        /// <param name="context">the context object for evaluating the chnage against</param>
+        /// <returns>the new current state</returns>
         public T UpdateState(TContext context) {
             return UpdateState(context, false);
         }
@@ -44,10 +70,10 @@ namespace HouraiTeahouse.SmashBrew.States {
             if (nextState != null) {
                 switch (nextState.GetEntryPolicy(context)) {
                     case StateEntryPolicy.Normal:
-                        SetState(nextState);
+                        ChangeState(nextState);
                         break;
                     case StateEntryPolicy.Passthrough:
-                        SetState(nextState);
+                        ChangeState(nextState);
                         UpdateState(context, true);
                         break;
                     case StateEntryPolicy.Blocked:
@@ -57,8 +83,11 @@ namespace HouraiTeahouse.SmashBrew.States {
             return CurrentState;
         }
 
+        /// <summary>
+        /// Resets <see cref="CurrentState"/> to 
+        /// </summary>
         public void ResetState() {
-            SetState(DefaultState);
+            ChangeState(DefaultState);
         }
 
     }

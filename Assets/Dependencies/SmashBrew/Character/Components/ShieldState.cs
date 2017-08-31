@@ -73,13 +73,9 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         GameObject _shieldObj;
         Transform _shieldTransform;
         Hitbox _shieldHitbox;
+        HashSet<CharacterState> validStates;
         float _lastShieldExitTime = float.NegativeInfinity;
 
-        public override void ResetState() { ShieldHealth = MaxShieldHealth; }
-
-        public override void UpdateStateContext(CharacterStateContext context) {
-            context.ShieldHP = ShieldHealth;
-        }
 
         /// <summary>
         /// Awake is called when the script instance is being loaded.
@@ -118,7 +114,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
                 return;
             var controller = Character.StateController;
             var states = Character.States.Shield;
-            var validStates = new HashSet<CharacterState>(new [] { states.On, states.Main, states.Perfect });
+            validStates = new HashSet<CharacterState>(new [] { states.On, states.Main, states.Perfect });
             //TODO(james7132): Synchronize this across the network
             controller.OnStateChange += (b, a) => {
                 _shieldObj.SetActive(validStates.Contains(a));
@@ -128,21 +124,33 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             };
         }
 
-        /// <summary>
-        /// Update is called every frame, if the MonoBehaviour is enabled.
-        /// </summary>
-        void Update() {
+        public override void Simulate(float deltaTime, ref CharacterStateSummary state) {
+            var machineState = GetState(state.StateHash);
+            var shieldActive = machineState != null && validStates.Contains(machineState);
+            if (shieldActive) {
+                state.ShieldHealth = Mathf.Max(0f, state.ShieldHealth - DepletionRate * deltaTime);
+            } else {
+                // TODO(james7132): Make this non-dependent on the actual component state
+                if (Time.time > _lastShieldExitTime + RecoveryCooldown)
+                    state.ShieldHealth = Mathf.Min(MaxShieldHealth, state.ShieldHealth + RegenRate * deltaTime);
+            }
+        }
+
+        public override void ApplyState(ref CharacterStateSummary state) {
             if (_targetBone != null && _shieldObj.activeInHierarchy) {
                 _shieldHitbox.CurrentType = Hitbox.Type.Shield;
                 _shieldHitbox.CurrentType = Hitbox.Type.Shield;
                 _shieldTransform.localScale = Vector3.one * _shieldSize * (ShieldHealth/MaxShieldHealth);
                 _shieldTransform.localPosition = transform.InverseTransformPoint(_targetBone.position);
-                ShieldHealth = Mathf.Max(0f, ShieldHealth - DepletionRate * Time.deltaTime);
-            } else {
-                // Assure the recovery time has passed
-                if (Time.time > _lastShieldExitTime + RecoveryCooldown)
-                    ShieldHealth = Mathf.Min(MaxShieldHealth, ShieldHealth + RegenRate * Time.deltaTime);
             }
+        }
+
+        public override void ResetState(ref CharacterStateSummary state) { 
+            state.ShieldHealth = MaxShieldHealth;
+        }
+
+        public override void UpdateStateContext(ref CharacterStateSummary summary, CharacterStateContext context) {
+            context.ShieldHP = summary.ShieldHealth;
         }
 
         void SetShieldColor(Color color) {

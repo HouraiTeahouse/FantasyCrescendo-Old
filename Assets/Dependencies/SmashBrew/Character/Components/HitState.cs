@@ -8,16 +8,10 @@ namespace HouraiTeahouse.SmashBrew.Characters {
     [RequireComponent(typeof(KnockbackState))]
     public class HitState : CharacterNetworkComponent {
 
-        [SyncVar]
-        float _hitstun;
-
         /// <summary>
-        /// The amount of hitstun time remaining
+        /// The amount of hitstun time remaining in seconds.
         /// </summary>
-        public float Hitstun {
-            get { return _hitstun; }
-            set { _hitstun = value; }
-        }
+        public float Hitstun { get; set; }
 
         KnockbackState KnockbackState { get; set; }
 
@@ -37,21 +31,19 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             };
         }
 
-        /// <summary>
-        /// Update is called every frame, if the MonoBehaviour is enabled.
-        /// </summary>
-        void Update() {
-            if (_hitstun <= 0f)
+        public override void Simulate(float deltaTime, 
+                                      ref CharacterStateSummary state) {
+            if (state.Hitstun <=  0f)
                 return;
-            _hitstun = Mathf.Max(0f, _hitstun - Time.deltaTime);
+            state.Hitstun = Mathf.Max(0f, Hitstun - Time.deltaTime);
         }
 
-        public override void UpdateStateContext(CharacterStateContext context) {
-            context.Hitstun = Hitstun;
+        public override void ResetState(ref CharacterStateSummary state) {
+            state.Hitstun = 0f;
         }
 
-        public override void ResetState() {
-            Hitstun = 0f;
+        public override void UpdateStateContext(ref CharacterStateSummary summary, CharacterStateContext context) {
+            context.IsHit = summary.Hitstun > 0f;
         }
 
     }

@@ -13,31 +13,22 @@ namespace HouraiTeahouse.SmashBrew.Characters {
 
     public class AnimationState : CharacterNetworkComponent {
 
-        const int StateLayer = 0;
-        const float UpdateRate = 0.2f;
-
-        [SerializeField]
-        float _transitionTime = 0.1f;
-
         [SerializeField]
         PlayableDirector _director;
 
         Dictionary<int, CharacterState> _states;
-        double _loopTime;
-        double _stateTime;
-        float _updateTimer;
 
         /// <summary>
         /// Awake is called when the script instance is being loaded.
         /// </summary>
         protected override void Awake() {
             base.Awake();
-            _updateTimer = 0f;
-            _stateTime = 0f;
+            _director = this.CachedGetComponent(_director, () => GetComponentInChildren<PlayableDirector>());
+            _director.timeUpdateMode = DirectorUpdateMode.Manual;
             if (Character != null)
                 Character.StateController.OnStateChange += (b, a) => {
+                    Character.State.StateTime = 0f;
                     PlayState(a);
-                    _loopTime = 0f;
                 };
         }
 
@@ -49,95 +40,37 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             BuildStateMap();
         }
 
-        /// <summary>
-        /// Update is called every frame, if the MonoBehaviour is enabled.
-        /// </summary>
-        void Update() {
-            UpdateStateTime();
-            if (!hasAuthority)
-                return;
-            _updateTimer += Time.unscaledDeltaTime;
-            if (_updateTimer <= UpdateRate)
-                return;
-            _updateTimer = 0f;
-            // CmdChangeState(CurrentState.AnimatorHash, (float)(_director.time / _director.duration));
-        }
-
-        void UpdateStateTime() {
-            if (_director == null)
-                return;
-            if (_director.time < _stateTime) {
-                // Time has looped at least once
-                _stateTime += (_director.duration - _loopTime) + _director.time;
-            } else {
-                _stateTime += Math.Abs(_director.time - _loopTime);
-                _loopTime = _director.time;
-            }
-        }
-
-        void PlayState(CharacterState state, float time = 0f) {
-            if (_director == null || state.Data.Timeline == null)
-                return;
-            _director.Play(state.Data.Timeline);
-            _director.time = (time % 1f) * _director.duration;
-            _director.Evaluate();
-            _stateTime = time;
-        }
-
         void BuildStateMap() {
             if (Character == null)
                 return;
             _states = Character.StateController.States.ToDictionary(s => s.AnimatorHash);
         }
 
-        public override void OnStartAuthority() {
-            // Update server when the local client has changed.
-            Character.StateController.OnStateChange += (b, a) =>  {
-                if (hasAuthority)
-                    CmdChangeState(a.AnimatorHash, 0f);
-            };
+        void PlayState(CharacterState state, float time = 0f) {
+            if (_director == null || state.Data.Timeline == null)
+                return;
+            if (state.Data.Timeline != _director.playableAsset)
+                _director.Play(state.Data.Timeline);
+            _director.time = time % _director.duration;
+            _director.Evaluate();
         }
 
-        public override void UpdateStateContext(CharacterStateContext context) {
+        public override void Simulate(float deltaTime, ref CharacterStateSummary state) {
+            state.StateTime += deltaTime;
+        }
+
+        public override void ApplyState(ref CharacterStateSummary state) {
+            PlayState(GetState(state.StateHash), state.StateTime);
+        }
+
+        public override void UpdateStateContext(ref CharacterStateSummary state, CharacterStateContext context) {
             if (_director == null || _director.duration == 0f)
                 return;
-            context.NormalizedAnimationTime = (float)(_stateTime / _director.duration);
+            context.NormalizedAnimationTime = (float)(state.StateTime / GetDuration(ref state));
         }
 
-        public override void ResetState() {
-            //TODO(james7132): implement
-        }
-
-        // -------------------------------------------------------
-        // Client Code
-        // -------------------------------------------------------
-        [Command]
-        void CmdChangeState(int animHash, float normalizedTime) {
-            //TODO(james7132): Make proper verfications server side
-            if (_states == null)
-                return;
-            if (!_states.ContainsKey(animHash)) {
-                Log.Error("Client attempted to set state to one with hash {0}, which has no matching server state.", animHash);
-                return;
-            }
-            RpcChangeState(animHash, normalizedTime);
-        }
-
-        // -------------------------------------------------------
-        // Server Code
-        // -------------------------------------------------------
-        [ClientRpc]
-        void RpcChangeState(int animHash, float normalizedTime) {
-            //TODO(james7132): This gives local players complete control over their networked state. The server should be authoritative on this.
-            if (hasAuthority)
-                return;
-            CharacterState newState;
-            if (!_states.TryGetValue(animHash, out newState)) {
-                Log.Error("Server attempted to set state to one with hash {0}, which has no matching client state.", animHash);
-                return;
-            }
-            Character.StateController.SetState(newState);
-            PlayState(newState);
+        double GetDuration(ref CharacterStateSummary state) {
+            return Character.GetState(state.StateHash).Data.Timeline.duration;
         }
 
     }

@@ -41,7 +41,13 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             return DamageModifiers.Out.Modifiy(source, baseDamage);
         }
 
-        public override void ResetState() { CurrentDamage = DefaultDamage; }
+        public override void ResetState(ref CharacterStateSummary state) { 
+            state.Damage = DefaultDamage;
+        }
+
+        public override void ApplyState(ref CharacterStateSummary state) {
+            CurrentDamage = state.Damage;
+        }
 
         public void Damage(float damage) { Damage(null, damage); }
 

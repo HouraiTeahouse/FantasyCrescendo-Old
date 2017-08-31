@@ -74,6 +74,19 @@ namespace HouraiTeahouse.SmashBrew.States {
             foreach (TestState testState in states) {
                 _controller.SetState(testState);
                 Assert.AreEqual(testState, _controller.CurrentState);
+                Assert.IsFalse(called);
+                called = false;
+            }
+        }
+
+        [Test]
+        public void change_state_invokes_event() {
+            var states = new[] {B, C, D, E, F};
+            var called = false;
+            _controller.OnStateChange += (b, a) => called = true;
+            foreach (TestState testState in states) {
+                _controller.ChangeState(testState);
+                Assert.AreEqual(testState, _controller.CurrentState);
                 Assert.IsTrue(called);
                 called = false;
             }

@@ -1,5 +1,6 @@
 using HouraiTeahouse.SmashBrew.Characters;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace HouraiTeahouse.SmashBrew.Stage {
 
@@ -18,8 +19,8 @@ namespace HouraiTeahouse.SmashBrew.Stage {
             var movement = collider.GetComponentInParent<MovementState>();
             if (movement == null || character == null || character.StateController.CurrentState == character.States.LedgeRelease)
                 return;
-            movement.Direction = _direction;
-            movement.CurrentLedge = transform;
+            character.State.Direction = _direction;
+            character.State.CurrentLedge = GetComponent<NetworkIdentity>();
         }
 
     }

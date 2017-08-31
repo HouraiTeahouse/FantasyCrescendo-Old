@@ -13,22 +13,26 @@ namespace HouraiTeahouse.SmashBrew.Characters {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(CharacterController))]
     [RequireComponent(typeof(MovementState))]
-    public class Character : NetworkBehaviour, IRegistrar<ICharacterComponent> {
+    public class Character : NetworkBehaviour, IRegistrar<ICharacterComponent>, IDataComponent<Player> {
 
-        public CharacterController Controller { get; private set; }
-        public MovementState Movement { get; private set; }
+        public InputState Input { get; private set; }
         public StateController<CharacterState, CharacterStateContext> StateController { get; private set; }
         public CharacterStateContext Context { get; private set; }
+        public CharacterStateSummary State;
 
         public CharacterControllerBuilder States {
             get { return _controller; }
         }
+
+        const int kInputHistorySize = 4;
 
         ReadOnlyCollection<Hitbox> _hitboxes;
         ReadOnlyCollection<Hitbox> _hurtboxes;
         Dictionary<int, CharacterState> _stateMap;
         List<ICharacterComponent> _components;
         HashSet<object> _hitHistory;
+        InputSlice _input;
+        Queue<InputSlice> _inputHistory;
 
 #pragma warning disable 414
         [SyncVar(hook = "ChangeActive")]
@@ -44,9 +48,11 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         void Awake() {
             gameObject.tag = Config.Tags.PlayerTag;
             gameObject.layer = Config.Tags.CharacterLayer;
+            _inputHistory = new Queue<InputSlice>();
             InitializedComponents();
             InitializeStates();
             InitializeHitboxes();
+            ResetCharacter();
         }
 
         void InitializeStates() {
@@ -62,8 +68,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         }
 
         void InitializedComponents() {
-            Controller = this.SafeGetComponent<CharacterController>();
-            Movement = this.SafeGetComponent<MovementState>();
+            Input = this.SafeGetComponent<InputState>();
             _components = new List<ICharacterComponent>();
         }
 
@@ -100,6 +105,28 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             return result;
         }
 
+        CharacterStateSummary Simulate(float dt, CharacterStateSummary state) {
+            foreach (var component in _components) {
+                Assert.IsNotNull(component);
+                component.Simulate(dt, ref state);
+            }
+            return state;
+        }
+
+        void ApplyState(ref CharacterStateSummary state) {
+            foreach (var component in _components) {
+                Assert.IsNotNull(component);
+                component.ApplyState(ref state);
+            }
+        }
+
+         void UpdateStateContext(ref CharacterStateSummary summary) {
+            Context.Input = summary.Input;
+            foreach (var component in _components) {
+                component.UpdateStateContext(ref summary, Context);
+            }
+        }
+
         void IRegistrar<ICharacterComponent>.Register(ICharacterComponent component) {
             if (_components.Contains(Argument.NotNull(component)))
                 return;
@@ -113,6 +140,10 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         public void ResetAllHitboxes() {
             foreach (Hitbox hitbox in Hitboxes.IgnoreNulls())
                 hitbox.ResetState();
+        }
+
+        public CharacterState GetState(int hash) {
+            return _stateMap[hash];
         }
 
         /// <summary>
@@ -130,15 +161,43 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         }
 
         /// <summary>
-        /// LateUpdate is called every frame, if the Behaviour is enabled.
-        /// It is called after all Update functions have been called.
+        /// This function is called every fixed framerate frame, if the MonoBehaviour is enabled.
         /// </summary>
-        void LateUpdate() {
+        void FixedUpdate() {
             if (!isLocalPlayer || SmashTimeManager.Paused)
-                return;
-            foreach (var component in _components)
-                component.UpdateStateContext(Context);
+                return;    
+            InputSlice currentInput = Input.GetInput(
+                (_inputHistory.Count >= kInputHistorySize)
+                    ? _inputHistory.Dequeue()
+                    : null);
+            var inputContext = new InputContext(_input, currentInput);
+            _inputHistory.Enqueue(currentInput);
+            _input = currentInput;
+            if (!isServer)
+                ProcessInput(ref inputContext);
+            CmdSendInput(inputContext);
+        }
+
+        void ProcessInput(ref InputContext input) {
+            State.Input = input;
+            State.StateHash = StateController.CurrentState.AnimatorHash;
+            State = Simulate(Time.fixedDeltaTime, State);
+            UpdateStateContext(ref State);
             StateController.UpdateState(Context);
+            ApplyState(ref State);
+        }
+
+        [Command]
+        void CmdSendInput(InputContext input) {
+            ProcessInput(ref input);
+            RpcUpdateState(State);
+        }
+
+        [ClientRpc]
+        void RpcUpdateState(CharacterStateSummary state) {
+            State = state;
+            if (!isServer)
+                ApplyState(ref state);
         }
 
         /// <summary> 
@@ -155,9 +214,16 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             get { return _hurtboxes; }
         }
 
+        void IDataComponent<Player>.SetData(Player data) {
+            gameObject.name = "Player {0} ({1},{2})".With(data.ID, data.Selection.Character.name, data.Selection.Pallete);
+        }
+
         public void ResetCharacter() {
             StateController.ResetState();
             _hitHistory.Clear();
+            State = new CharacterStateSummary();
+            foreach (var component in _components)
+                component.ResetState(ref State);
             foreach (IResettable resetable in GetComponentsInChildren<IResettable>())
                 resetable.OnReset();
         }
@@ -165,26 +231,6 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         void ChangeActive(bool active) {
             _isActive = active;
             gameObject.SetActive(active);
-        }
-
-        public override void OnStartServer() {
-            Log.Error("HELLO");
-            Assert.IsNotNull(StateController);
-            StateController.OnStateChange += (b, a) => {
-                if (isServer)
-                    RpcSetState(a.AnimatorHash, 0f);
-            };
-        }
-
-        [ClientRpc]
-        void RpcSetState(int hash, float time) {
-            CharacterState newState;
-            if (!_stateMap.TryGetValue(hash, out newState)) {
-                Log.Error("Server attempted to set state to one with hash {0}, which has no matching client state.", hash);
-                return;
-            }
-            Assert.IsNotNull(newState);
-            StateController.SetState(newState);
         }
 
     }

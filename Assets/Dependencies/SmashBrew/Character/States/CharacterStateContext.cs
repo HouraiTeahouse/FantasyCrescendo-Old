@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using UnityEngine;
 using HouraiTeahouse.SmashBrew.States;
+using UnityEngine.Networking;
 
 namespace HouraiTeahouse.SmashBrew.Characters {
 
@@ -72,6 +73,31 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         public ButtonContext Special;
         public ButtonContext Jump;
         public ButtonContext Shield;
+
+        public InputContext(InputSlice old, InputSlice current) {
+            Movement = new DirectionalInput {
+                Value = current.Movement
+            };
+            Smash = new DirectionalInput {
+                Value = current.Smash
+            };
+            Attack = new ButtonContext {
+                LastFrame = old != null && old.Attack,
+                Current = current.Attack
+            };
+            Special = new ButtonContext {
+                LastFrame = old != null && old.Special,
+                Current = current.Special
+            };
+            Jump = new ButtonContext {
+                LastFrame = old != null && old.Jump,
+                Current = current.Jump
+            };
+            Shield = new ButtonContext {
+                LastFrame = old != null && old.Shield,
+                Current = current.Shield
+            };
+        }
 
         public override int GetHashCode() {
             return Shield.GetHashCode() + 

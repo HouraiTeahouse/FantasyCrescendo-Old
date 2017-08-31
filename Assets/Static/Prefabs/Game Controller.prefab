@@ -56,7 +56,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _invertYAxis: 0
   _enableXInput: 0
-  _useFixedUpdate: 0
+  _useFixedUpdate: 1
   _dontDestroyOnLoad: 0
   _customProfiles:
   - HouraiTeahouse.SmashBrew.SmashBrewKeyboardProfile

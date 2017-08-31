@@ -11,7 +11,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
     /// <summary> The pallete swap behaviour for changing out the </summary>
     [DisallowMultipleComponent]
     [AddComponentMenu("Smash Brew/Characters/Color State")]
-    public class ColorState : CharacterNetworkComponent {
+    public class ColorState : CharacterNetworkComponent, IDataComponent<Player> {
 
         [Serializable]
         public class Swap {
@@ -104,6 +104,10 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             foreach (Swap swap in _swaps)
                 swap.Set(color);
             Log.Info("Set color on {0} to {1}", gameObject.name, _color);
+        }
+
+        void IDataComponent<Player>.SetData(Player data) {
+            Pallete = data.Selection.Pallete;
         }
 
 #if UNITY_EDITOR
