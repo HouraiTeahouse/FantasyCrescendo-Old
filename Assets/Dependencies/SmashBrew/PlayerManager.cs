@@ -126,6 +126,15 @@ namespace HouraiTeahouse.SmashBrew {
             networkManager.ClientDisconnected += conn => DestroyLeftoverPlayers();
             networkManager.ServerStarted += () => {
                 DestroyLeftoverPlayers();
+                NetworkServer.RegisterHandler(SmashNetworkMessages.PlayerInput,
+                    msg => {
+                        // TODO(james7132): check for client authority
+                        var message = msg.ReadMessage<PlayerInputSet>();
+                        var player = MatchPlayers.Get(message.PlayerId);
+                        if (player == null || player.PlayerObject == null)
+                            return;
+                        player.PlayerObject.ServerRecieveInput(message);
+                    });
                 // Update players when they change
                 foreach (var player in MatchPlayers) {
                     player.Changed += () => {

@@ -22,7 +22,10 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             get { return _controller; }
         }
 
-        const int kInputHistorySize = 4;
+        [SyncVar(hook = "SetPlayerId")]
+        byte _playerId;
+
+        public const int kInputHistorySize = 3;
 
         ReadOnlyCollection<Hitbox> _hitboxes;
         ReadOnlyCollection<Hitbox> _hurtboxes;
@@ -31,6 +34,9 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         HashSet<object> _hitHistory;
         InputSlice _input;
         CharacterStateHistory _history;
+
+        int _inputHistoryIndex;
+        PlayerInputSet _cachedInputSet;
 
 #pragma warning disable 414
         [SyncVar(hook = "ChangeActive")]
@@ -51,6 +57,9 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             InitializeHitboxes();
             ResetCharacter();
             _history = new CharacterStateHistory(this);
+            _cachedInputSet = new PlayerInputSet {
+                Inputs = new InputSlice[kInputHistorySize]
+            };
         }
 
         void InitializeStates() {
@@ -171,10 +180,18 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             InputSlice currentInput = Input.GetInput();
             State = _history.Advance(currentInput, State);
             ApplyState(ref State);
-            if (isServer)
+            _cachedInputSet.Inputs[_inputHistoryIndex] = currentInput;
+            _inputHistoryIndex++;
+            if (_inputHistoryIndex < kInputHistorySize)
+                return;
+            _inputHistoryIndex = 0;
+            if (isServer)  {
                 RpcUpdateState(_history.LatestTimestamp, State);
-            else
-                CmdSendInput(_history.LatestTimestamp, currentInput);
+                return;
+            }
+            Assert.IsTrue(_history.LatestTimestamp - kInputHistorySize >= 0);
+            _cachedInputSet.Timestamp = _history.LatestTimestamp - kInputHistorySize;
+            connectionToServer.Send(SmashNetworkMessages.PlayerInput, _cachedInputSet);
         }
 
         internal CharacterStateSummary Advance(CharacterStateSummary state, 
@@ -194,18 +211,20 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             return state;
         }
 
-        [Command]
-        void CmdSendInput(int timestamp, InputSlice input) {
-            State = Advance(State, Time.fixedDeltaTime, new InputContext(_input, input));
-            // State = _history.AcknowledgeState(timestamp, State);
-            RpcUpdateState(timestamp, State);
-            _input = input;
+        [Server]
+        internal void ServerRecieveInput(PlayerInputSet inputSet) {
+            InputSlice previous = _input;
+            foreach (var input in inputSet.Inputs) {
+                State = Advance(State, Time.fixedDeltaTime, new InputContext(previous, input));
+                _input = input;
+            }
+            RpcUpdateState((uint)(inputSet.Timestamp + inputSet.Inputs.Length), State);
         }
 
         [ClientRpc]
-        void RpcUpdateState(int timestamp, CharacterStateSummary state) {
+        void RpcUpdateState(uint timestamp, CharacterStateSummary state) {
             if (isLocalPlayer)
-                State = _history.AcknowledgeState(timestamp, state);
+                State = _history.ReconcileState(timestamp, state);
             else
                 ApplyState(ref state);
         }
@@ -226,6 +245,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
 
         void IDataComponent<Player>.SetData(Player data) {
             gameObject.name = "Player {0} ({1},{2})".With(data.ID, data.Selection.Character.name, data.Selection.Pallete);
+            _playerId = (byte)data.ID;
         }
 
         public CharacterStateSummary ResetState(CharacterStateSummary state) {
@@ -246,6 +266,16 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         void ChangeActive(bool active) {
             _isActive = active;
             gameObject.SetActive(active);
+        }
+
+        void SetPlayerId(byte id) {
+            Log.Error(_playerId);
+            _playerId = id;
+            if (_cachedInputSet == null)
+                _cachedInputSet = new PlayerInputSet {
+                    Inputs = new InputSlice[kInputHistorySize]
+                };
+            _cachedInputSet.PlayerId = id;
         }
 
     }

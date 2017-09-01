@@ -7,7 +7,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
 
         public class Record {
             public Record Next;
-            public int Timestamp;
+            public uint Timestamp;
             public InputSlice Input;
         }
 
@@ -19,7 +19,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
 
         public int Count { get; private set; }
 
-        public int LatestTimestamp {
+        public uint LatestTimestamp {
             get { return _tail.Timestamp; }
         }
 
@@ -45,11 +45,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             return state;
         }
 
-        void Simulate(ref CharacterStateSummary state, Record previous, Record current) {
-            state = character.Advance(state, deltaTime, new InputContext(previous.Input, current.Input));
-        }
-
-        public CharacterStateSummary AcknowledgeState(int timestamp, CharacterStateSummary state) {
+        public CharacterStateSummary ReconcileState(uint timestamp, CharacterStateSummary state) {
             var newRecord = new Record {
                 Timestamp = timestamp,
             };
@@ -76,6 +72,10 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             }
             _head = newRecord;
             return state;
+        }
+
+        void Simulate(ref CharacterStateSummary state, Record previous, Record current) {
+            state = character.Advance(state, deltaTime, new InputContext(previous.Input, current.Input));
         }
 
     }

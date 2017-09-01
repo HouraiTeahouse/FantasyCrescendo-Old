@@ -5,11 +5,36 @@ using UnityEngine.Networking;
 
 namespace HouraiTeahouse.SmashBrew.Characters {
 
-    // public class InputSlice : MessageBase {
-    public struct InputSlice {
+    public class PlayerInputSet : MessageBase {
+                                        // Total size: 2-6 + 3 * x bytes.
+                                        // Standard 15tps: 14-18 bytes.
+        public byte PlayerId;           // 1 byte
+        public uint Timestamp;          // 1-4 bytes
+        public InputSlice[] Inputs;     // 3 * x bytes
 
-        public Vector2b movement;
-        public byte buttons;
+        public override void Serialize(NetworkWriter writer) {
+            writer.Write(PlayerId);
+            writer.Write(Timestamp);
+            for (var i = 0; i < Character.kInputHistorySize; i++)
+                Inputs[i].Serialize(writer);
+        }
+
+        public override void Deserialize(NetworkReader reader) {
+            PlayerId = reader.ReadByte();
+            Timestamp = reader.ReadUInt32();
+            Inputs = new InputSlice[Character.kInputHistorySize];
+            for (var i = 0; i < Inputs.Length; i++) {
+                Inputs[i] = new InputSlice();
+                Inputs[i].Deserialize(reader);
+            }
+        }
+
+    }
+
+    public class InputSlice : MessageBase {
+                                        // Total size: 3 bytes
+        internal Vector2b movement;              // 2 bytes
+        internal byte buttons;                   // 1 bytes
 
         const float kSmashThreshold = 0.3f;
 
@@ -86,19 +111,19 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             buttons |= (byte)(bVal << bitShift);
         }
 
-        // public override void Serialize(NetworkWriter writer) {
-        //     writer.Write(movement.byteX);
-        //     writer.Write(movement.byteY);
-        //     writer.Write(buttons);
-        // }
+        public override void Serialize(NetworkWriter writer) {
+            writer.Write(movement.byteX);
+            writer.Write(movement.byteY);
+            writer.Write(buttons);
+        }
 
-        // public override void Deserialize(NetworkReader reader) {
-        //     movement = new Vector2b  {
-        //         X = reader.ReadByte(),
-        //         Y = reader.ReadByte()
-        //     };
-        //     buttons = reader.ReadByte();
-        // }
+        public override void Deserialize(NetworkReader reader) {
+            movement = new Vector2b  {
+                X = reader.ReadSByte(),
+                Y = reader.ReadSByte()
+            };
+            buttons = reader.ReadByte();
+        }
 
         public InputSlice Clone() {
             return (InputSlice) MemberwiseClone();

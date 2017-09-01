@@ -15,6 +15,7 @@ namespace HouraiTeahouse.SmashBrew {
 
     public class SmashNetworkMessages {
         public const short UpdatePlayer = MsgType.Highest + 1;
+        public const short PlayerInput = MsgType.Highest + 1;
     }
     
     [RequireComponent(typeof(PlayerManager))]
