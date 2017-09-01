@@ -175,8 +175,18 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         /// This function is called every fixed framerate frame, if the MonoBehaviour is enabled.
         /// </summary>
         void FixedUpdate() {
-            if (!isLocalPlayer || SmashTimeManager.Paused)
-                return;    
+            if (SmashTimeManager.Paused)
+                return;
+            if (isLocalPlayer) {
+                LocalPlayerUpdate();
+            //TODO(james7132): This is somewhat of a hack, and prevents hosts from seeing interpolation.
+            //                 The server likely needs to have a temporary state assigned to it.
+            } else if (!isServer) {
+                RemotePlayerUpdate();
+            }
+        }
+
+        void LocalPlayerUpdate() {
             InputSlice currentInput = Input.GetInput();
             State = _history.Advance(currentInput, State);
             ApplyState(ref State);
@@ -186,12 +196,18 @@ namespace HouraiTeahouse.SmashBrew.Characters {
                 return;
             _inputHistoryIndex = 0;
             if (isServer)  {
-                RpcUpdateState(_history.LatestTimestamp, State);
+                RpcUpdateState(_history.LatestTimestamp, State, currentInput);
                 return;
             }
             Assert.IsTrue(_history.LatestTimestamp - kInputHistorySize >= 0);
             _cachedInputSet.Timestamp = _history.LatestTimestamp - kInputHistorySize;
             connectionToServer.Send(SmashNetworkMessages.PlayerInput, _cachedInputSet);
+        }
+
+        void RemotePlayerUpdate() {
+            InputSlice currentInput = _input == null ? new InputSlice() : _input.Clone();
+            State = _history.Advance(currentInput, State);
+            ApplyState(ref State);
         }
 
         internal CharacterStateSummary Advance(CharacterStateSummary state, 
@@ -218,15 +234,14 @@ namespace HouraiTeahouse.SmashBrew.Characters {
                 State = Advance(State, Time.fixedDeltaTime, new InputContext(previous, input));
                 _input = input;
             }
-            RpcUpdateState((uint)(inputSet.Timestamp + inputSet.Inputs.Length), State);
+            RpcUpdateState((uint)(inputSet.Timestamp + inputSet.Inputs.Length), State, _input);
         }
 
         [ClientRpc]
-        void RpcUpdateState(uint timestamp, CharacterStateSummary state) {
-            if (isLocalPlayer)
-                State = _history.ReconcileState(timestamp, state);
-            else
-                ApplyState(ref state);
+        void RpcUpdateState(uint timestamp, CharacterStateSummary state, InputSlice latestInput) {
+            State = _history.ReconcileState(timestamp, state);
+            if (!isLocalPlayer)
+                _input = latestInput;
         }
 
         /// <summary> 
@@ -269,7 +284,6 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         }
 
         void SetPlayerId(byte id) {
-            Log.Error(_playerId);
             _playerId = id;
             if (_cachedInputSet == null)
                 _cachedInputSet = new PlayerInputSet {
