@@ -14,14 +14,14 @@ namespace HouraiTeahouse.SmashBrew.Characters {
 
         public override void Serialize(NetworkWriter writer) {
             writer.Write(PlayerId);
-            writer.Write(Timestamp);
+            writer.WritePackedUInt32(Timestamp);
             for (var i = 0; i < Character.kInputHistorySize; i++)
                 Inputs[i].Serialize(writer);
         }
 
         public override void Deserialize(NetworkReader reader) {
             PlayerId = reader.ReadByte();
-            Timestamp = reader.ReadUInt32();
+            Timestamp = reader.ReadPackedUInt32();
             Inputs = new InputSlice[Character.kInputHistorySize];
             for (var i = 0; i < Inputs.Length; i++) {
                 Inputs[i] = new InputSlice();
@@ -33,8 +33,8 @@ namespace HouraiTeahouse.SmashBrew.Characters {
 
     public class InputSlice : MessageBase {
                                         // Total size: 3 bytes
-        internal Vector2b movement;              // 2 bytes
-        internal byte buttons;                   // 1 bytes
+        internal Vector2b movement;     // 2 bytes
+        internal byte buttons;          // 1 bytes
 
         const float kSmashThreshold = 0.3f;
 
