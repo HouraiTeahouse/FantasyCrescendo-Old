@@ -128,10 +128,10 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             ResetJumps(ref state);
         }
 
-        void LedgeMovement(ref CharacterStateSummary state) {
+        void LedgeMovement(ref CharacterStateSummary state, ref InputContext input) {
             ResetJumps(ref state);
             if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow) || 
-                state.Input.Smash.Value.y <= -DirectionalInput.DeadZone) {
+                input.Smash.Value.y <= -DirectionalInput.DeadZone) {
                 state.CurrentLedge = null;
             } else {
                 SnapToLedge(ref state);
@@ -158,10 +158,10 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             return val + (pos ? 1f : 0f);
         }
 
-        public override void Simulate(float deltaTime, ref CharacterStateSummary state) {
-            if (Mathf.Approximately(deltaTime, 0))
-                return;
-            if (state.Hitstun > 0)
+        public override void Simulate(float deltaTime, 
+                                      ref CharacterStateSummary state,
+                                      ref InputContext input) {
+            if (Mathf.Approximately(deltaTime, 0) || state.Hitstun > 0)
                 return;
             var currentState = GetState(state.StateHash);
             if (currentState.Data.MovementType == MovementType.Locked) {
@@ -170,7 +170,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             }
             // If currently hanging from a edge
             if (state.CurrentLedge != null) {
-                LedgeMovement(ref state);
+                LedgeMovement(ref state, ref input);
                 // TODO(james7132): Make this non-dependent on component state
                 if (Time.time > _grabTime + Config.Player.MaxLedgeHangTime) {
                     state.CurrentLedge = null;
@@ -178,7 +178,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
                     return;
                 }
             } 
-            var movementInput = state.Input.Movement.Value;
+            var movementInput = input.Movement.Value;
             if (state.IsGrounded) {
                 state.IsFastFalling = false;
                 if (state.JumpCount != MaxJumpCount)

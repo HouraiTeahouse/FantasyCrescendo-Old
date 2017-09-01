@@ -5,10 +5,11 @@ using UnityEngine.Networking;
 
 namespace HouraiTeahouse.SmashBrew.Characters {
 
-    public class InputSlice : MessageBase {
+    // public class InputSlice : MessageBase {
+    public struct InputSlice {
 
-        Vector2b movement;
-        byte buttons;
+        public Vector2b movement;
+        public byte buttons;
 
         const float kSmashThreshold = 0.3f;
 
@@ -85,19 +86,19 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             buttons |= (byte)(bVal << bitShift);
         }
 
-        public override void Serialize(NetworkWriter writer) {
-            writer.Write(movement.byteX);
-            writer.Write(movement.byteY);
-            writer.Write(buttons);
-        }
+        // public override void Serialize(NetworkWriter writer) {
+        //     writer.Write(movement.byteX);
+        //     writer.Write(movement.byteY);
+        //     writer.Write(buttons);
+        // }
 
-        public override void Deserialize(NetworkReader reader) {
-            movement = new Vector2b  {
-                X = reader.ReadByte(),
-                Y = reader.ReadByte()
-            };
-            buttons = reader.ReadByte();
-        }
+        // public override void Deserialize(NetworkReader reader) {
+        //     movement = new Vector2b  {
+        //         X = reader.ReadByte(),
+        //         Y = reader.ReadByte()
+        //     };
+        //     buttons = reader.ReadByte();
+        // }
 
         public InputSlice Clone() {
             return (InputSlice) MemberwiseClone();

@@ -1,5 +1,6 @@
 using System;
 using HouraiTeahouse.HouraiInput;
+using HouraiTeahouse.SmashBrew.Characters;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -9,7 +10,7 @@ namespace HouraiTeahouse.SmashBrew {
 
         PlayerType _type;
         PlayerSelection _selection;
-        GameObject _playerObject;
+        Character _playerObject;
         NetworkIdentity _networkIdentity;
 
         internal Player(int number) {
@@ -39,7 +40,7 @@ namespace HouraiTeahouse.SmashBrew {
             }
         }
 
-        public GameObject PlayerObject {
+        public Character PlayerObject {
             get { return _playerObject;  }
             set {
                 bool changed = _playerObject != value;

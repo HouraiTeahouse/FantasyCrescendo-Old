@@ -32,7 +32,8 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         }
 
         public override void Simulate(float deltaTime, 
-                                      ref CharacterStateSummary state) {
+                                      ref CharacterStateSummary state,
+                                      ref InputContext input) {
             if (state.Hitstun <=  0f)
                 return;
             state.Hitstun = Mathf.Max(0f, Hitstun - Time.deltaTime);

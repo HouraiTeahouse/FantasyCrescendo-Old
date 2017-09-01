@@ -55,7 +55,9 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             _director.Evaluate();
         }
 
-        public override void Simulate(float deltaTime, ref CharacterStateSummary state) {
+        public override void Simulate(float deltaTime, 
+                                      ref CharacterStateSummary state,
+                                      ref InputContext input) {
             state.StateTime += deltaTime;
         }
 

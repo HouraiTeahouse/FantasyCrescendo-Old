@@ -11,8 +11,6 @@ namespace HouraiTeahouse.SmashBrew.Characters {
 
     /// <summary> General character class for handling the physics and animations of individual characters </summary>
     [DisallowMultipleComponent]
-    [RequireComponent(typeof(CharacterController))]
-    [RequireComponent(typeof(MovementState))]
     public class Character : NetworkBehaviour, IRegistrar<ICharacterComponent>, IDataComponent<Player> {
 
         public InputState Input { get; private set; }
@@ -32,7 +30,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         List<ICharacterComponent> _components;
         HashSet<object> _hitHistory;
         InputSlice _input;
-        Queue<InputSlice> _inputHistory;
+        CharacterStateHistory _history;
 
 #pragma warning disable 414
         [SyncVar(hook = "ChangeActive")]
@@ -48,11 +46,11 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         void Awake() {
             gameObject.tag = Config.Tags.PlayerTag;
             gameObject.layer = Config.Tags.CharacterLayer;
-            _inputHistory = new Queue<InputSlice>();
             InitializedComponents();
             InitializeStates();
             InitializeHitboxes();
             ResetCharacter();
+            _history = new CharacterStateHistory(this);
         }
 
         void InitializeStates() {
@@ -105,25 +103,26 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             return result;
         }
 
-        CharacterStateSummary Simulate(float dt, CharacterStateSummary state) {
+        internal CharacterStateSummary Simulate(float dt, CharacterStateSummary state, InputContext input) {
             foreach (var component in _components) {
                 Assert.IsNotNull(component);
-                component.Simulate(dt, ref state);
+                component.Simulate(dt, ref state, ref input);
             }
             return state;
         }
 
-        void ApplyState(ref CharacterStateSummary state) {
+        internal void ApplyState(ref CharacterStateSummary state) {
+            State = state;
             foreach (var component in _components) {
                 Assert.IsNotNull(component);
                 component.ApplyState(ref state);
             }
         }
 
-         void UpdateStateContext(ref CharacterStateSummary summary) {
-            Context.Input = summary.Input;
+         internal void UpdateStateContext(ref CharacterStateSummary state, InputContext input) {
+            Context.Input = input;
             foreach (var component in _components) {
-                component.UpdateStateContext(ref summary, Context);
+                component.UpdateStateContext(ref state, Context);
             }
         }
 
@@ -143,7 +142,10 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         }
 
         public CharacterState GetState(int hash) {
-            return _stateMap[hash];
+            CharacterState state;
+            if (_stateMap.TryGetValue(hash, out state))
+                return state;
+            return null;
         }
 
         /// <summary>
@@ -166,37 +168,45 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         void FixedUpdate() {
             if (!isLocalPlayer || SmashTimeManager.Paused)
                 return;    
-            InputSlice currentInput = Input.GetInput(
-                (_inputHistory.Count >= kInputHistorySize)
-                    ? _inputHistory.Dequeue()
-                    : null);
-            var inputContext = new InputContext(_input, currentInput);
-            _inputHistory.Enqueue(currentInput);
-            _input = currentInput;
-            if (!isServer)
-                ProcessInput(ref inputContext);
-            CmdSendInput(inputContext);
+            InputSlice currentInput = Input.GetInput();
+            State = _history.Advance(currentInput, State);
+            ApplyState(ref State);
+            if (isServer)
+                RpcUpdateState(_history.LatestTimestamp, State);
+            else
+                CmdSendInput(_history.LatestTimestamp, currentInput);
         }
 
-        void ProcessInput(ref InputContext input) {
-            State.Input = input;
+        internal CharacterStateSummary Advance(CharacterStateSummary state, 
+                                               float deltaTime, 
+                                               InputContext input) {
+            var currentState = State;
+            State = state;
+            var controllerState = GetState(state.StateHash);
+            StateController.SetState(controllerState ?? StateController.DefaultState);
             State.StateHash = StateController.CurrentState.AnimatorHash;
-            State = Simulate(Time.fixedDeltaTime, State);
-            UpdateStateContext(ref State);
+            State = Simulate(deltaTime, State, input);
+            UpdateStateContext(ref State, input);
             StateController.UpdateState(Context);
-            ApplyState(ref State);
+            State.StateHash = StateController.CurrentState.AnimatorHash;
+            state = State;
+            State = currentState;
+            return state;
         }
 
         [Command]
-        void CmdSendInput(InputContext input) {
-            ProcessInput(ref input);
-            RpcUpdateState(State);
+        void CmdSendInput(int timestamp, InputSlice input) {
+            State = Advance(State, Time.fixedDeltaTime, new InputContext(_input, input));
+            // State = _history.AcknowledgeState(timestamp, State);
+            RpcUpdateState(timestamp, State);
+            _input = input;
         }
 
         [ClientRpc]
-        void RpcUpdateState(CharacterStateSummary state) {
-            State = state;
-            if (!isServer)
+        void RpcUpdateState(int timestamp, CharacterStateSummary state) {
+            if (isLocalPlayer)
+                State = _history.AcknowledgeState(timestamp, state);
+            else
                 ApplyState(ref state);
         }
 
@@ -218,12 +228,17 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             gameObject.name = "Player {0} ({1},{2})".With(data.ID, data.Selection.Character.name, data.Selection.Pallete);
         }
 
+        public CharacterStateSummary ResetState(CharacterStateSummary state) {
+            foreach (var component in _components)
+                component.ResetState(ref state);
+            state.StateHash = StateController.DefaultState.AnimatorHash;
+            return state;
+        }
+
         public void ResetCharacter() {
             StateController.ResetState();
             _hitHistory.Clear();
-            State = new CharacterStateSummary();
-            foreach (var component in _components)
-                component.ResetState(ref State);
+            State = ResetState(new CharacterStateSummary());
             foreach (IResettable resetable in GetComponentsInChildren<IResettable>())
                 resetable.OnReset();
         }

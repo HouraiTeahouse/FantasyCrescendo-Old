@@ -29,8 +29,8 @@ namespace HouraiTeahouse.SmashBrew.UI {
             if (_player == null || _player.PlayerObject == null)
                 _damage = null;
             else {
-                _damage = _player.PlayerObject.GetComponent<DamageState>();
-                Number = _damage;
+                _damage = _player.PlayerObject.GetComponentInChildren<DamageState>();
+                Number = _damage.Character.State.Damage;
             }
         }
 
@@ -42,7 +42,7 @@ namespace HouraiTeahouse.SmashBrew.UI {
             //TODO: Change this into a event
             bool visible = _damage.isActiveAndEnabled;
             Text.enabled = visible;
-            float value = Mathf.Floor(_damage);
+            float value = Mathf.Floor(_damage.Character.State.Damage);
             if (visible && !Mathf.Approximately(Number, value))
                 Number = value;
         }

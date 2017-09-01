@@ -19,16 +19,6 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         [Tooltip("How fast a charactter reaches their max fall speed, in seconds.")]
         float _gravity = 1.5f;
 
-        // Character Variables 
-        Vector2 _velocity;
-        Vector2 _acceleration;
-
-        [SyncVar]
-        bool _grounded;
-
-        [SyncVar]
-        bool _isFastFalling;
-
         public float Weight {
             get { return _weight; }
         }
@@ -37,50 +27,9 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             get { return _gravity; }
         }
 
-        public Vector2 Velocity {
-            get { return _velocity; }
-            set { _velocity = value; }
-        }
-
-        public Vector2 Acceleration {
-            get { return _acceleration; }
-            set { _acceleration = value; }
-        }
-
-        public bool IsGrounded {
-            get { 
-                if (Velocity.y > 0)
-                    return false;
-                var center = Vector3.zero;
-                var radius = 1f;
-                if (CharacterController != null) {
-                    center = CharacterController.center - Vector3.up * (CharacterController.height * 0.50f - CharacterController.radius * 0.5f);
-                    radius = CharacterController.radius * 0.75f;
-                }
-                return Physics.OverlapSphere(transform.TransformPoint(center), 
-                                             radius, Config.Tags.StageMask, 
-                                             QueryTriggerInteraction.Ignore)
-                                             .Any(col => !_ignoredColliders.Contains(col));
-            }
-        }
-
-        HashSet<Collider> _ignoredColliders;
-
-        public override void ResetState(ref CharacterStateSummary state) {
-            state.Velocity = Vector2.zero;
-            state.Acceleration = Vector2.zero;
-            Velocity = Vector2.zero;
-            Acceleration = Vector2.zero;
-        }
-
         public CharacterController CharacterController { get; private set; }
 
-        public bool IsFastFalling {
-            get { return _isFastFalling; }
-        }
-
-        public void SetHorizontalVelocity(float speed) { _velocity.x = speed; }
-        public void SetVerticalVelocity(float speed) { _velocity.y = speed; }
+        HashSet<Collider> _ignoredColliders;
 
         /// <summary>
         /// Awake is called when the script instance is being loaded.
@@ -91,32 +40,18 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             _ignoredColliders = new HashSet<Collider>();
         }
 
-        /// <summary>
-        /// Update is called every frame, if the MonoBehaviour is enabled.
-        /// </summary>
-        void Update() {
-            if (!hasAuthority)
-                return;
-        }
-
-        /// <summary>
-        /// LateUpdate is called every frame, if the Behaviour is enabled.
-        /// It is called after all Update functions have been called.
-        /// </summary>
-        void LateUpdate() {
-            transform.SetZ(0);
-        }
-
-        public override void Simulate(float deltaTime, ref CharacterStateSummary state) {
+        public override void Simulate(float deltaTime, 
+                                      ref CharacterStateSummary state,
+                                      ref InputContext input) {
             Vector3 originalPosition = transform.position;
             transform.position = state.Position;
-            var grounded = IsGrounded;
-            state.IsGrounded = grounded;
             var acceleration = state.Acceleration + Vector2.down * Gravity;
             if (CharacterController.isGrounded)
                 acceleration.y = 0;
             state.Velocity += acceleration * deltaTime;
             CharacterController.Move(state.Velocity * deltaTime);
+            var grounded = IsGrounded(ref state);
+            state.IsGrounded = grounded;
             if (grounded && state.Velocity.y < 0f) {
                 var originalPos = transform.position;
                 var collision = CharacterController.Move(Vector3.down * Config.Physics.GroundSnapDistance);
@@ -134,6 +69,27 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         public override void UpdateStateContext(ref CharacterStateSummary summary, CharacterStateContext context) {
             context.IsGrounded = summary.IsGrounded;
         }
+
+        public override void ResetState(ref CharacterStateSummary state) {
+            state.Velocity = Vector2.zero;
+            state.Acceleration = Vector2.zero;
+        }
+
+        bool IsGrounded(ref CharacterStateSummary state) {
+            if (state.Velocity.y > 0)
+                return false;
+            var center = Vector3.zero;
+            var radius = 1f;
+            if (CharacterController != null) {
+                center = CharacterController.center - Vector3.up * (CharacterController.height * 0.50f - CharacterController.radius * 0.5f);
+                radius = CharacterController.radius * 0.75f;
+            }
+            return Physics.OverlapSphere(transform.TransformPoint(center), 
+                                         radius, Config.Tags.StageMask, 
+                                         QueryTriggerInteraction.Ignore)
+                                         .Any(col => !_ignoredColliders.Contains(col));
+        }
+
 
         public void IgnoreCollider(Collider collider, bool state) {
             Physics.IgnoreCollision(CharacterController, collider, state);

@@ -8,21 +8,6 @@ namespace HouraiTeahouse.SmashBrew.Characters {
     [AddComponentMenu("Smash Brew/Character/Damage State")]
     public class DamageState : CharacterNetworkComponent, IDamageable {
 
-        [SyncVar]
-        float _currentDamage;
-
-        /// <summary> 
-        /// The current internal damage value. Used for knockback calculations. 
-        /// </summary>
-        public float CurrentDamage {
-            get { return _currentDamage; }
-            set { 
-                if (!isServer)
-                    return;
-                _currentDamage = value; 
-            }
-        }
-
         public float DefaultDamage { get; set; }
 
         public ModifierGroup<object, float> DamageModifiers { get; private set; }
@@ -46,26 +31,22 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         }
 
         public override void ApplyState(ref CharacterStateSummary state) {
-            CurrentDamage = state.Damage;
         }
 
         public void Damage(float damage) { Damage(null, damage); }
 
         public void Damage(object source, float damage) {
             damage = DamageModifiers.In.Modifiy(source, Mathf.Abs(damage));
-            CurrentDamage = Type.Damage(CurrentDamage, damage);
+            Character.State.Damage = Type.Damage(Character.State.Damage, damage);
         }
 
         public void Heal(float healing) { Heal(null, healing); }
 
         public void Heal(object source, float healing) {
             healing = HealingModifiers.In.Modifiy(source, Mathf.Abs(healing));
-            CurrentDamage = Type.Heal(CurrentDamage, healing);
+            Character.State.Damage = Type.Heal(Character.State.Damage, healing);
         }
 
-        public static implicit operator float(DamageState damage) {
-            return damage == null ? 0f : damage.CurrentDamage;
-        }
     }
 
     public class DamageType {

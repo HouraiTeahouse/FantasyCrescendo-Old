@@ -1,4 +1,5 @@
 using UnityEngine.Networking;
+using HouraiTeahouse.SmashBrew.Characters;
 
 namespace HouraiTeahouse.SmashBrew {
 
@@ -21,7 +22,7 @@ namespace HouraiTeahouse.SmashBrew {
             var instanceId = new NetworkInstanceId(GameObjectNetId);
             var objects = ClientScene.objects;
             if(objects.ContainsKey(instanceId)) {
-                player.PlayerObject = objects[instanceId].gameObject;
+                player.PlayerObject = objects[instanceId].gameObject.GetComponentInChildren<Character>();
             } else {
                 player.PlayerObject = null;
             }

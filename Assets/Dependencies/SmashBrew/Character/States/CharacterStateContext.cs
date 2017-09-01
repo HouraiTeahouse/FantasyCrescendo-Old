@@ -82,19 +82,19 @@ namespace HouraiTeahouse.SmashBrew.Characters {
                 Value = current.Smash
             };
             Attack = new ButtonContext {
-                LastFrame = old != null && old.Attack,
+                LastFrame = old.Attack,
                 Current = current.Attack
             };
             Special = new ButtonContext {
-                LastFrame = old != null && old.Special,
+                LastFrame = old.Special,
                 Current = current.Special
             };
             Jump = new ButtonContext {
-                LastFrame = old != null && old.Jump,
+                LastFrame = old.Jump,
                 Current = current.Jump
             };
             Shield = new ButtonContext {
-                LastFrame = old != null && old.Shield,
+                LastFrame = old.Shield,
                 Current = current.Shield
             };
         }

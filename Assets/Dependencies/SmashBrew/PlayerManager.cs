@@ -211,7 +211,7 @@ namespace HouraiTeahouse.SmashBrew {
                 NetworkServer.AddPlayerForConnection(conn, playerObj, playerControllerId);
                 player.Selection = selection;
                 player.Type = PlayerType.HumanPlayer;
-                player.PlayerObject = playerObj;
+                player.PlayerObject = playerObj.GetComponentInChildren<Character>();
                 playerCount++;
                 NetworkServer.SendToAll(SmashNetworkMessages.UpdatePlayer, UpdatePlayerMessage.FromPlayer(player));
                 var playerConnection = new PlayerConnection {

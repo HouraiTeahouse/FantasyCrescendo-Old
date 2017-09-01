@@ -65,7 +65,7 @@ namespace HouraiTeahouse.SmashBrew.Stage {
             _character.ResetCharacter();
             _invincibility = Status.Apply<Invincibility>(_character, _invicibilityTimer + _platformTimer);
             _timer = 0f;
-            eventArgs.Player.PlayerObject.SetActive(true);
+            eventArgs.Player.PlayerObject.gameObject.SetActive(true);
             Occupied = true;
             _isOccupied = true;
         }

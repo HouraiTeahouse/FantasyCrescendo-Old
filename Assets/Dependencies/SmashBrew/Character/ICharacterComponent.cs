@@ -4,25 +4,24 @@ using UnityEngine.Networking;
 namespace HouraiTeahouse.SmashBrew.Characters {
 
     public struct CharacterStateSummary {
-        public InputContext Input;
+                                                // Total: 49 bytes
+        public Vector2 Position;                // 2 * 4 = 8 bytes
+        public Vector2 Velocity;                // 2 * 4 = 8 bytes
+        public Vector2 Acceleration;            // 2 * 4 = 8 bytes
+        public bool Direction;                  // 1 bit
 
-        public Vector2 Position;
-        public Vector2 Velocity;
-        public Vector2 Acceleration;
-        public bool Direction;
-        public bool IsFastFalling;
-        public NetworkIdentity CurrentLedge;
+        public int JumpCount;                   // 4 bytes
+        public bool IsGrounded;                 // 1 bit
+        public bool IsFastFalling;              // 1 bit
+        public NetworkIdentity CurrentLedge;    // 8 bytes
 
-        public int JumpCount;
-        public bool IsGrounded;
+        public int StateHash;                   // 4 bytes
+        public float StateTime;                 // 4 bytes
 
-        public int StateHash;
-        public float StateTime;
+        public float Damage;                    // 4 bytes
+        public float Hitstun;                   // 4 bytes
 
-        public float Damage;
-        public float Hitstun;
-
-        public float ShieldHealth;
+        public float ShieldHealth;              // 4 bytes
     }
 
     public interface ICharacterComponent {
@@ -33,7 +32,8 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         //                  Should generally need to be synced across the network.
 
         void Simulate(float deltaTime, 
-                      ref CharacterStateSummary state);
+                      ref CharacterStateSummary state,
+                      ref InputContext input);
         
         void ApplyState(ref CharacterStateSummary summary);
         
@@ -47,7 +47,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
 
     public abstract class CharacterNetworkComponent : NetworkBehaviour, ICharacterComponent {
 
-        protected Character Character { get; private set; }
+        public Character Character { get; private set; }
 
         protected CharacterState CurrentState {
             get { return (Character != null && Character.StateController != null) ? Character.StateController.CurrentState : null; }
@@ -65,7 +65,8 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         }
 
         public virtual void Simulate(float deltaTime,
-                                     ref CharacterStateSummary previousState) {
+                                     ref CharacterStateSummary state,
+                                     ref InputContext input) {
         }
 
         public virtual void ResetState(ref CharacterStateSummary state) {
@@ -81,7 +82,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
 
     public abstract class CharacterComponent : BaseBehaviour, ICharacterComponent {
 
-        protected Character Character { get; private set; }
+        public Character Character { get; private set; }
         protected CharacterState CurrentState {
             get { return (Character != null && Character.StateController != null) ? Character.StateController.CurrentState : null; }
         }
@@ -99,7 +100,8 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         }
 
         public virtual void Simulate(float deltaTime,
-                                     ref CharacterStateSummary previousState) {
+                                     ref CharacterStateSummary state,
+                                     ref InputContext input) {
         }
 
         public virtual void ResetState(ref CharacterStateSummary state) {

@@ -81,18 +81,16 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             return Mathf.Abs(a) > Mathf.Abs(b) ? a : b;
         }
 
-        public InputSlice GetInput(InputSlice oldInput = null) {
-            InputSlice input = oldInput;
-            if (input == null)
-                input = new InputSlice();
+        public InputSlice GetInput() {
             var valid = !IsInvalid;
-            input.Movement = this.Movement;
-            input.Smash = this.Smash;
-            input.Attack = valid && (GetKeys(KeyCode.E) || _controlMapping.Attack(Player.Controller));
-            input.Special = valid && (GetKeys(KeyCode.S) || _controlMapping.Special(Player.Controller));
-            input.Shield = valid && (GetKeys(KeyCode.LeftShift) || _controlMapping.Shield(Player.Controller));
-            input.Jump = this.Jump;
-            return input;
+            return new InputSlice {
+                Movement = this.Movement,
+                Smash = this.Smash,
+                Attack = valid && (GetKeys(KeyCode.E) || _controlMapping.Attack(Player.Controller)),
+                Special = valid && (GetKeys(KeyCode.S) || _controlMapping.Special(Player.Controller)),
+                Shield = valid && (GetKeys(KeyCode.LeftShift) || _controlMapping.Shield(Player.Controller)),
+                Jump = this.Jump
+            };
         }
 
         void IDataComponent<Player>.SetData(Player data) {

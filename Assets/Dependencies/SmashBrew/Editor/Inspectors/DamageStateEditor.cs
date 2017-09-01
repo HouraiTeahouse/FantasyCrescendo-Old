@@ -8,9 +8,10 @@ namespace HouraiTeahouse.SmashBrew {
 
         public override void OnInspectorGUI() {
             var damage = target as DamageState;
-            if (!EditorApplication.isPlayingOrWillChangePlaymode)
+            if (!EditorApplication.isPlayingOrWillChangePlaymode || damage.Character == null)
                 return;
-            damage.CurrentDamage = EditorGUILayout.FloatField("Current Damage", damage.CurrentDamage);
+            damage.Character.State.Damage = EditorGUILayout.FloatField("Current Damage", 
+                damage.Character.State.Damage);
         }
 
     }

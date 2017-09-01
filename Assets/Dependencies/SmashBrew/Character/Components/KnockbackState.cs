@@ -36,7 +36,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         }
 
         public float GetKnockbackDamage() {
-            return KnockbackDamageModifiers.Modifiy(this, DamageState.CurrentDamage);
+            return KnockbackDamageModifiers.Modifiy(this, Character.State.Damage);
         }
 
         public void Knockback(object source, Vector2 knockback) {
@@ -47,7 +47,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             var hitbox = source as Hitbox;
             if (hitbox == null) {
                 knockback = Modifiers.In.Modifiy(source, knockback);
-                PhysicsState.Velocity = knockback;
+                Character.State.Velocity = knockback;
                 return;
             }
             var damage = GetKnockbackDamage();
@@ -58,8 +58,8 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             multiplier += 18f;
             multiplier *= hitbox.Scaling;
             multiplier += baseKnockback;
-            PhysicsState.Velocity = Modifiers.In.Modifiy(source, multiplier * unit);
-            OnHit.SafeInvoke(source, PhysicsState.Velocity);
+            Character.State.Velocity = Modifiers.In.Modifiy(source, multiplier * unit);
+            OnHit.SafeInvoke(source, Character.State.Velocity);
         }
 
     }

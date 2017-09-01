@@ -124,7 +124,9 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             };
         }
 
-        public override void Simulate(float deltaTime, ref CharacterStateSummary state) {
+        public override void Simulate(float deltaTime, 
+                                      ref CharacterStateSummary state,
+                                      ref InputContext input) {
             var machineState = GetState(state.StateHash);
             var shieldActive = machineState != null && validStates.Contains(machineState);
             if (shieldActive) {
