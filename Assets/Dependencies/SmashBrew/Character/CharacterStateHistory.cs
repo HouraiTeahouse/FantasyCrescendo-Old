@@ -64,7 +64,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
                     if (current.Timestamp > newRecord.Timestamp) {
                         if (!foundSuccessor) {
                             newRecord.Next = previous;
-                            newRecord.Input = previous.Input;
+                            newRecord.Input = previous != null ? previous.Input : null;
                             previous = newRecord;
                             foundSuccessor = true;
                             Count = 1;
@@ -77,7 +77,6 @@ namespace HouraiTeahouse.SmashBrew.Characters {
                     previous = current;
                     current = current.Next;
                 }
-                character.ApplyState(ref state);
             }
             _head = newRecord;
             return state;

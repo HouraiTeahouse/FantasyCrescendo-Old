@@ -34,6 +34,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         HashSet<object> _hitHistory;
         InputSlice _input;
         CharacterStateHistory _history;
+        CharacterStateSummary _lastServerState;
 
         int _inputHistoryIndex;
         PlayerInputSet _cachedInputSet;
@@ -121,7 +122,6 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         }
 
         internal void ApplyState(ref CharacterStateSummary state) {
-            State = state;
             foreach (var component in _components) {
                 Assert.IsNotNull(component);
                 component.ApplyState(ref state);
@@ -179,9 +179,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
                 return;
             if (isLocalPlayer) {
                 LocalPlayerUpdate();
-            //TODO(james7132): This is somewhat of a hack, and prevents hosts from seeing interpolation.
-            //                 The server likely needs to have a temporary state assigned to it.
-            } else if (!isServer) {
+            } else {
                 RemotePlayerUpdate();
             }
         }
@@ -206,8 +204,13 @@ namespace HouraiTeahouse.SmashBrew.Characters {
 
         void RemotePlayerUpdate() {
             InputSlice currentInput = _input == null ? new InputSlice() : _input.Clone();
-            State = _history.Advance(currentInput, State);
-            ApplyState(ref State);
+            if (isServer) {
+                _lastServerState = Advance(_lastServerState, Time.fixedDeltaTime, new InputContext(currentInput, currentInput));
+                ApplyState(ref _lastServerState);
+            } else {
+                State = _history.Advance(currentInput, State);
+                ApplyState(ref State);
+            }
         }
 
         internal CharacterStateSummary Advance(CharacterStateSummary state, 
@@ -240,6 +243,8 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         [ClientRpc]
         void RpcUpdateState(uint timestamp, CharacterStateSummary state, InputSlice latestInput) {
             State = _history.ReconcileState(timestamp, state);
+            _lastServerState = State;
+            ApplyState(ref State);
             if (!isLocalPlayer)
                 _input = latestInput;
         }
@@ -274,6 +279,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             StateController.ResetState();
             _hitHistory.Clear();
             State = ResetState(new CharacterStateSummary());
+            _lastServerState = State;
             foreach (IResettable resetable in GetComponentsInChildren<IResettable>())
                 resetable.OnReset();
         }
