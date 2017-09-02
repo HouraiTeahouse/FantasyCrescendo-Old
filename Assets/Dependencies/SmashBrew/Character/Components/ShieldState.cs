@@ -7,7 +7,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
 
     [DisallowMultipleComponent]
     [AddComponentMenu("Smash Brew/Character/Shield State")]
-    public sealed class ShieldState : CharacterNetworkComponent, IDataComponent<Player> {
+    public sealed class ShieldState : CharacterComponent, IDataComponent<Player> {
 
         // Character Constrants
         [Header("Constants")]
@@ -39,12 +39,6 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         [SerializeField]
         Material _shieldMaterial;
 
-        // Character Variables 
-        [Header("Variables")]
-        [SyncVar, SerializeField, ReadOnly]
-        [Tooltip("How much shield health the character currently has")]
-        float _currentShieldHealth;
-
         public float MaxShieldHealth {
             get { return _maxShieldHealth; }
         }
@@ -63,11 +57,6 @@ namespace HouraiTeahouse.SmashBrew.Characters {
 
         public float RecoveryCooldown {
             get { return _recoveryCooldown; }
-        }
-
-        public float ShieldHealth {
-            get { return _currentShieldHealth; }
-            set { _currentShieldHealth = value; }
         }
 
         GameObject _shieldObj;
@@ -108,7 +97,6 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             SetShieldColor(Color.grey);
             _shieldObj.SetActive(false);
 
-            _currentShieldHealth = _maxShieldHealth;
 
             if (Character == null)
                 return;
@@ -142,7 +130,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             if (_targetBone != null && _shieldObj.activeInHierarchy) {
                 _shieldHitbox.CurrentType = Hitbox.Type.Shield;
                 _shieldHitbox.CurrentType = Hitbox.Type.Shield;
-                _shieldTransform.localScale = Vector3.one * _shieldSize * (ShieldHealth/MaxShieldHealth);
+                _shieldTransform.localScale = Vector3.one * _shieldSize * (state.ShieldHealth/MaxShieldHealth);
                 _shieldTransform.localPosition = transform.InverseTransformPoint(_targetBone.position);
             }
         }

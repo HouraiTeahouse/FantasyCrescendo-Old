@@ -10,8 +10,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
 
     [DisallowMultipleComponent]
     [AddComponentMenu("Smash Brew/Character/Movement State")]
-    [RequireComponent(typeof(PhysicsState), typeof(InputState))]
-    public class MovementState : CharacterNetworkComponent {
+    public class MovementState : CharacterComponent {
 
         public enum CharacterFacingMode {
             Rotation, Scale
@@ -101,7 +100,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
                     characterState.Position = transform.position;
                     transform.position = originalPosition;
                 }
-                if (states.EscapeForward == b && isServer)
+                if (states.EscapeForward == b)
                     characterState.Direction = !characterState.Direction;
                 Character.State = characterState;
             };

@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 namespace HouraiTeahouse.SmashBrew.Characters {
 
     [RequireComponent(typeof(KnockbackState))]
-    public class HitState : CharacterNetworkComponent {
+    public class HitState : CharacterComponent {
 
         /// <summary>
         /// The amount of hitstun time remaining in seconds.

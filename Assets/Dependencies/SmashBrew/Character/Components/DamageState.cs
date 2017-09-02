@@ -6,7 +6,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
 
     [DisallowMultipleComponent]
     [AddComponentMenu("Smash Brew/Character/Damage State")]
-    public class DamageState : CharacterNetworkComponent, IDamageable {
+    public class DamageState : CharacterComponent, IDamageable {
 
         public float DefaultDamage { get; set; }
 

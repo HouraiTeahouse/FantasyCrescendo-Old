@@ -11,7 +11,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
     /// <summary> The pallete swap behaviour for changing out the </summary>
     [DisallowMultipleComponent]
     [AddComponentMenu("Smash Brew/Characters/Color State")]
-    public class ColorState : CharacterNetworkComponent, IDataComponent<Player> {
+    public class ColorState : NetworkBehaviour, IDataComponent<Player> {
 
         [Serializable]
         public class Swap {

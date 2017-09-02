@@ -11,7 +11,7 @@ using UnityEditor;
 
 namespace HouraiTeahouse.SmashBrew.Characters {
 
-    public class AnimationState : CharacterNetworkComponent {
+    public class AnimationState : CharacterComponent {
 
         [SerializeField]
         PlayableDirector _director;
