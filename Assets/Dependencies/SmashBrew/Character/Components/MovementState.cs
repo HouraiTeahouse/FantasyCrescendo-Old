@@ -17,10 +17,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             Rotation, Scale
         }
 
-        PhysicsState PhysicsState { get; set; }
         CharacterController MovementCollider { get; set; }
-        InputState InputState { get; set; }
-        HitState HitState { get; set; }
 
         public event Action OnJump;
 
@@ -74,21 +71,11 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         float _grabTime;
 
         /// <summary>
-        /// Awake is called when the script instance is being loaded.
-        /// </summary>
-        protected override void Awake() {
-            base.Awake();
-            InputState = this.SafeGetComponent<InputState>();
-        }
-
-        /// <summary>
         /// Start is called on the frame when a script is enabled just before
         /// any of the Update methods is called the first time.
         /// </summary>
         void Start() {
-            PhysicsState = this.SafeGetComponent<PhysicsState>();
             MovementCollider = this.SafeGetComponent<CharacterController>();
-            HitState = GetComponent<HitState>();
             OnChangeDirection(_direction, true);
             _ledgeTarget = this.CachedGetComponent(_ledgeTarget, () => transform);
             if (Character == null)
@@ -188,8 +175,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
                 if (movementInput.x < -DirectionalInput.DeadZone)
                     state.Direction = false;
             } else {
-                state.IsFastFalling |= GetKeysDown(KeyCode.S, KeyCode.DownArrow) || 
-                                        InputState.Smash.y < -DirectionalInput.DeadZone;
+                state.IsFastFalling |= input.Smash.Value.y < -DirectionalInput.DeadZone;
                 LimitFallSpeed(ref state);
             }
             ApplyControlledMovement(ref state, currentState, movementInput);
