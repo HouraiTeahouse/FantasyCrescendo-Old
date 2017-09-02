@@ -5,6 +5,8 @@ namespace HouraiTeahouse.SmashBrew.Characters {
 
     internal class CharacterStateHistory {
 
+        static AbstractPool<Record> _recordPool = SingletonPool.Get<Record>();
+
         public class Record {
             public Record Next;
             public uint Timestamp;
@@ -27,17 +29,18 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             Assert.IsNotNull(character);
             this.character = character;
             this.deltaTime = deltaTime ?? Time.fixedDeltaTime;
-            _head = new Record();
+            _head = _recordPool.Get();
             _tail = _head;
         }
 
         public CharacterStateSummary Advance(InputSlice input, CharacterStateSummary state) {
             Assert.IsNotNull(_tail);
-            var newRecord = new Record {
-                Next = null,
-                Timestamp = _tail.Timestamp + 1,
-                Input = input,
-            };
+            var newRecord = _recordPool.Get();
+
+            newRecord.Next = null;
+            newRecord.Timestamp = _tail.Timestamp + 1;
+            newRecord.Input = input;
+
             _tail.Next = newRecord;
             Simulate(ref state, _tail, newRecord);
             _tail = newRecord;
@@ -46,9 +49,12 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         }
 
         public CharacterStateSummary ReconcileState(uint timestamp, CharacterStateSummary state) {
-            var newRecord = new Record {
-                Timestamp = timestamp,
-            };
+            var newRecord = _recordPool.Get();
+
+            newRecord.Next = null;
+            newRecord.Timestamp = timestamp;
+            newRecord.Input = null;
+
             if (_head != null) {
                 var current = _head;
                 Record previous = null;
@@ -57,13 +63,16 @@ namespace HouraiTeahouse.SmashBrew.Characters {
                 while (current != null) {
                     if (current.Timestamp > newRecord.Timestamp) {
                         if (!foundSuccessor) {
-                            newRecord.Next = current;
+                            newRecord.Next = previous;
+                            newRecord.Input = previous.Input;
                             previous = newRecord;
                             foundSuccessor = true;
                             Count = 1;
                         }
                         Simulate(ref state, previous, current);
                         Count++;
+                    } else {
+                        _recordPool.Return(current);
                     }
                     previous = current;
                     current = current.Next;
