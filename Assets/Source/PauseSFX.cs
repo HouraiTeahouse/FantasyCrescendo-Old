@@ -5,6 +5,9 @@ using HouraiTeahouse.SmashBrew;
 
 namespace HouraiTeahouse.FantasyCrescendo {
 
+    /// <summary>
+    /// Plays Pause and Unpause sound effects at the approriate time.
+    /// </summary>
     public class PauseSFX : MonoBehaviour {
 
         [SerializeField]
@@ -46,7 +49,6 @@ namespace HouraiTeahouse.FantasyCrescendo {
             _source.clip = SmashTimeManager.Paused ? _pauseSFX : _unpauseSFX;
             _source.Play();
         }
-
 
     }
 

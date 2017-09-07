@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.Timeline;
 using UnityEngine.Playables;
 using UnityEngine.Networking;
@@ -16,8 +17,6 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         [SerializeField]
         PlayableDirector _director;
 
-        Dictionary<int, CharacterState> _states;
-
         /// <summary>
         /// Awake is called when the script instance is being loaded.
         /// </summary>
@@ -25,34 +24,11 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             base.Awake();
             _director = this.CachedGetComponent(_director, () => GetComponentInChildren<PlayableDirector>());
             _director.timeUpdateMode = DirectorUpdateMode.Manual;
-            if (Character != null)
-                Character.StateController.OnStateChange += (b, a) => {
-                    Character.State.StateTime = 0f;
-                    PlayState(a);
-                };
-        }
-
-        /// <summary>
-        /// Start is called on the frame when a script is enabled just before
-        /// any of the Update methods is called the first time.
-        /// </summary>
-        void Start() {
-            BuildStateMap();
-        }
-
-        void BuildStateMap() {
-            if (Character == null)
-                return;
-            _states = Character.StateController.States.ToDictionary(s => s.AnimatorHash);
-        }
-
-        void PlayState(CharacterState state, float time = 0f) {
-            if (_director == null || state.Data.Timeline == null)
-                return;
-            if (state.Data.Timeline != _director.playableAsset)
-                _director.Play(state.Data.Timeline);
-            _director.time = time % _director.duration;
-            _director.Evaluate();
+            Assert.IsNotNull(Character);
+            Character.StateController.OnStateChange += (b, a) => {
+                Character.State.StateTime = 0f;
+                PlayState(a);
+            };
         }
 
         public override void Simulate(float deltaTime, 
@@ -69,6 +45,15 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             if (_director == null || _director.duration == 0f)
                 return;
             context.NormalizedAnimationTime = (float)(state.StateTime / GetDuration(ref state));
+        }
+
+        void PlayState(CharacterState state, float time = 0f) {
+            if (_director == null || state.Data.Timeline == null)
+                return;
+            if (state.Data.Timeline != _director.playableAsset)
+                _director.Play(state.Data.Timeline);
+            _director.time = time % _director.duration;
+            _director.Evaluate();
         }
 
         double GetDuration(ref CharacterStateSummary state) {

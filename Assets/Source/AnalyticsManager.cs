@@ -7,8 +7,14 @@ using UnityEngine.Analytics;
 
 namespace HouraiTeahouse.FantasyCrescendo {
 
+    /// <summary>
+    /// A set of Unity Analytics hooks for Fantasy Crescendo.
+    /// </summary>
     public class AnalyticsManager : MonoBehaviour {
-
+        
+        /// <summary>
+        /// Awake is called when the script instance is being loaded.
+        /// </summary>
         void Awake() {
             var mediator = Mediator.Global;
             mediator.Subscribe<PlayerDieEvent>(e => {

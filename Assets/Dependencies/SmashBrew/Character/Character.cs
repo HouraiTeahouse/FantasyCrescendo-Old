@@ -22,9 +22,6 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             get { return _controller; }
         }
 
-        [SyncVar(hook = "SetPlayerId")]
-        byte _playerId;
-
         public const int kInputHistorySize = 3;
 
         ReadOnlyCollection<Hitbox> _hitboxes;
@@ -235,6 +232,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             InputSlice previous = _input;
             foreach (var input in inputSet.Inputs) {
                 State = Advance(State, Time.fixedDeltaTime, new InputContext(previous, input));
+                Log.Warning(Convert.ToString(input.buttons, 2).PadLeft(8, '0'));
                 _input = input;
             }
             RpcUpdateState((uint)(inputSet.Timestamp + inputSet.Inputs.Length), State, _input);
@@ -265,7 +263,8 @@ namespace HouraiTeahouse.SmashBrew.Characters {
 
         void IDataComponent<Player>.SetData(Player data) {
             gameObject.name = "Player {0} ({1},{2})".With(data.ID, data.Selection.Character.name, data.Selection.Pallete);
-            _playerId = (byte)data.ID;
+            if (isServer)
+                RpcSetPlayerId((byte)data.ID);
         }
 
         public CharacterStateSummary ResetState(CharacterStateSummary state) {
@@ -289,12 +288,13 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             gameObject.SetActive(active);
         }
 
-        void SetPlayerId(byte id) {
-            _playerId = id;
+        [ClientRpc]
+        void RpcSetPlayerId(byte id) {
             if (_cachedInputSet == null)
                 _cachedInputSet = new PlayerInputSet {
                     Inputs = new InputSlice[kInputHistorySize]
                 };
+            Log.Warning(id);
             _cachedInputSet.PlayerId = id;
         }
 

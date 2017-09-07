@@ -111,13 +111,12 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             state.IsFastFalling = false;
             var offset = LedgeTarget.position - transform.position;
             state.Position = state.CurrentLedge.transform.position - offset;
-            ResetJumps(ref state);
+            state.JumpCount = MaxJumpCount;
         }
 
         void LedgeMovement(ref CharacterStateSummary state, ref InputContext input) {
-            ResetJumps(ref state);
-            if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow) || 
-                input.Smash.Value.y <= -DirectionalInput.DeadZone) {
+            state.JumpCount = MaxJumpCount;
+            if (input.Smash.Value.y <= -DirectionalInput.DeadZone) {
                 state.CurrentLedge = null;
             } else {
                 SnapToLedge(ref state);
@@ -129,19 +128,6 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             OnJump.SafeInvoke();
             state.Velocity.y = _jumpPower[MaxJumpCount - state.JumpCount];
             state.JumpCount--;
-        }
-
-        bool GetKeys(params KeyCode[] keys) {
-            return keys.Any(Input.GetKey);
-        }
-
-        bool GetKeysDown(params KeyCode[] keys) {
-            return keys.Any(Input.GetKeyDown);
-        }
-
-        float ButtonAxis(bool neg, bool pos) {
-            var val = neg ? -1f : 0f;
-            return val + (pos ? 1f : 0f);
         }
 
         public override void Simulate(float deltaTime, 
@@ -167,8 +153,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             var movementInput = input.Movement.Value;
             if (state.IsGrounded) {
                 state.IsFastFalling = false;
-                if (state.JumpCount != MaxJumpCount)
-                    state.JumpCount = MaxJumpCount;
+                state.JumpCount = MaxJumpCount;
                 if (movementInput.x > DirectionalInput.DeadZone)
                     state.Direction = true;
                 if (movementInput.x < -DirectionalInput.DeadZone)
@@ -181,7 +166,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         }
 
         public override void ResetState(ref CharacterStateSummary state) {
-            ResetJumps(ref state);
+            state.JumpCount = MaxJumpCount;
         }
 
         public override void ApplyState(ref CharacterStateSummary state) {
@@ -220,10 +205,6 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             var platform = hit.gameObject.GetComponent<Platform>();
             if (platform != null)
                 platform.CharacterCollision(MovementCollider);
-        }
-
-        void ResetJumps(ref CharacterStateSummary state) { 
-            state.JumpCount = MaxJumpCount; 
         }
 
         void SetDirection(bool direction, ref CharacterStateSummary state) {

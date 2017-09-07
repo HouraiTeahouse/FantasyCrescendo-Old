@@ -6,7 +6,9 @@ namespace HouraiTeahouse {
 
         Mediator _eventManager;
 
-        /// <summary> Gets or sets the event manager the event handler is subscribed to. </summary>
+        /// <summary> 
+        /// Gets or sets the event manager the event handler is subscribed to. 
+        /// </summary>
         public Mediator EventManager {
             get { return _eventManager; }
             set {
@@ -18,22 +20,23 @@ namespace HouraiTeahouse {
             }
         }
 
-        /// <summary> Unity callback. Called on object instantiation. </summary>
+        /// <summary>
+        /// Awake is called when the script instance is being loaded.
+        /// </summary>
         protected override void Awake() {
             base.Awake();
             _eventManager = Mediator.Global;
             _eventManager.Subscribe<T>(OnEvent);
         }
 
-        /// <summary> Unity callback. Called on object destruction. </summary>
-        /// >
+        /// <summary>
+        /// This function is called when the MonoBehaviour will be destroyed.
+        /// </summary>
         protected virtual void OnDestroy() {
             if (_eventManager != null)
                 _eventManager.Unsubscribe<T>(OnEvent);
         }
 
-        /// <summary> Events callback. </summary>
-        /// <param name="eventArgs"> event arguments </param>
         protected abstract void OnEvent(T eventArgs);
 
     }

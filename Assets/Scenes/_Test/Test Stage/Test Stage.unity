@@ -173,6 +173,7 @@ GameObject:
   m_Component:
   - component: {fileID: 50}
   - component: {fileID: 100}
+  - component: {fileID: 19}
   - component: {fileID: 130}
   m_Layer: 0
   m_Name: Ledge
@@ -197,6 +198,38 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &19
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 17}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 221
+    i1: 228
+    i2: 5
+    i3: 127
+    i4: 112
+    i5: 180
+    i6: 43
+    i7: 36
+    i8: 10
+    i9: 206
+    i10: 71
+    i11: 149
+    i12: 192
+    i13: 193
+    i14: 182
+    i15: 36
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!1 &20
 GameObject:
   m_ObjectHideFlags: 0
@@ -241,9 +274,10 @@ GameObject:
   m_Component:
   - component: {fileID: 63}
   - component: {fileID: 101}
+  - component: {fileID: 33}
   - component: {fileID: 147}
   m_Layer: 0
-  m_Name: Ledge (1)
+  m_Name: Ledge
   m_TagString: Untagged
   m_Icon: {fileID: -2349822300998112484, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -315,6 +349,38 @@ MonoBehaviour:
   color: {r: 1, g: 0.7058824, b: 0, a: 1}
   includeChildren: 0
   solid: 0
+--- !u!114 &33
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 28}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 0
+    i1: 0
+    i2: 0
+    i3: 0
+    i4: 0
+    i5: 0
+    i6: 0
+    i7: 0
+    i8: 0
+    i9: 0
+    i10: 0
+    i11: 0
+    i12: 0
+    i13: 0
+    i14: 0
+    i15: 0
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!1 &34
 GameObject:
   m_ObjectHideFlags: 0

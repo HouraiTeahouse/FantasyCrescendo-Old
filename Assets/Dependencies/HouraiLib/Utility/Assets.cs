@@ -7,14 +7,17 @@ using UnityEngine;
 
 namespace HouraiTeahouse.Editor {
 
-    /// <summary> Utility class for handling Assets in the Unity Editor. </summary>
+    /// <summary> 
+    /// Utility class for handling Assets in the Unity Editor. 
+    /// </summary>
     [InitializeOnLoad]
     public static class Assets {
 
         const string ResourcePath = "Resources/";
         static readonly Regex ResourceRegex = new Regex(".*/Resources/(.*?)\\..*", RegexOptions.Compiled);
 
-        /// <summary> Create new asset from <see cref="ScriptableObject" /> type with unique name at selected folder in project
+        /// <summary> 
+        /// Create new asset from <see cref="ScriptableObject" /> type with unique name at selected folder in project
         /// window. Asset creation can be cancelled by pressing escape key when asset is initially being named. </summary>
         /// <typeparam name="T"> type of scriptable object </typeparam>
         public static T CreateAssetInProjectWindow<T>(T asset = null, string name = null) where T : ScriptableObject {
@@ -72,12 +75,17 @@ namespace HouraiTeahouse.Editor {
             return !string.IsNullOrEmpty(path) && path.Contains(ResourcePath);
         }
 
-        public static bool IsResource(Object asset) { return IsResourcePath(AssetDatabase.GetAssetPath(asset)); }
+        public static bool IsResource(Object asset) { 
+            return IsResourcePath(AssetDatabase.GetAssetPath(asset)); 
+        }
 
         public static bool IsBundleAsset(Object asset) {
             return !string.IsNullOrEmpty(AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(asset)).assetBundleName);
         }
-        public static bool IsBundlePath(string path) { return path.IndexOf(Resource.BundleSeperator) >= 0; }
+
+        public static bool IsBundlePath(string path) { 
+            return path.IndexOf(Resource.BundleSeperator) >= 0; 
+        }
 
         public static Object LoadBundledAsset(string assetPath) {
             if (!IsBundlePath(assetPath))

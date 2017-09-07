@@ -8,15 +8,25 @@ using HouraiTeahouse.SmashBrew.Characters;
 
 namespace HouraiTeahouse.FantasyCrescendo {
 
+    /// <summary>
+    /// In-Game Debug UI used to show the state.
+    /// Intended only for use on the Debug Stage.
+    ///  </summary>
     public class StateDumpUI : MonoBehaviour {
 
         [SerializeField]
         Text _text;
 
+        /// <summary>
+        /// Awake is called when the script instance is being loaded.
+        /// </summary>
         void Awake() {
             _text = GetComponent<Text>();
         }
 
+        /// <summary>
+        /// Update is called every frame, if the MonoBehaviour is enabled.
+        /// </summary>
         void Update() {
             if (_text == null)
                 return;
@@ -38,7 +48,6 @@ namespace HouraiTeahouse.FantasyCrescendo {
             }
             _text.text = builder.ToString();
         }
-
 
     }
 

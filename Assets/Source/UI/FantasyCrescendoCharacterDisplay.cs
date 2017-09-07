@@ -7,6 +7,10 @@ using UnityEngine.UI;
 
 namespace HouraiTeahouse.FantasyCrescendo {
 
+    /// <summary>
+    /// A script to select a random character managed by <see cref="DataManager"/> and displays 
+    /// their portrait on a provided UI Image.
+    /// </summary>
     public class FantasyCrescendoCharacterDisplay : MonoBehaviour {
 
         [SerializeField]

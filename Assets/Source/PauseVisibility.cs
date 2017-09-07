@@ -5,9 +5,14 @@ using UnityEngine;
 
 namespace HouraiTeahouse.FantasyCrescendo {
 
+    /// <summary>
+    /// Hides or shows the GameObject that this script is attached to when the game is
+    /// paused.
+    /// </summary>
     public class PauseVisibility : MonoBehaviour {
 
         [SerializeField]
+        [Tooltip("If true, the object will only be active while paused. Otherwise it will be active only when unpaused.")]
         bool _show;
 
         /// <summary>

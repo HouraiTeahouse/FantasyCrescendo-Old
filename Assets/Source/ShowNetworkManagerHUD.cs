@@ -6,6 +6,10 @@ using UnityEngine.Networking;
 
 namespace HouraiTeahouse.FantasyCrescendo  {
 
+    /// <summary>
+    /// Quick and sloppy debug script to show the NetworkManagerHUD when this script is active.
+    /// Used as a quick debug method until a proper network lobby UI is created.
+    /// </summary>
     public class ShowNetworkManagerHUD : MonoBehaviour {
 
         NetworkManagerHUD[] huds;

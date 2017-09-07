@@ -28,7 +28,6 @@ namespace HouraiTeahouse.SmashBrew {
         static void AddHitbox(Hitbox.Type type) {
             var hitboxes = new List<Hitbox>();
             var rootMap = new Dictionary<GameObject, List<Hitbox>>();
-            var idGen = new Random();
             Undo.IncrementCurrentGroup();
             foreach (GameObject go in Selection.gameObjects) {
                 var hbGo = new GameObject();

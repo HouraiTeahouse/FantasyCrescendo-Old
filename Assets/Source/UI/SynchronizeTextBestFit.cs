@@ -7,6 +7,9 @@ using UnityEngine.EventSystems;
 
 namespace HouraiTeahouse.SmashBrew {
 
+    /// <summary>
+    /// Synchronizes multiple Best-Fit UI Texts to be the same size.
+    /// </summary>
     public class SynchronizeTextBestFit : UIBehaviour {
 
         [SerializeField]
@@ -20,6 +23,11 @@ namespace HouraiTeahouse.SmashBrew {
             StartCoroutine(UpdateSizes());
         }
 
+        /// <summary>
+        /// This callback is called if an associated RectTransform has its dimensions changed. 
+        /// The call is also made to all child rect transforms, even if the child transform itself 
+        /// doesn't change - as it could have, depending on its anchoring. 
+        /// </summary>
         protected override void OnRectTransformDimensionsChange() {
             foreach (var text in _texts)
                 if (text != null)
@@ -31,6 +39,8 @@ namespace HouraiTeahouse.SmashBrew {
         }
 
         IEnumerator UpdateSizes() {
+            // Waits one frame to allow the TextGenerator to properly get a feel for what is the best fit for
+            // each text.
             yield return null;
             yield return null;
             while (true) {

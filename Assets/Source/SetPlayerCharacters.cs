@@ -2,6 +2,8 @@ using HouraiTeahouse.SmashBrew;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+// DEPRECATED: No longer used.
+// TODO(james7132): Remove from the code base and all references to it.
 public class SetPlayerCharacters : MonoBehaviour, ISubmitHandler {
 
     [SerializeField]

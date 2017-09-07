@@ -42,6 +42,10 @@ namespace HouraiTeahouse.FantasyCrescendo {
         Other
     }
 
+    /// <summary>
+    /// A ScriptableObject extenstion of CharacterData that holds information regarding a Touhou
+    /// character's source information.
+    /// </summary>
     [Extension(typeof(CharacterData))]
     public class TouhouCharacterData : ScriptableObject {
 
@@ -51,12 +55,16 @@ namespace HouraiTeahouse.FantasyCrescendo {
         [SerializeField]
         TouhouStage _sourceStage = TouhouStage.Other;
 
-        /// <summary> The source game the character is from </summary>
+        /// <summary> 
+        /// The original game or media the character is from 
+        /// </summary>
         public TouhouGame SourceGame {
             get { return _sourceGame; }
         }
 
-        /// <summary> The source stage the character is from </summary>
+        /// <summary> 
+        /// The source stage the character is from 
+        /// </summary>
         public TouhouStage SourceStage {
             get { return _sourceStage; }
         }

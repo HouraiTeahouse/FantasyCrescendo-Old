@@ -8,13 +8,18 @@ namespace HouraiTeahouse {
         AudioSource _audio;
         ParticleSystem _particleSystem;
 
+        /// <summary>
+        /// Awake is called when the script instance is being loaded.
+        /// </summary>
         void Awake() {
             _animation = GetComponent<Animation>();
             _audio = GetComponent<AudioSource>();
             _particleSystem = GetComponent<ParticleSystem>();
         }
 
-        // Update is called once per frame
+        /// <summary>
+        /// Update is called every frame, if the MonoBehaviour is enabled.
+        /// </summary>
         void Update() {
             if (_animation && _animation.isPlaying)
                 return;

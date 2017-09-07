@@ -6,44 +6,45 @@ using TMPro;
 
 namespace HouraiTeahouse.UI {
 
+    /// <summary>
+    /// Sets a UI Text or <see cref="ITextAcceptor"/> component's text to <see cref="UnityEngine.Application.version"/>.
+    /// A custom display format can be provided.
+    /// Utilizes <see cref="ITextAcceptor.SetText(string)"/> to set the text of the object.
+    /// </summary>
     public class VersionText : MonoBehaviour {
 
         [SerializeField]
-        Text _text;
+        [Tooltip("Text object to assign the value to.")]
+        GameObject _text;
 
         [SerializeField]
-        TMP_Text _textMesh;
-
-        [SerializeField]
+        [Tooltip("Custom display format. Use {0} to subsitute in the version text.")]
         string _displayFormat = "v{0}";
 
+        /// <summary>
+        /// Awake is called when the script instance is being loaded.
+        /// </summary>
         void Awake() {
             if (_text == null)
-                _text = GetComponent<Text>();
-            if (_textMesh == null)
-                _textMesh = GetComponent<TMP_Text>();
-            if (_text == null && _textMesh == null)
-                return;
+                _text = gameObject;
             // Do not show on non-debug builds
             if (!Debug.isDebugBuild) {
-              DestroyImmediate(gameObject);
+              DestroyImmediate(_text);
               return;
             }
             if (string.IsNullOrEmpty(_displayFormat))
-                SetText(Application.version);
+                _text.SetUIText(Application.version);
             else
-                SetText(_displayFormat.With(Application.version));
+                _text.SetUIText(_displayFormat.With(Application.version));
+            Destroy(this);
         }
 
-        void SetText(string text) {
-            if (_text != null)
-                _text.text = text;
-            if (_textMesh != null)
-                _textMesh.text = text;
-        }
-
+        /// <summary>
+        /// Reset is called when the user hits the Reset button in the Inspector's
+        /// context menu or when adding the component the first time.
+        /// </summary>
         void Reset() {
-            _text = GetComponent<Text>();
+            _text = gameObject;
         }
 
     }

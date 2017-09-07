@@ -6,8 +6,9 @@ using Object = UnityEngine.Object;
 
 namespace HouraiTeahouse.Editor {
 
-    /// <summary> Custom PropertyDrawer for ResourcePathAttribute. </summary>
-    //TODO(jame7132): Move this to the Resource Attribute file
+    /// <summary> 
+    /// Custom PropertyDrawer for ResourcePathAttribute. 
+    /// </summary>
     [CustomPropertyDrawer(typeof(ResourceAttribute))]
     internal class ResourceAttributeDrawer : BasePropertyDrawer<ResourceAttribute> {
 
@@ -71,7 +72,9 @@ namespace HouraiTeahouse.Editor {
 
         readonly Dictionary<string, Data> _data;
 
-        public ResourceAttributeDrawer() { _data = new Dictionary<string, Data>(); }
+        public ResourceAttributeDrawer() { 
+            _data = new Dictionary<string, Data>(); 
+        }
 
         /// <summary>
         ///     <see cref="PropertyDrawer.OnGUI" />

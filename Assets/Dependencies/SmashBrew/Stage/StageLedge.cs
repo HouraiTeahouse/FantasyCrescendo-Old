@@ -5,6 +5,7 @@ using UnityEngine.Networking;
 namespace HouraiTeahouse.SmashBrew.Stage {
 
     [AddComponentMenu("SmashBrew/Stage/Ledge")]
+    [RequireComponent(typeof(NetworkIdentity))]
     public class StageLedge : MonoBehaviour {
 
         [SerializeField]
@@ -16,8 +17,7 @@ namespace HouraiTeahouse.SmashBrew.Stage {
             if (!collider.CompareTag(Config.Tags.LedgeTag))
                 return;
             var character = collider.GetComponentInParent<Character>();
-            var movement = collider.GetComponentInParent<MovementState>();
-            if (movement == null || character == null || character.StateController.CurrentState == character.States.LedgeRelease)
+            if (character == null || character.StateController.CurrentState == character.States.LedgeRelease)
                 return;
             character.State.Direction = _direction;
             character.State.CurrentLedge = GetComponent<NetworkIdentity>();

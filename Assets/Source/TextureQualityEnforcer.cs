@@ -1,17 +1,32 @@
 using UnityEngine;
 
-public class TextureQualityEnforcer : MonoBehaviour {
+namespace HouraiTeahouse.FantasyCrescendo {
 
-    int _cachedLevel;
+    /// <summary>
+    /// A script that enforces a certain global texture quality level while active.
+    /// </summary>
+    public class TextureQualityEnforcer : MonoBehaviour {
 
-    [SerializeField]
-    int _level;
+        int _cachedLevel;
 
-    void Awake() {
-        _cachedLevel = QualitySettings.masterTextureLimit;
-        QualitySettings.masterTextureLimit = _level;
+        [SerializeField]
+        int _level;
+
+        /// <summary>
+        /// Awake is called when the script instance is being loaded.
+        /// </summary>
+        void Awake() {
+            _cachedLevel = QualitySettings.masterTextureLimit;
+            QualitySettings.masterTextureLimit = _level;
+        }
+
+        /// <summary>
+        /// This function is called when the MonoBehaviour will be destroyed.
+        /// </summary>
+        void OnDestroy() { 
+            QualitySettings.masterTextureLimit = _cachedLevel; 
+        }
+
     }
-
-    void OnDestroy() { QualitySettings.masterTextureLimit = _cachedLevel; }
 
 }
