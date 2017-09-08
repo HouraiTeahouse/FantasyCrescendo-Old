@@ -9,10 +9,8 @@ namespace HouraiTeahouse.HouraiInput {
     public class UnityGyroAxisSource : InputSource {
 
         public enum GyroAxis {
-
             X = 0,
             Y = 1,
-
         }
 
         static Quaternion _zeroAttitude;
@@ -24,11 +22,13 @@ namespace HouraiTeahouse.HouraiInput {
             Calibrate();
         }
 
-        public float GetValue(InputDevice inputDevice) { return GetAxis()[(int) _axis]; }
+        public override float GetValue(InputDevice inputDevice) { 
+            return GetAxis()[(int) _axis]; 
+        }
 
-        public bool GetState(InputDevice inputDevice) { return !Mathf.Approximately(GetValue(inputDevice), 0.0f); }
-
-        static Quaternion GetAttitude() { return Quaternion.Inverse(_zeroAttitude) * Input.gyro.attitude; }
+        static Quaternion GetAttitude() { 
+            return Quaternion.Inverse(_zeroAttitude) * Input.gyro.attitude; 
+        }
 
         static Vector3 GetAxis() {
             Vector3 gv = GetAttitude() * Vector3.forward;

@@ -2,11 +2,12 @@ using UnityEditor;
 
 namespace HouraiTeahouse.Editor {
 
-    /// <summary> Custom Inspector for TimeManager. </summary>
+    /// <summary> 
+    /// Custom Inspector for TimeManager. 
+    /// </summary>
     [CustomEditor(typeof(TimeManager), true)]
-    public class TimeManagerEditor : ScriptlessEditor {
+    public class TimeManagerEditor : BaseEditor<TimeManager> {
 
-        /// <summary> Callback. Called every time the Inspector is drawn. </summary>
         public override void OnInspectorGUI() {
             base.OnInspectorGUI();
             TimeManager.Paused = EditorGUILayout.Toggle("Paused", TimeManager.Paused);

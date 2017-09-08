@@ -6,13 +6,17 @@ using System.Linq;
 
 namespace HouraiTeahouse.Editor {
 
-    /// <summary> Custom PropertyDrawer for SceneAttribute </summary>
+    /// <summary> 
+    /// Custom PropertyDrawer for SceneAttribute 
+    /// </summary>
     [CustomPropertyDrawer(typeof(SceneAttribute))]
     internal class SceneAttributeDrawer : PropertyDrawer {
 
         readonly Dictionary<string, Data> _data;
 
-        public SceneAttributeDrawer() { _data = new Dictionary<string, Data>(); }
+        public SceneAttributeDrawer() { 
+            _data = new Dictionary<string, Data>(); 
+        }
 
         class Data {
 
@@ -40,7 +44,7 @@ namespace HouraiTeahouse.Editor {
             public void Draw(Rect position, SerializedProperty property, Type type) {
                 EditorGUI.BeginChangeCheck();
                 SceneAsset obj;
-                using (hGUI.Color(Valid ? GUI.color : Color.red))
+                using (HGUI.Color(Valid ? GUI.color : Color.red))
                     obj = EditorGUI.ObjectField(position, Content, _object, type, false) as SceneAsset;
                 if (!EditorGUI.EndChangeCheck())
                     return;
@@ -91,7 +95,7 @@ namespace HouraiTeahouse.Editor {
                 _data[propertyPath] = data;
             }
 
-            using (hGUI.Property(data.Content, position, property)) {
+            using (HGUI.Property(data.Content, position, property)) {
                 data.UpdateContent(label);
                 data.Draw(position, property, typeof(SceneAsset));
                 _data[propertyPath] = data;

@@ -4,12 +4,16 @@ using Random = System.Random;
 
 namespace HouraiTeahouse {
 
-    /// <summary> Component that marks a unique object. Objects instantiated with this attached only allows one to exist.
-    /// Trying to create/instantiate more copies will have the object destroyed instantly. </summary>
+    /// <summary> 
+    /// Component that marks a unique object. Objects instantiated with this attached only allows one to exist.
+    /// Trying to create/instantiate more copies will have the object destroyed instantly. 
+    /// </summary>
     [DisallowMultipleComponent]
     public sealed class UniqueObject : MonoBehaviour, IUniqueEntity<int> {
 
-        /// <summary> A collection of all of the UniqueObjects currently in the game. </summary>
+        /// <summary> 
+        /// A collection of all of the UniqueObjects currently in the game. 
+        /// </summary>
         static Dictionary<int, UniqueObject> _allIds;
 
         [SerializeField]
@@ -17,12 +21,16 @@ namespace HouraiTeahouse {
         [Tooltip("The unique id for this object")]
         int _id;
 
-        /// <summary> The unique ID of the object. </summary>
+        /// <summary> 
+        /// The unique ID of the object. 
+        /// </summary>
         public int ID {
             get { return _id; }
         }
 
-        /// <summary> Unity Callback. Called on object instantiation. </summary>
+        /// <summary>
+        /// Awake is called when the script instance is being loaded.
+        /// </summary>
         void Awake() {
             if (_allIds == null)
                 _allIds = new Dictionary<int, UniqueObject>();
@@ -40,8 +48,10 @@ namespace HouraiTeahouse {
             _allIds[ID] = this;
             log.Info("Registered {0} as a unique object. (ID: {1})", name, ID);
         }
-
-        /// <summary> Unity callback. Called on object destruction. </summary>
+        
+        /// <summary>
+        /// This function is called when the MonoBehaviour will be destroyed.
+        /// </summary>
         void OnDestroy() {
             if (_allIds == null || _allIds[ID] != this)
                 return;
@@ -50,8 +60,13 @@ namespace HouraiTeahouse {
                 _allIds = null;
         }
 
-        /// <summary> Unity callback. Called on editor reset. </summary>
-        void Reset() { _id = new Random().Next(); }
+        /// <summary>
+        /// Reset is called when the user hits the Reset button in the Inspector's
+        /// context menu or when adding the component the first time.
+        /// </summary>
+        void Reset() { 
+            _id = new Random().Next(); 
+        }
 
     }
 

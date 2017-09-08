@@ -1,9 +1,16 @@
+using UnityEngine;
+
 namespace HouraiTeahouse.HouraiInput {
 
-    public interface InputSource {
+    public abstract class InputSource {
 
-        float GetValue(InputDevice inputDevice);
-        bool GetState(InputDevice inputDevice);
+        public virtual float GetValue(InputDevice inputDevice) {
+            return GetState(inputDevice) ? 1.0f : 0.0f;
+        }
+
+        public virtual bool GetState(InputDevice inputDevice) {
+            return !Mathf.Approximately(GetValue(inputDevice), 0.0f);
+        }
 
     }
 

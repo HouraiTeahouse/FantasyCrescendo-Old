@@ -29,13 +29,21 @@ namespace HouraiTeahouse.HouraiInput {
             Value = state ? 1.0f : 0.0f;
         }
 
-        public static implicit operator bool(InputState state) { return state.State; }
+        public static implicit operator bool(InputState state) { 
+            return state.State; 
+        }
 
-        public static implicit operator float(InputState state) { return state.Value; }
+        public static implicit operator float(InputState state) { 
+            return state.Value; 
+        }
 
-        public static bool operator ==(InputState a, InputState b) { return Mathf.Approximately(a.Value, b.Value); }
+        public static bool operator ==(InputState a, InputState b) { 
+            return Mathf.Approximately(a.Value, b.Value); 
+        }
 
-        public static bool operator !=(InputState a, InputState b) { return !Mathf.Approximately(a.Value, b.Value); }
+        public static bool operator !=(InputState a, InputState b) { 
+            return !Mathf.Approximately(a.Value, b.Value); 
+        }
 
     }
 

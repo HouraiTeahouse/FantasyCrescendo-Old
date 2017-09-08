@@ -14,7 +14,7 @@ namespace HouraiTeahouse.Editor {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
             SerializedProperty key = GetKey(property);
             SerializedProperty defaultValue = GetDefaultValue(property);
-            using (hGUI.Property(label, position, GetKey(property))) {
+            using (HGUI.Property(label, position, GetKey(property))) {
                 position.width /= 2;
                 EditorGUI.PropertyField(position, key, label);
                 position.x += position.width;
@@ -26,7 +26,6 @@ namespace HouraiTeahouse.Editor {
 
     [CustomPropertyDrawer(typeof(PrefInt))]
     internal sealed class PrefIntDrawer : PrefDrawer {
-
     }
 
     [CustomPropertyDrawer(typeof(PrefFloat))]

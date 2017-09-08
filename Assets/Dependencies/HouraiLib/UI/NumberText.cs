@@ -4,7 +4,9 @@ using UnityEngine.UI;
 
 namespace HouraiTeahouse {
 
-    /// <summary> Displays a number to a UnityEngine.UI.Text UI object. </summary>
+    /// <summary> 
+    /// Displays a number to a UnityEngine.UI.Text UI object. 
+    /// </summary>
     [ExecuteInEditMode]
     public class NumberText : MonoBehaviour {
 
@@ -20,20 +22,20 @@ namespace HouraiTeahouse {
         [Tooltip("The Text UI object driven by this script")]
         Text _text;
 
-        /// <summary> The number to be displayed by the Text UI object. </summary>
+        /// <summary> 
+        /// The number to be displayed by the Text UI object. 
+        /// </summary>
         public float Number {
             get { return _number; }
             set {
-                bool changed = !Mathf.Approximately(_number, value);
                 _number = value;
                 UpdateText();
-                if (!changed)
-                    return;
-                OnNumberChange.SafeInvoke();
             }
         }
 
-        /// <summary> The string format used to display the number. </summary>
+        /// <summary> 
+        /// The string format used to display the number. 
+        /// </summary>
         public string Format {
             get { return _format; }
             set {
@@ -44,7 +46,9 @@ namespace HouraiTeahouse {
             }
         }
 
-        /// <summary> The Text UI object that is driven by this script. </summary>
+        /// <summary> 
+        /// The Text UI object that is driven by this script. 
+        /// </summary>
         protected Text Text {
             get { return _text; }
             set {
@@ -55,18 +59,25 @@ namespace HouraiTeahouse {
             }
         }
 
-        public event Action OnNumberChange;
-
-        /// <summary> Unity Callback. Called on object instantiation. </summary>
+        /// <summary>
+        /// Awake is called when the script instance is being loaded.
+        /// </summary>
         void Awake() {
             if (Text == null)
                 Text = GetComponent<Text>();
         }
 
-        /// <summary> Unity Callback. Called when the script is added in the Editor or the Reset menu option is selected. </summary>
-        void Reset() { Text = GetComponent<Text>(); }
+        /// <summary>
+        /// Reset is called when the user hits the Reset button in the Inspector's
+        /// context menu or when adding the component the first time.
+        /// </summary>
+        void Reset() { 
+            Text = GetComponent<Text>(); 
+        }
 
-        /// <summary> Unity Callback. Called once per frame. </summary>
+        /// <summary>
+        /// Update is called every frame, if the MonoBehaviour is enabled.
+        /// </summary>
         protected virtual void Update() {
             if (!Application.isPlaying)
                 UpdateText();
@@ -78,7 +89,9 @@ namespace HouraiTeahouse {
             _text.text = ProcessNumber(string.IsNullOrEmpty(_format) ? _number.ToString() : _number.ToString(_format));
         }
 
-        protected virtual string ProcessNumber(string number) { return number; }
+        protected virtual string ProcessNumber(string number) { 
+            return number; 
+        }
 
     }
 

@@ -42,8 +42,8 @@ namespace HouraiTeahouse.HouraiInput {
 
         Vector2 DPadVector {
             get {
-                float x = DPadLeft.State ? -DPadLeft.Value : DPadRight.Value;
-                float t = DPadUp.State ? DPadUp.Value : -DPadDown.Value;
+                float x = DPadLeft.State ? -DPadLeft : DPadRight;
+                float t = DPadUp.State ? DPadUp : -DPadDown;
                 float y = HInput.InvertYAxis ? -t : t;
                 return new Vector2(x, y).normalized;
             }
@@ -225,16 +225,14 @@ namespace HouraiTeahouse.HouraiInput {
                         obverseControl.PreValue.Value,
                         control.LowerDeadZone,
                         control.UpperDeadZone);
-                }
-                else {
+                } else {
                     analogValue = ApplyDeadZone(analogValue, control.LowerDeadZone, control.UpperDeadZone);
                 }
-            }
-            else {
+            } else {
                 analogValue = ApplyDeadZone(analogValue, control.LowerDeadZone, control.UpperDeadZone);
             }
 
-            return ApplySmoothing(analogValue, control.LastValue, deltaTime, control.Sensitivity);
+            return ApplySmoothing(analogValue, control.LastState, deltaTime, control.Sensitivity);
         }
 
         static float ApplyDeadZone(float value, float lowerDeadZone, float upperDeadZone) {
@@ -262,11 +260,16 @@ namespace HouraiTeahouse.HouraiInput {
             return Mathf.MoveTowards(lastValue, thisValue, maxDelta);
         }
 
-        public bool LastChangedAfter(InputDevice otherDevice) { return LastChangeTick > otherDevice.LastChangeTick; }
+        public bool LastChangedAfter(InputDevice otherDevice) { 
+            return LastChangeTick > otherDevice.LastChangeTick; 
+        }
 
-        public virtual void Vibrate(float leftMotor, float rightMotor) { }
+        public virtual void Vibrate(float leftMotor, float rightMotor) { 
+        }
 
-        public void Vibrate(float intensity) { Vibrate(intensity, intensity); }
+        public void Vibrate(float intensity) { 
+            Vibrate(intensity, intensity); 
+        }
 
         public override string ToString() {
             return string.Format("InputDevice ({0}, {1})", Name, Meta);

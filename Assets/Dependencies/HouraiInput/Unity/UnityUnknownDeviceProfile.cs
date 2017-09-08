@@ -1,6 +1,8 @@
+using System.Linq;
+
 namespace HouraiTeahouse.HouraiInput {
 
-    public class UnityUnknownDeviceProfile : UnityInputDeviceProfile {
+    public sealed class UnityUnknownDeviceProfile : UnityInputDeviceProfile {
 
         public UnityUnknownDeviceProfile(string joystickName) {
             Name = "Unknown Device";

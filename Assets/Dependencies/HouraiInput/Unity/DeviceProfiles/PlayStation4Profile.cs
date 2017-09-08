@@ -13,47 +13,47 @@ namespace HouraiTeahouse.HouraiInput {
             JoystickRegex = new[] {"controller"};
 
             ButtonMappings = new[] {
-                new InputMapping {Handle = "Cross", Target = InputTarget.Action1, Source = Button0},
-                new InputMapping {Handle = "Circle", Target = InputTarget.Action2, Source = Button1},
-                new InputMapping {Handle = "Square", Target = InputTarget.Action3, Source = Button2},
-                new InputMapping {Handle = "Triangle", Target = InputTarget.Action4, Source = Button3},
-                new InputMapping {Handle = "Left Bumper", Target = InputTarget.LeftBumper, Source = Button4},
-                new InputMapping {Handle = "Right Bumper", Target = InputTarget.RightBumper, Source = Button5},
-                new InputMapping {Handle = "Options", Target = InputTarget.Select, Source = Button7},
-                new InputMapping {Handle = "Left Stick Button", Target = InputTarget.LeftStickButton, Source = Button8},
+                new InputMapping {Handle = "Cross", Target = InputTarget.Action1, Source = Button(0)},
+                new InputMapping {Handle = "Circle", Target = InputTarget.Action2, Source = Button(1)},
+                new InputMapping {Handle = "Square", Target = InputTarget.Action3, Source = Button(2)},
+                new InputMapping {Handle = "Triangle", Target = InputTarget.Action4, Source = Button(3)},
+                new InputMapping {Handle = "Left Bumper", Target = InputTarget.LeftBumper, Source = Button(4)},
+                new InputMapping {Handle = "Right Bumper", Target = InputTarget.RightBumper, Source = Button(5)},
+                new InputMapping {Handle = "Options", Target = InputTarget.Select, Source = Button(7)},
+                new InputMapping {Handle = "Left Stick Button", Target = InputTarget.LeftStickButton, Source = Button(8)},
                 new InputMapping {
                     Handle = "Right Stick Button",
                     Target = InputTarget.RightStickButton,
-                    Source = Button9
+                    Source = Button(9)
                 }
             };
 
             AnalogMappings = new[] {
-                new InputMapping {Handle = "Left Trigger", Target = InputTarget.LeftTrigger, Source = Analog7},
+                new InputMapping {Handle = "Left Trigger", Target = InputTarget.LeftTrigger, Source = Analog(7)},
                 new InputMapping {
                     Handle = "Right Trigger",
                     Target = InputTarget.RightTrigger,
-                    Source = Analog2,
+                    Source = Analog(2),
                     Invert = true
                 },
-                new InputMapping {Handle = "Left Stick X", Target = InputTarget.LeftStickX, Source = Analog0},
+                new InputMapping {Handle = "Left Stick X", Target = InputTarget.LeftStickX, Source = Analog(0)},
                 new InputMapping {
                     Handle = "Left Stick Y",
                     Target = InputTarget.LeftStickY,
-                    Source = Analog1,
+                    Source = Analog(1),
                     Invert = true
                 },
-                new InputMapping {Handle = "Right Stick X", Target = InputTarget.RightStickX, Source = Analog3},
+                new InputMapping {Handle = "Right Stick X", Target = InputTarget.RightStickX, Source = Analog(3)},
                 new InputMapping {
                     Handle = "Right Stick Y",
                     Target = InputTarget.RightStickY,
-                    Source = Analog4,
+                    Source = Analog(4),
                     Invert = true
                 },
                 new InputMapping {
                     Handle = "DPad Left",
                     Target = InputTarget.DPadLeft,
-                    Source = Analog5,
+                    Source = Analog(5),
                     SourceRange = InputMapping.Negative,
                     TargetRange = InputMapping.Negative,
                     Invert = true
@@ -61,21 +61,21 @@ namespace HouraiTeahouse.HouraiInput {
                 new InputMapping {
                     Handle = "DPad Right",
                     Target = InputTarget.DPadRight,
-                    Source = Analog5,
+                    Source = Analog(5),
                     SourceRange = InputMapping.Positive,
                     TargetRange = InputMapping.Positive
                 },
                 new InputMapping {
                     Handle = "DPad Up",
                     Target = InputTarget.DPadUp,
-                    Source = Analog6,
+                    Source = Analog(6),
                     SourceRange = InputMapping.Positive,
                     TargetRange = InputMapping.Positive
                 },
                 new InputMapping {
                     Handle = "DPad Down",
                     Target = InputTarget.DPadDown,
-                    Source = Analog6,
+                    Source = Analog(6),
                     SourceRange = InputMapping.Negative,
                     TargetRange = InputMapping.Negative,
                     Invert = true

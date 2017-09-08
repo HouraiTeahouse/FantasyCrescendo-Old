@@ -6,11 +6,13 @@ namespace HouraiTeahouse.HouraiInput {
 
         readonly string _mouseAxisQuery;
 
-        public UnityMouseAxisSource(string axis) { _mouseAxisQuery = "mouse " + axis; }
+        public UnityMouseAxisSource(string axis) { 
+            _mouseAxisQuery = "mouse " + axis; 
+        }
 
-        public float GetValue(InputDevice inputDevice) { return Input.GetAxisRaw(_mouseAxisQuery); }
-
-        public bool GetState(InputDevice inputDevice) { return !Mathf.Approximately(GetValue(inputDevice), 0.0f); }
+        public override float GetValue(InputDevice inputDevice) { 
+            return Input.GetAxisRaw(_mouseAxisQuery); 
+        }
 
     }
 

@@ -1,8 +1,10 @@
+using UnityEngine; 
+
 namespace HouraiTeahouse {
 
     /// <summary> An abstract class for MonoBehaviours that handle events published by Mediators. </summary>
     /// <typeparam name="T"> the event type to subscribe to </typeparam>
-    public abstract class EventBehaviour<T> : BaseBehaviour {
+    public abstract class EventBehaviour<T> : MonoBehaviour {
 
         Mediator _eventManager;
 
@@ -23,8 +25,7 @@ namespace HouraiTeahouse {
         /// <summary>
         /// Awake is called when the script instance is being loaded.
         /// </summary>
-        protected override void Awake() {
-            base.Awake();
+        protected virtual void Awake() {
             _eventManager = Mediator.Global;
             _eventManager.Subscribe<T>(OnEvent);
         }

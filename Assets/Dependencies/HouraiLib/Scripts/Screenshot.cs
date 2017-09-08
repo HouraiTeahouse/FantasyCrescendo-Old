@@ -4,8 +4,9 @@ using UnityEngine;
 
 namespace HouraiTeahouse {
 
-    /// <summary> Takes screenshots upon pressing F12 </summary>
-    //TODO: Generalize
+    /// <summary> 
+    /// Takes screenshots upon pressing a specified keyboard key
+    /// </summary>
     public class Screenshot : MonoBehaviour {
 
         [SerializeField]
@@ -17,7 +18,9 @@ namespace HouraiTeahouse {
         [SerializeField]
         KeyCode _key = KeyCode.F12;
 
-        /// <summary> Unity callback. Called once per frame. </summary>
+        /// <summary>
+        /// Update is called every frame, if the MonoBehaviour is enabled.
+        /// </summary>
         void Update() {
             if (!Input.GetKeyDown(_key))
                 return;

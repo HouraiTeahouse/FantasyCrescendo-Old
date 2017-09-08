@@ -3,10 +3,14 @@ using UnityEngine;
 
 namespace HouraiTeahouse {
 
-    /// <summary> A set of useful utility funcitons for the UnityEngine Rect struct </summary>
+    /// <summary> 
+    /// A set of useful utility funcitons for the UnityEngine Rect struct 
+    /// </summary>
     public static class RectExtensions {
 
-        /// <summary> Changes the width of a Rect without changing the centered position of the Rect. </summary>
+        /// <summary> 
+        /// Changes the width of a Rect without changing the centered position of the Rect. 
+        /// </summary>
         /// <param name="rect"> the source Rect </param>
         /// <param name="width"> the new width of the Rect </param>
         /// <returns> the edited Rect </returns>
@@ -17,7 +21,9 @@ namespace HouraiTeahouse {
             return rect;
         }
 
-        /// <summary> Changes the height of a Rect without changing the centered posiiton of the Rect. </summary>
+        /// <summary> 
+        /// Changes the height of a Rect without changing the centered posiiton of the Rect. 
+        /// </summary>
         /// <param name="rect"> the source Rect </param>
         /// <param name="height"> the new height of the Rect </param>
         /// <returns> the edited Rect </returns>
@@ -28,7 +34,9 @@ namespace HouraiTeahouse {
             return rect;
         }
 
-        /// <summary> Changes both the height and width of the a Rect without changing the centered position of the Rect. </summary>
+        /// <summary> 
+        /// Changes both the height and width of the a Rect without changing the centered position of the Rect. 
+        /// </summary>
         /// <param name="rect"> the source Rect </param>
         /// <param name="width"> the new width of the Rect </param>
         /// <param name="height"> the new height of the Rect </param>
@@ -37,7 +45,9 @@ namespace HouraiTeahouse {
             return rect.ChangeWidth(width).ChangeHeight(height);
         }
 
-        /// <summary> Changes both the height and width of the a Rect without changing the centered position of the Rect. </summary>
+        /// <summary> 
+        /// Changes both the height and width of the a Rect without changing the centered position of the Rect. 
+        /// </summary>
         /// <param name="rect"> the source Rect </param>
         /// <param name="dims"> the new dimensions of the Rect </param>
         /// <returns> the edited Rect </returns>
@@ -45,7 +55,9 @@ namespace HouraiTeahouse {
             return rect.ChangeDims(dims.x, dims.y);
         }
 
-        /// <summary> Gets the aspect ratio of the rect. If the height of the Rect is zero, returns NaN. </summary>
+        /// <summary> 
+        /// Gets the aspect ratio of the rect. If the height of the Rect is zero, returns NaN. 
+        /// </summary>
         /// <param name="rect"> the Rect to get the aspect ratio of </param>
         /// <returns> the aspect ratio of the Rect </returns>
         public static float AspectRatio(this Rect rect) {
@@ -54,7 +66,9 @@ namespace HouraiTeahouse {
             return rect.width / rect.height;
         }
 
-        /// <summary> Enforces an aspect ratio on a Rect. Will expand the Rect if necessary </summary>
+        /// <summary> 
+        /// Enforces an aspect ratio on a Rect. Will expand the Rect if necessary 
+        /// </summary>
         /// <param name="rect"> the source Rect </param>
         /// <param name="aspect"> the aspect ratio to enforce </param>
         /// <returns> the edited Rect </returns>
@@ -67,7 +81,9 @@ namespace HouraiTeahouse {
             return rect.ChangeHeight(rect.width / aspect);
         }
 
-        /// <summary> Restricts a Rect to to a certain size. Retains the center. Optionally can enforce an aspect ratio. </summary>
+        /// <summary> 
+        /// Restricts a Rect to to a certain size. Retains the center. Optionally can enforce an aspect ratio. 
+        /// </summary>
         /// <param name="rect"> the source Rect </param>
         /// <param name="size"> the maximum dimensions of the new Rect </param>
         /// <param name="aspect"> the aspect ratio to enforce, will not enforce one if null </param>
@@ -76,7 +92,9 @@ namespace HouraiTeahouse {
             return rect.Restrict(size.x, size.y, aspect);
         }
 
-        /// <summary> Restricts a Rect to to a certain size. Retains the center. Optionally can enforce an aspect ratio. </summary>
+        /// <summary> 
+        /// Restricts a Rect to to a certain size. Retains the center. Optionally can enforce an aspect ratio. 
+        /// </summary>
         /// <param name="rect"> the source Rect </param>
         /// <param name="width"> the maximum width of the new Rect </param>
         /// <param name="height"> the maximum height of the new Rect </param>

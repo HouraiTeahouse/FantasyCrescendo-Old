@@ -42,28 +42,17 @@ namespace HouraiTeahouse.HouraiInput {
         public float LowerDeadZone { get; set; }
         public float UpperDeadZone { get; set; }
 
-        /// <summary> Is this control a button? </summary>
+        /// <summary> 
+        /// Is this control a button? 
+        /// </summary>
         public bool IsButton { get; protected set; }
 
         internal bool IsOnZeroTick {
             get { return UpdateTick == zeroTick; }
         }
 
-        public bool State {
-            get { return thisState.State; }
-        }
-
-        public bool LastState {
-            get { return lastState.State; }
-        }
-
-        public float Value {
-            get { return thisState.Value; }
-        }
-
-        public float LastValue {
-            get { return lastState.Value; }
-        }
+        public InputState State { get; private set; }
+        public InputState LastState { get; private set; }
 
         public bool HasChanged {
             get { return thisState != lastState; }
@@ -145,11 +134,14 @@ namespace HouraiTeahouse.HouraiInput {
 
         internal void SetZeroTick() { zeroTick = UpdateTick; }
 
-        public override string ToString() { return "[InputControl: Handle={0}, Value={1}]".With(Handle, Value); }
+        public override string ToString() { return "[InputControl: Handle={0}, Value={1}]".With(Handle, State.Value); }
 
-        public static implicit operator bool(InputControl control) { return control.State; }
+        public static implicit operator bool(InputControl control) { 
+            return control.State; }
 
-        public static implicit operator float(InputControl control) { return control.Value; }
+        public static implicit operator float(InputControl control) { 
+            return control.State; 
+        }
 
     }
 

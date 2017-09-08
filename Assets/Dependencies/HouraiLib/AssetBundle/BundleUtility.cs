@@ -38,7 +38,7 @@ namespace HouraiTeahouse.AssetBundles {
         }
 
         public static string GetLocalStoragePath() {
-            return PathUtility.Combine(StoragePath, AssetBundlesOutputPath);
+            return Path.Combine(StoragePath, AssetBundlesOutputPath);
         }
 
         public static string GetLocalBundlePath(string bundleName) {

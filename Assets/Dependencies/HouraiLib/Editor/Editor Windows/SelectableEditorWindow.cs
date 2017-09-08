@@ -7,35 +7,50 @@ using Object = UnityEngine.Object;
 
 namespace HouraiTeahouse {
 
-    /// <summary> An EditorWindow that is based on the current selection. The selection can be locked via the padlock in the
-    /// top right of the window. </summary>
-    /// <typeparam name="T"> </typeparam>
+    /// <summary> 
+    /// Abstract base class for EditorWindows that are reliant on the current selection of objects. 
+    /// Inherits from LockableEditorWindow, the selection can be locked via the padlock in the 
+    /// top right of the window. 
+    /// </summary>
+    /// <typeparam name="T"> the type of object to filter the selection for </typeparam>
     public abstract class SelectableEditorWindow<T> : LockableEditorWindow where T : Object {
 
         T[] _selection;
 
-        /// <summary> A list of selected objects. </summary>
-        protected IEnumerable<T> Selection {
+        /// <summary> 
+        /// A list of selected objects. 
+        /// </summary>
+        protected IEnumerable<T> CurrentSelection {
             get {
                 if (_selection == null)
                     return Enumerable.Empty<T>();
-                return _selection.Where(selected => Filter == null || Filter(selected));
+                return _selection.Where(IsSelectionValid);
             }
         }
 
-        /// <summary> Provides a filter on the selection's objects. </summary>
-        protected SelectionMode SelectionMode { get; set; }
+        /// <summary> 
+        /// Gets a SelectionMode filter on the selection's objects. 
+        /// </summary>
+        protected SelectionMode SelectionMode {
+            get { return SelectionMode.Unfiltered; }
+        }
 
-        /// <summary> Provides a filter for what kinds of selected objects are used. If null, the selection is unfiltered. </summary>
-        protected Predicate<T> Filter { get; set; }
-
-        /// <summary> Updates the Selection as needed. </summary>
+        /// <summary> 
+        /// Unity event: invoked when the editor selection has changed. 
+        /// </summary>
         protected virtual void OnSelectionChange() {
             if (IsLocked)
                 return;
+            _selection = Selection.GetFiltered(typeof(T), SelectionMode).Cast<T>().ToArray();
+        }
 
-            _selection =
-                UnityEditor.Selection.GetFiltered(typeof(T), SelectionMode).Select(selected => selected as T).ToArray();
+        /// <summary>
+        /// Checks if an object is valid to include in the CurrentSelection.
+        /// </summary>
+        /// <param name="selectedObject">the object in the Editor selection to evaluate</param>
+        /// <returns> true if the object is valid, false otherwise. </returns>
+        protected virtual bool IsSelectionValid(T selectedObject) {
+            return true;
         }
 
     }

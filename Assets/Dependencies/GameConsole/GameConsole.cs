@@ -5,26 +5,35 @@ using UnityEngine;
 
 namespace HouraiTeahouse.Console {
 
-    /// <summary> Delegate type for commands executable by GameConsole </summary>
+    /// <summary> 
+    /// Delegate type for commands executable by GameConsole 
+    /// </summary>
     /// <param name="args"> the Console arguments. Does not include command name </param>
     public delegate void ConsoleCommand(string[] args);
 
-    /// <summary> A globally accessible commandline-like debug console accessible in both the Unity Editor and in builds.
-    /// Allows registering bash-like commands. Useful for creating cheat modes and debug views in builds. </summary>
+    /// <summary> 
+    /// A globally accessible commandline-like debug console accessible in both the Unity Editor and in builds.
+    /// Allows registering bash-like commands. Useful for creating cheat modes and debug views in builds. 
+    /// </summary>
     public static class GameConsole {
 
-        /// <summary> Built-in GameConsole commands </summary>
+        /// <summary> 
+        /// Built-in GameConsole commands 
+        /// </summary>
         public static class Commands {
 
-            /// <summary> Console Comand for clearing the GameConsole history. </summary>
+            /// <summary> 
+            /// Console Comand for clearing the GameConsole history. 
+            /// </summary>
             /// <param name="args"> Console arguments </param>
             public static void Clear(string[] args) { GameConsole.Clear(); }
 
-            /// <summary> Console command for echoing back the argument values. </summary>
+            /// <summary> 
+            /// Console command for echoing back the argument values. 
+            /// </summary>
             /// <param name="args"> Console arguments </param>
             public static void Echo(string[] args) {
-                foreach (string arg in args)
-                    Log(arg);
+                Log(string.Join(" ", args));
             }
 
         }

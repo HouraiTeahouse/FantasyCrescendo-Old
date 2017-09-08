@@ -51,7 +51,7 @@ namespace HouraiTeahouse.SmashBrew {
             var data = target as CharacterData;
             if (data == null || data.PalleteCount < 1)
                 return;
-            using (hGUI.Horizontal()) {
+            using (new EditorGUILayout.HorizontalScope()) {
                 GUILayout.FlexibleSpace();
                 if (GUILayout.Button("\u25c4", EditorStyles.miniButton))
                     _previewSelect++;

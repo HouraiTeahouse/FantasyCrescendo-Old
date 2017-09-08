@@ -45,15 +45,18 @@ namespace HouraiTeahouse.SmashBrew.Characters {
 
     }
 
-    public abstract class CharacterComponent : BaseBehaviour, ICharacterComponent {
+    public abstract class CharacterComponent : MonoBehaviour, ICharacterComponent {
 
         public Character Character { get; private set; }
+
         protected CharacterState CurrentState {
             get { return (Character != null && Character.StateController != null) ? Character.StateController.CurrentState : null; }
         }
 
-        protected override void Awake() {
-            base.Awake();
+        /// <summary>
+        /// Awake is called when the script instance is being loaded.
+        /// </summary>
+        protected virtual void Awake() {
             var registrar = GetComponentInParent<IRegistrar<ICharacterComponent>>();
             if (registrar != null)
                 registrar.Register(this);

@@ -6,6 +6,9 @@ using UnityEngine;
 
 namespace HouraiTeahouse.Editor {
 
+    /// <summary>
+    /// Custom editor for all ExtendableObjectEditor.
+    /// </summary>
     [InitializeOnLoad]
     [CustomEditor(typeof(ExtendableObject), isFallback = true)]
     public class ExtendableObjectEditor : BaseEditor<ExtendableObject> {
@@ -21,6 +24,7 @@ namespace HouraiTeahouse.Editor {
         ObjectSelector<ExtensionType> Selector;
 
         static ExtendableObjectEditor() {
+            //TODO(james7132): This puts a heavy strain on domain reloads. Consider moving somewhere else.
             Matches =
                 ReflectionUtilty.AllTypes.ConcreteClasses()
                     .IsAssignableFrom(typeof(ScriptableObject))
@@ -63,7 +67,7 @@ namespace HouraiTeahouse.Editor {
                 return;
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Extensions", EditorStyles.boldLabel);
-            using (hGUI.Horizontal()) {
+            using (new EditorGUILayout.HorizontalScope()) {
                 ExtensionType selection = Selector.Draw(GUIContent.none);
                 if (GUILayout.Button("Add") && selection != null) {
                     Undo.RecordObject(Target, "Add Extension");
@@ -72,7 +76,7 @@ namespace HouraiTeahouse.Editor {
                 }
             }
             foreach (ScriptableObject extension in Target.Extensions.ToArray()) {
-                using (hGUI.Horizontal()) {
+                using (new EditorGUILayout.HorizontalScope()) {
                     EditorGUILayout.InspectorTitlebar(true, extension);
                     if (GUILayout.Button(GUIContent.none, "ToggleMixed", GUILayout.Width(15))) {
                         Undo.RecordObject(Target, "Remove Extension");

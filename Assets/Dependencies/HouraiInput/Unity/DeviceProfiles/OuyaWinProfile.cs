@@ -13,52 +13,52 @@ namespace HouraiTeahouse.HouraiInput {
             LowerDeadZone = 0.3f;
 
             ButtonMappings = new[] {
-                new InputMapping {Handle = "O", Target = InputTarget.Action1, Source = Button0},
-                new InputMapping {Handle = "A", Target = InputTarget.Action2, Source = Button3},
-                new InputMapping {Handle = "U", Target = InputTarget.Action3, Source = Button1},
-                new InputMapping {Handle = "Y", Target = InputTarget.Action4, Source = Button2},
-                new InputMapping {Handle = "Left Bumper", Target = InputTarget.LeftBumper, Source = Button4},
-                new InputMapping {Handle = "Right Bumper", Target = InputTarget.RightBumper, Source = Button5},
-                new InputMapping {Handle = "Left Stick Button", Target = InputTarget.LeftStickButton, Source = Button6},
+                new InputMapping {Handle = "O", Target = InputTarget.Action1, Source = Button(0)},
+                new InputMapping {Handle = "A", Target = InputTarget.Action2, Source = Button(3)},
+                new InputMapping {Handle = "U", Target = InputTarget.Action3, Source = Button(1)},
+                new InputMapping {Handle = "Y", Target = InputTarget.Action4, Source = Button(2)},
+                new InputMapping {Handle = "Left Bumper", Target = InputTarget.LeftBumper, Source = Button(4)},
+                new InputMapping {Handle = "Right Bumper", Target = InputTarget.RightBumper, Source = Button(5)},
+                new InputMapping {Handle = "Left Stick Button", Target = InputTarget.LeftStickButton, Source = Button(6)},
                 new InputMapping {
                     Handle = "Right Stick Button",
                     Target = InputTarget.RightStickButton,
-                    Source = Button7
+                    Source = Button(7)
                 },
-                new InputMapping {Handle = "DPad Up", Target = InputTarget.DPadUp, Source = Button8},
-                new InputMapping {Handle = "DPad Down", Target = InputTarget.DPadDown, Source = Button9},
-                new InputMapping {Handle = "DPad Left", Target = InputTarget.DPadLeft, Source = Button10},
-                new InputMapping {Handle = "DPad Right", Target = InputTarget.DPadRight, Source = Button11},
-                new InputMapping {Handle = "System", Target = InputTarget.System, Source = Button14},
-                new InputMapping {Handle = "TouchPad Tap", Target = InputTarget.TouchPadTap, Source = MouseButton0}
+                new InputMapping {Handle = "DPad Up", Target = InputTarget.DPadUp, Source = Button(8)},
+                new InputMapping {Handle = "DPad Down", Target = InputTarget.DPadDown, Source = Button(9)},
+                new InputMapping {Handle = "DPad Left", Target = InputTarget.DPadLeft, Source = Button(10)},
+                new InputMapping {Handle = "DPad Right", Target = InputTarget.DPadRight, Source = Button(11)},
+                new InputMapping {Handle = "System", Target = InputTarget.System, Source = Button(14)},
+                new InputMapping {Handle = "TouchPad Tap", Target = InputTarget.TouchPadTap, Source = MouseButton(0)}
             };
 
             AnalogMappings = new[] {
-                new InputMapping {Handle = "Left Stick X", Target = InputTarget.LeftStickX, Source = Analog0},
+                new InputMapping {Handle = "Left Stick X", Target = InputTarget.LeftStickX, Source = Analog(0)},
                 new InputMapping {
                     Handle = "Left Stick Y",
                     Target = InputTarget.LeftStickY,
-                    Source = Analog1,
+                    Source = Analog(1),
                     Invert = true
                 },
-                new InputMapping {Handle = "Right Stick X", Target = InputTarget.RightStickX, Source = Analog3},
+                new InputMapping {Handle = "Right Stick X", Target = InputTarget.RightStickX, Source = Analog(3)},
                 new InputMapping {
                     Handle = "Right Stick Y",
                     Target = InputTarget.RightStickY,
-                    Source = Analog4,
+                    Source = Analog(4),
                     Invert = true
                 },
                 new InputMapping {
                     Handle = "Left Trigger",
                     Target = InputTarget.LeftTrigger,
-                    Source = Analog2,
+                    Source = Analog(2),
                     SourceRange = InputMapping.Positive,
                     TargetRange = InputMapping.Positive
                 },
                 new InputMapping {
                     Handle = "Right Trigger",
                     Target = InputTarget.RightTrigger,
-                    Source = Analog5,
+                    Source = Analog(5),
                     SourceRange = InputMapping.Positive,
                     TargetRange = InputMapping.Positive
                 },

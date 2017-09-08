@@ -6,34 +6,70 @@ using UnityEngine;
 
 namespace HouraiTeahouse {
 
-    /// <summary> Set of extension methods for collections and enumerations of any type. </summary>
+    /// <summary> 
+    /// Set of extension methods for collections and enumerations of any type. 
+    /// </summary>
     public static class GenericCollectionExtensions {
 
-        // Tries to get a value from a dictionary. Returns the default value if the dictionary or
-        public static T GetOrDefault<TKey, T>(this IDictionary<TKey, T> dictionary, TKey key) {
-            return dictionary != null && dictionary.ContainsKey(key) ? dictionary[key] : default(T);
+        /// <summary>
+        /// Gets the value for a key within a dictionary. If no value matches the key a default value is used.
+        /// Note this does not mutate the dictionary in any way. See <see cref="GetOrAdd"> instead.
+        /// </summary>
+        /// <param name="dictionary"> the dictionary to fetch from </param>
+        /// <param name="key">the key to fetch</param>
+        /// <param name="defaultVal"> the default value used if no valid value is found</param>
+        /// <returns> the fetched value or the default value </returns>
+        /// <exception cref="System.ArgumentNullException"> <paramref name="dictionary"> is null </exception>
+        public static T GetOrDefault<TKey, T>(this IDictionary<TKey, T> dictionary, 
+                                              TKey key, 
+                                              T defaultVal = default(T)) {
+            T value;
+            if (Argument.NotNull(dictionary).TryGetValue(key, out value))
+                return value;
+            return defaultVal;
         }
 
-        // Tries to get a value from a dictionary, and adds one if it doesn't exist.
-        // Throws an ArgumentNullException if $dictionary is null.
-        public static T GetOrAdd<TKey, T>(this IDictionary<TKey, T> dictionary, TKey key) where T : new() {
-            Argument.NotNull(dictionary);
-            if (!dictionary.ContainsKey(key))
-                dictionary[key] = new T();
+        /// <summary>
+        /// Gets the value for a key within a dictionary. If no value matches the key a default value is created
+        /// and added to the dictionary.
+        /// Note this may mutate the dictionary. See <see cref="GetOrDefault"> for a non-mutating version instead.
+        /// </summary>
+        /// <param name="dictionary"> the dictionary to fetch from </param>
+        /// <param name="key"></param>
+        /// <returns> the retrieved or created value </returns>
+        /// <exception cref="System.ArgumentNullException"> 
+        ///     <paramref name="dictionary"> or <paramref name="createFunc"> is null 
+        /// </exception>
+        public static T GetOrAdd<TKey, T>(this IDictionary<TKey, T> dictionary, TKey key, Func<T> createFunc) {
+            if (!Argument.NotNull(dictionary).ContainsKey(key))
+                dictionary[key] = Argument.NotNull(createFunc)();
             return dictionary[key];
         }
 
+
+        /// <summary>
         // Gets only the keys from a KVP set.
+        /// </summary>
+        /// <param name="enumerable"> the KVP to convert</param>
+        /// <returns> the keys of a KVP set </returns>
+        /// <exception cref="System.ArgumentNullException"> <paramref name="enumerable">  is null </exception>
         public static IEnumerable<TKey> Keys<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> enumerable) {
             return enumerable.Select(k => k.Key);
         }
 
+        /// <summary>
         // Gets only the values from a KVP set.
+        /// </summary>
+        /// <param name="enumerable"> the KVP to convert</param>
+        /// <returns> the values of a KVP set </returns>
+        /// <exception cref="System.ArgumentNullException"> <paramref name="enumerable">  is null </exception>
         public static IEnumerable<TValue> Values<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> enumerable) {
             return enumerable.Select(k => k.Value);
         }
 
-        /// <summary> Checks if the enumeration is null or empty. </summary>
+        /// <summary> 
+        /// Checks if the enumeration is null or empty. 
+        /// </summary>
         /// <param name="enumeration"> the enumeration of values </param>
         /// <returns> true if <paramref name="enumeration" /> is null or empty. </returns>
         public static bool IsNullOrEmpty(this IEnumerable enumeration) {
@@ -43,7 +79,9 @@ namespace HouraiTeahouse {
             return enumeration == null || IsEmpty(enumeration);
         }
 
-        /// <summary> Checks if a enumeration is empty or not. </summary>
+        /// <summary> 
+        /// Checks if a enumeration is empty or not. 
+        /// </summary>
         /// <param name="enumeration"> the enumeration of values </param>
         /// <exception cref="ArgumentNullException"> <paramref name="enumeration" /> is null </exception>
         /// <returns> true if <paramref name="enumeration" /> is empty, false otherwise </returns>
@@ -54,7 +92,9 @@ namespace HouraiTeahouse {
             return !enumeration.Cast<object>().Any();
         }
 
-        /// <summary> Samples one every N elements from an enumeration. </summary>
+        /// <summary> 
+        /// Subsamples one every N elements from an enumeration. 
+        /// </summary>
         /// <typeparam name="T"> the type of values being enumerated </typeparam>
         /// <param name="enumeration"> the enumeration of values </param>
         /// <param name="count"> the subsampling rate </param>
@@ -73,6 +113,13 @@ namespace HouraiTeahouse {
             }
         }
 
+        /// <summary>
+        /// Zips two parallel enumerations into one KVP stream. Note the length of the zipped stream
+        /// is the minimum of the two provided enumeations.
+        /// </summary>
+        /// <param name="keys"> the keys for the zipped result </param>
+        /// <param name="value"> the values for the zipped result </param>
+        /// <returns> the zipped enumeration </returns>
         public static IEnumerable<KeyValuePair<TKey, TValue>> Zip<TKey, TValue>(this IEnumerable<TKey> keys,
                                                                                 IEnumerable<TValue> value) {
             IEnumerator<TKey> keyEnumerator = keys.EmptyIfNull().GetEnumerator();
@@ -83,7 +130,9 @@ namespace HouraiTeahouse {
                 yield return new KeyValuePair<TKey, TValue>(keyEnumerator.Current, valueEnumerator.Current);
         }
 
-        /// <summary> Creates an empty enumeration if the provided one is null. Used to avoid NullReferenceExceptions. </summary>
+        /// <summary> 
+        /// Creates an empty enumeration if the provided one is null. Used to avoid NullReferenceExceptions. 
+        /// </summary>
         /// <typeparam name="T"> the type of values being enumerated </typeparam>
         /// <param name="enumeration"> the enumeration of values </param>
         /// <returns> the same enumeration if it is not null, an empty enumeration if it is. </returns>
@@ -91,7 +140,9 @@ namespace HouraiTeahouse {
             return enumeration ?? Enumerable.Empty<T>();
         }
 
-        /// <summary> Removes all null values from an enumeration. </summary>
+        /// <summary> 
+        /// Removes all null values from an enumeration. 
+        /// </summary>
         /// <typeparam name="T"> the type of values being enumerated </typeparam>
         /// <param name="enumeration"> the enumeration of values </param>
         /// <returns> the enumeration without null values, empty if <paramref name="enumeration" /> is null. </returns>
@@ -99,8 +150,10 @@ namespace HouraiTeahouse {
             return enumeration.EmptyIfNull().Where(obj => obj != null);
         }
 
-        /// <summary> Finds the key with the maximum value over an enumeration of key-value pairs. Note this is not a streaming
-        /// operator. An infinite enumeration will infinitely loop. </summary>
+        /// <summary> 
+        /// Finds the key with the maximum value over an enumeration of key-value pairs. Note this is not a streaming
+        /// operator. An infinite enumeration will infinitely loop. 
+        /// </summary>
         /// <typeparam name="K"> the type of of the keys </typeparam>
         /// <typeparam name="V"> the type of the values </typeparam>
         /// <param name="values"> the enumeration </param>
@@ -110,8 +163,10 @@ namespace HouraiTeahouse {
             return FindArg(Argument.NotNull(values), (v1, v2) => v1.CompareTo(v2) > 0);
         }
 
-        /// <summary> Finds the key with the minimum value over an enumeration of key-value pairs. Note this is not a streaming
-        /// operator. An infinite enumeration will infinitely loop. </summary>
+        /// <summary> 
+        /// Finds the key with the minimum value over an enumeration of key-value pairs. Note this is not a streaming
+        /// operator. An infinite enumeration will infinitely loop. 
+        /// </summary>
         /// <typeparam name="K"> the type of of the keys </typeparam>
         /// <typeparam name="V"> the type of the values </typeparam>
         /// <param name="values"> the enumeration </param>
@@ -136,8 +191,10 @@ namespace HouraiTeahouse {
             return key;
         }
 
-        /// <summary> Finds the index of the maximum value over an enumeration. Note this is not a streaming operator. An infinite
-        /// enumeration will infinitely loop. </summary>
+        /// <summary> 
+        /// Finds the index of the maximum value over an enumeration. Note this is not a streaming operator. An infinite
+        /// enumeration will infinitely loop. 
+        /// </summary>
         /// <typeparam name="T"> the type of the values being enumerated </typeparam>
         /// <param name="values"> the enumeration </param>
         /// <exception cref="ArgumentNullException"> <paramref name="values" /> is null </exception>
@@ -146,8 +203,10 @@ namespace HouraiTeahouse {
             return FindIndex(Argument.NotNull(values), (v1, v2) => v1.CompareTo(v2) > 0);
         }
 
-        /// <summary> Finds the index of the minimum value over an enumeration. Note this is not a streaming operator. An infinite
-        /// enumeration will infinitely loop. </summary>
+        /// <summary> 
+        /// Finds the index of the minimum value over an enumeration. Note this is not a streaming operator. An infinite
+        /// enumeration will infinitely loop. 
+        /// </summary>
         /// <typeparam name="T"> the type of the values being enumerated </typeparam>
         /// <param name="values"> the enumeration </param>
         /// <exception cref="ArgumentNullException"> <paramref name="values" /> is null </exception>
@@ -173,17 +232,20 @@ namespace HouraiTeahouse {
             return index;
         }
 
-        /// <summary> Selects a random element from a list. </summary>
+        /// <summary> 
+        /// Selects a random element from a list. 
+        /// </summary>
         /// <typeparam name="T"> the type of the list </typeparam>
         /// <param name="list"> the list to randomly select from </param>
         /// <exception cref="ArgumentNullException"> <paramref name="list" /> is null </exception>
         /// <returns> a random element from the list </returns>
         public static T Random<T>(this IList<T> list) {
-            Argument.NotNull(list);
-            return list.Random(0, list.Count);
+            return Argument.NotNull(list).Random(0, list.Count);
         }
 
-        /// <summary> Selects a random element from a list, within a specified range. </summary>
+        /// <summary> 
+        /// Selects a random element from a list, within a specified range. 
+        /// </summary>
         /// <typeparam name="T"> the type of the list </typeparam>
         /// <param name="list"> the list to randomly select from </param>
         /// <param name="start"> the start index of the range to select from. Will be clamped to [0, list.Count] </param>

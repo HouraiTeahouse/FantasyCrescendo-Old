@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace HouraiTeahouse.Editor {
 
-    public static class hGUI {
+    public static class HGUI {
 
         class BackgroundColorDisposable : IDisposable {
 
@@ -15,7 +15,9 @@ namespace HouraiTeahouse.Editor {
                 GUI.backgroundColor = newColor;
             }
 
-            public void Dispose() { GUI.backgroundColor = color; }
+            public void Dispose() { 
+                GUI.backgroundColor = color; 
+            }
 
         }
 
@@ -28,7 +30,9 @@ namespace HouraiTeahouse.Editor {
                 GUI.color = newColor;
             }
 
-            public void Dispose() { GUI.color = color; }
+            public void Dispose() { 
+                GUI.color = color; 
+            }
 
         }
 
@@ -41,7 +45,9 @@ namespace HouraiTeahouse.Editor {
                 GUI.enabled = state;
             }
 
-            public void Dispose() { GUI.enabled = state; }
+            public void Dispose() { 
+                GUI.enabled = state; 
+            }
 
         }
 
@@ -51,7 +57,9 @@ namespace HouraiTeahouse.Editor {
                 EditorGUI.BeginProperty(position, label, property);
             }
 
-            public void Dispose() { EditorGUI.EndProperty(); }
+            public void Dispose() { 
+                EditorGUI.EndProperty(); 
+            }
 
         }
 
@@ -91,22 +99,6 @@ namespace HouraiTeahouse.Editor {
         public static IDisposable Color(Color color) { return new ColorDisposable(color); }
 
         public static IDisposable BackgroundColor(Color color) { return new BackgroundColorDisposable(color); }
-
-        public static EditorGUILayout.HorizontalScope Horizontal(GUIStyle style, params GUILayoutOption[] options) {
-            return new EditorGUILayout.HorizontalScope(style, options);
-        }
-
-        public static EditorGUILayout.HorizontalScope Horizontal(params GUILayoutOption[] options) {
-            return new EditorGUILayout.HorizontalScope(options);
-        }
-
-        public static EditorGUILayout.VerticalScope Vertical(GUIStyle style, params GUILayoutOption[] options) {
-            return new EditorGUILayout.VerticalScope(style, options);
-        }
-
-        public static EditorGUILayout.VerticalScope Vertical(params GUILayoutOption[] options) {
-            return new EditorGUILayout.VerticalScope(options);
-        }
 
     }
 

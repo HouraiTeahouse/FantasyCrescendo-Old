@@ -106,15 +106,25 @@ namespace HouraiTeahouse.HouraiInput {
             return HasJoystickName(joystickName) || HasLastResortRegex(joystickName);
         }
 
-        public static void Hide(Type type) { HiddenTypes.Add(type); }
+        public static void Hide(Type type) { 
+            HiddenTypes.Add(type); 
+        }
 
-        #region InputSource Helpers
+        protected static InputSource Button(int index) { 
+            return new UnityButtonSource(index); 
+        }
 
-        protected static InputSource Button(int index) { return new UnityButtonSource(index); }
+        protected static InputSource MouseButton(int index) {
+            return new UnityMouseButtonSource(index);
+        }
 
-        protected static InputSource Analog(int index) { return new UnityAnalogSource(index); }
+        protected static InputSource Analog(int index) { 
+            return new UnityAnalogSource(index); 
+        }
 
-        protected static InputSource KeyCodeButton(KeyCode keyCodeList) { return new UnityKeyCodeSource(keyCodeList); }
+        protected static InputSource KeyCodeButton(KeyCode keyCodeList) { 
+            return new UnityKeyCodeSource(keyCodeList); 
+        }
 
         protected static InputSource KeyCodeComboButton(params KeyCode[] keyCodeList) {
             return new UnityKeyCodeComboSource(keyCodeList);
@@ -124,58 +134,11 @@ namespace HouraiTeahouse.HouraiInput {
             return new UnityKeyCodeAxisSource(negativeKeyCode, positiveKeyCode);
         }
 
-        protected static InputSource Button0 = Button(0);
-        protected static InputSource Button1 = Button(1);
-        protected static InputSource Button2 = Button(2);
-        protected static InputSource Button3 = Button(3);
-        protected static InputSource Button4 = Button(4);
-        protected static InputSource Button5 = Button(5);
-        protected static InputSource Button6 = Button(6);
-        protected static InputSource Button7 = Button(7);
-        protected static InputSource Button8 = Button(8);
-        protected static InputSource Button9 = Button(9);
-        protected static InputSource Button10 = Button(10);
-        protected static InputSource Button11 = Button(11);
-        protected static InputSource Button12 = Button(12);
-        protected static InputSource Button13 = Button(13);
-        protected static InputSource Button14 = Button(14);
-        protected static InputSource Button15 = Button(15);
-        protected static InputSource Button16 = Button(16);
-        protected static InputSource Button17 = Button(17);
-        protected static InputSource Button18 = Button(18);
-        protected static InputSource Button19 = Button(19);
-
-        protected static InputSource Analog0 = Analog(0);
-        protected static InputSource Analog1 = Analog(1);
-        protected static InputSource Analog2 = Analog(2);
-        protected static InputSource Analog3 = Analog(3);
-        protected static InputSource Analog4 = Analog(4);
-        protected static InputSource Analog5 = Analog(5);
-        protected static InputSource Analog6 = Analog(6);
-        protected static InputSource Analog7 = Analog(7);
-        protected static InputSource Analog8 = Analog(8);
-        protected static InputSource Analog9 = Analog(9);
-        protected static InputSource Analog10 = Analog(10);
-        protected static InputSource Analog11 = Analog(11);
-        protected static InputSource Analog12 = Analog(12);
-        protected static InputSource Analog13 = Analog(13);
-        protected static InputSource Analog14 = Analog(14);
-        protected static InputSource Analog15 = Analog(15);
-        protected static InputSource Analog16 = Analog(16);
-        protected static InputSource Analog17 = Analog(17);
-        protected static InputSource Analog18 = Analog(18);
-        protected static InputSource Analog19 = Analog(19);
-
-        protected static InputSource MouseButton0 = new UnityMouseButtonSource(0);
-        protected static InputSource MouseButton1 = new UnityMouseButtonSource(1);
-        protected static InputSource MouseButton2 = new UnityMouseButtonSource(2);
-
         protected static InputSource MouseXAxis = new UnityMouseAxisSource("x");
         protected static InputSource MouseYAxis = new UnityMouseAxisSource("y");
 
         protected static InputSource MouseScrollWheel = new UnityMouseAxisSource("z");
 
-        #endregion
     }
 
 }

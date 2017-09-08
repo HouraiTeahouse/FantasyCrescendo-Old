@@ -10,7 +10,7 @@ namespace HouraiTeahouse.Editor {
     /// Custom PropertyDrawer for ResourcePathAttribute. 
     /// </summary>
     [CustomPropertyDrawer(typeof(ResourceAttribute))]
-    internal class ResourceAttributeDrawer : BasePropertyDrawer<ResourceAttribute> {
+    internal class ResourceAttributeDrawer : PropertyDrawer {
 
         class Data {
 
@@ -32,7 +32,7 @@ namespace HouraiTeahouse.Editor {
             public void Draw(Rect position, SerializedProperty property, Type type) {
                 EditorGUI.BeginChangeCheck();
                 Object obj;
-                using (hGUI.Color(Valid ? GUI.color : Color.red))
+                using (HGUI.Color(Valid ? GUI.color : Color.red))
                     obj = EditorGUI.ObjectField(position, Content, _object, type, false);
                 if (!EditorGUI.EndChangeCheck())
                     return;
@@ -76,9 +76,6 @@ namespace HouraiTeahouse.Editor {
             _data = new Dictionary<string, Data>(); 
         }
 
-        /// <summary>
-        ///     <see cref="PropertyDrawer.OnGUI" />
-        /// </summary>
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
             if (property.propertyType != SerializedPropertyType.String) {
                 EditorGUI.PropertyField(position, property, label);
@@ -92,9 +89,9 @@ namespace HouraiTeahouse.Editor {
                 _data[propertyPath] = data;
             }
 
-            using (hGUI.Property(data.Content, position, property)) {
+            using (HGUI.Property(data.Content, position, property)) {
                 data.UpdateContent(label);
-                data.Draw(position, property, attribute.TypeRestriction);
+                data.Draw(position, property, (attribute as ResourceAttribute).TypeRestriction);
                 _data[propertyPath] = data;
             }
         }

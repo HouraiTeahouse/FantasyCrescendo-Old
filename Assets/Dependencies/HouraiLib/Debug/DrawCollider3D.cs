@@ -2,8 +2,10 @@ using UnityEngine;
 
 namespace HouraiTeahouse {
 
-    /// <summary> Draws Colliders as Gizmos, permanentally seen in the Scene view. Good for general establishing of boundaries.
-    /// Currently does not support CapsuleColliders </summary>
+    /// <summary> 
+    /// Draws Colliders as Gizmos, permanentally seen in the Scene view. Good for general establishing of boundaries.
+    /// Currently does not support CapsuleColliders 
+    /// </summary>
     public class DrawCollider3D : MonoBehaviour {
 
         [SerializeField]
@@ -19,7 +21,9 @@ namespace HouraiTeahouse {
         bool solid;
 
 #if UNITY_EDITOR
-        /// <summary> Unity Callback. Called in the Editor to draw Gizmos on each GUI update. </summary>
+        /// <summary>
+        /// Callback to draw gizmos that are pickable and always drawn.
+        /// </summary>
         void OnDrawGizmos() {
             Collider[] colliders = includeChildren ? GetComponentsInChildren<Collider>() : GetComponents<Collider>();
 

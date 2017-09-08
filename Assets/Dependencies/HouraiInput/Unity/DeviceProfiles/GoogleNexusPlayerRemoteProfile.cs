@@ -13,7 +13,7 @@ namespace HouraiTeahouse.HouraiInput {
             JoystickNames = new[] {"Google Nexus Remote"};
 
             ButtonMappings = new[] {
-                new InputMapping {Handle = "A", Target = InputTarget.Action1, Source = Button0},
+                new InputMapping {Handle = "A", Target = InputTarget.Action1, Source = Button(0)},
                 new InputMapping {Handle = "Back", Target = InputTarget.Back, Source = KeyCodeButton(KeyCode.Escape)}
             };
 
@@ -21,7 +21,7 @@ namespace HouraiTeahouse.HouraiInput {
                 new InputMapping {
                     Handle = "DPad Left",
                     Target = InputTarget.DPadLeft,
-                    Source = Analog4,
+                    Source = Analog(4),
                     SourceRange = InputMapping.Negative,
                     TargetRange = InputMapping.Negative,
                     Invert = true
@@ -29,14 +29,14 @@ namespace HouraiTeahouse.HouraiInput {
                 new InputMapping {
                     Handle = "DPad Right",
                     Target = InputTarget.DPadRight,
-                    Source = Analog4,
+                    Source = Analog(4),
                     SourceRange = InputMapping.Positive,
                     TargetRange = InputMapping.Positive
                 },
                 new InputMapping {
                     Handle = "DPad Up",
                     Target = InputTarget.DPadUp,
-                    Source = Analog5,
+                    Source = Analog(5),
                     SourceRange = InputMapping.Negative,
                     TargetRange = InputMapping.Negative,
                     Invert = true
@@ -44,7 +44,7 @@ namespace HouraiTeahouse.HouraiInput {
                 new InputMapping {
                     Handle = "DPad Down",
                     Target = InputTarget.DPadDown,
-                    Source = Analog5,
+                    Source = Analog(5),
                     SourceRange = InputMapping.Positive,
                     TargetRange = InputMapping.Positive
                 },

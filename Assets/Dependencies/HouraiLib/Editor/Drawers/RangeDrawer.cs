@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace HouraiTeahouse.Editor {
 
-    public class AbstractRangeDrawer : PropertyDrawer {
+    internal class AbstractRangeDrawer : PropertyDrawer {
 
         readonly GUIContent[] _content = {new GUIContent("-"), new GUIContent("+")};
 
