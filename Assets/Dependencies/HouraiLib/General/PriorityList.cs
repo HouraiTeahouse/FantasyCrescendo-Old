@@ -5,7 +5,9 @@ using System.Linq;
 
 namespace HouraiTeahouse {
 
-    /// <summary> An generic iterable priority queue. </summary>
+    /// <summary> 
+    /// An generic iterable priority queue. 
+    /// </summary>
     /// <typeparam name="T"> the type of elements contained by the PriorityList </typeparam>
     public class PriorityList<T> : ICollection<T> {
 
@@ -41,7 +43,7 @@ namespace HouraiTeahouse {
             Argument.NotNull(priorities);
             _priorities = new Dictionary<T, int>(priorities);
             foreach (KeyValuePair<T, int> priority in priorities)
-                _items.GetOrAdd(priority.Value).Add(priority.Key);
+                _items.GetOrAdd(priority.Value, () => new List<T>()).Add(priority.Key);
         }
 
         /// <summary> Gets the priority of an item stored within the PriorityList. </summary>
@@ -66,7 +68,7 @@ namespace HouraiTeahouse {
                 return;
 
             List<T> currentBucket = _items[current];
-            List<T> newBucket = _items.GetOrAdd(priority);
+            List<T> newBucket = _items.GetOrAdd(priority, () => new List<T>());
 
             // Remove from the old bucket
             currentBucket.Remove(item);
@@ -129,7 +131,7 @@ namespace HouraiTeahouse {
         /// <param name="item"> the element to add </param>
         /// <param name="priority"> </param>
         public void Add(T item, int priority) {
-            List<T> bucket = _items.GetOrAdd(priority);
+            List<T> bucket = _items.GetOrAdd(priority, () => new List<T>());
             bucket.Add(item);
             _priorities[item] = priority;
         }

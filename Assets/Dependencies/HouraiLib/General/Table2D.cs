@@ -15,7 +15,7 @@ namespace HouraiTeahouse {
         /// <returns> the value associated with the pair of keys </returns>
         public virtual V this[K1 key1, K2 key2] {
             get { return this[key1][key2]; }
-            set { this.GetOrAdd(key1)[key2] = value; }
+            set { this.GetOrAdd(key1, () => new Dictionary<K2, V>())[key2] = value; }
         }
 
         /// <summary> Adds a key, key, value triplet to the table. </summary>
