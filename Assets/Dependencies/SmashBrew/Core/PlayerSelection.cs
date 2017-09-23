@@ -22,7 +22,7 @@ namespace HouraiTeahouse.SmashBrew {
                 if (_character == value)
                     return;
                 _character = value;
-                Changed.SafeInvoke();
+                Changed?.Invoke();
             }
         }
 
@@ -40,7 +40,7 @@ namespace HouraiTeahouse.SmashBrew {
                 else {
                     _pallete = value;
                 }
-                Changed.SafeInvoke();
+                Changed?.Invoke();
             }
         }
 
@@ -50,7 +50,7 @@ namespace HouraiTeahouse.SmashBrew {
                 if (_cpuLevel == value)
                     return;
                 _cpuLevel = value;
-                Changed.SafeInvoke();
+                Changed?.Invoke();
             }
         }
 

@@ -19,13 +19,8 @@ namespace HouraiTeahouse.HouraiInput {
         internal int JoystickId { get; private set; }
         public UnityInputDeviceProfile Profile { get; protected set; }
 
-        public override bool IsSupportedOnThisPlatform {
-            get { return Profile.IsSupportedOnThisPlatform; }
-        }
-
-        public override bool IsKnown {
-            get { return Profile.IsKnown; }
-        }
+        public override bool IsSupportedOnThisPlatform => Profile.IsSupportedOnThisPlatform;
+        public override bool IsKnown => Profile.IsKnown;
 
         void Initialize(UnityInputDeviceProfile profile, int joystickId) {
             Profile = profile;

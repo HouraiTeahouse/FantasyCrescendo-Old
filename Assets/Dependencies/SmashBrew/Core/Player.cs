@@ -17,7 +17,7 @@ namespace HouraiTeahouse.SmashBrew {
             ID = number;
             Type = PlayerType.Types[0];
             _selection = new PlayerSelection();
-            Selection.Changed += () => Changed.SafeInvoke();
+            Selection.Changed += () => Changed?.Invoke();
         }
 
         public int ID { get; private set; }
@@ -28,7 +28,7 @@ namespace HouraiTeahouse.SmashBrew {
                 bool changed = _type != value;
                 _type = Argument.NotNull(value);
                 if (changed)
-                    Changed.SafeInvoke();
+                    Changed?.Invoke();
             }
         }
 
@@ -48,24 +48,18 @@ namespace HouraiTeahouse.SmashBrew {
                 if (changed) {
                     if (_playerObject != null)
                         _networkIdentity = _playerObject.GetComponent<NetworkIdentity>();
-                    Changed.SafeInvoke();
+                    Changed?.Invoke();
                 }
             }
         }
 
-        public NetworkIdentity NetworkIdentity {
-            get { return _networkIdentity; }
-        }
+        public NetworkIdentity NetworkIdentity => _networkIdentity;
 
         // TODO(james7132): Move this somewhere else
-        public InputDevice Controller {
-            get { return Check.Range(ID, HInput.Devices.Count) ? HInput.Devices[ID] : null; }
-        }
+        public InputDevice Controller => Check.Range(ID, HInput.Devices.Count) ? HInput.Devices[ID] : null;
 
         // The represnetative color of this player. Used in UI.
-        public Color Color {
-            get { return Type.Color ?? Config.Player.GetColor(ID); }
-        }
+        public Color Color => Type.Color ?? Config.Player.GetColor(ID);
 
         public static Player Get(GameObject gameObject) {
             var playerManager = PlayerManager.Instance;
@@ -86,7 +80,7 @@ namespace HouraiTeahouse.SmashBrew {
 
         public void CycleType() {
             Type = Type.Next;
-            Changed.SafeInvoke();
+            Changed?.Invoke();
         }
 
         public string GetName(bool shortName = false) {

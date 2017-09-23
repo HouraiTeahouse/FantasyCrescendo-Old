@@ -11,17 +11,9 @@ namespace HouraiTeahouse.SmashBrew {
 
         SerializedProperty _swaps;
 
-        ColorState Swap {
-            get { return target as ColorState; }
-        }
-
-        bool RemoveButton {
-            get { return GUILayout.Button("-", EditorStyles.toolbarButton, GUILayout.MaxWidth(30)); }
-        }
-
-        bool AddButton {
-            get { return GUILayout.Button("+", EditorStyles.toolbarButton); }
-        }
+        ColorState Swap => target as ColorState;
+        bool RemoveButton => GUILayout.Button("-", EditorStyles.toolbarButton, GUILayout.MaxWidth(30));
+        bool AddButton => GUILayout.Button("+", EditorStyles.toolbarButton);
 
         void OnEnable() { _swaps = serializedObject.FindProperty("_swaps"); }
 

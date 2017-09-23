@@ -39,7 +39,7 @@ namespace HouraiTeahouse.Localization {
         public void SetStoredLanguageId(string language) {
             if (Prefs.Exists(_playerPrefKey) || Prefs.GetString(_playerPrefKey) != language) {
                 Prefs.SetString(_playerPrefKey, language);
-                OnChangeLangauge.SafeInvoke(language);
+                OnChangeLangauge?.Invoke(language);
             }
         }
 
@@ -97,9 +97,7 @@ namespace HouraiTeahouse.Localization {
         string localizationDirectory = "lang";
 
         /// <summary> The currently used language. </summary>
-        public Language CurrentLangauge {
-            get { return _currentLanguage; }
-        }
+        public Language CurrentLangauge => _currentLanguage;
 
         /// <summary> All available languages currently supported by the system. </summary>
         public IEnumerable<string> AvailableLanguages {
@@ -111,16 +109,12 @@ namespace HouraiTeahouse.Localization {
         }
 
         /// <summary> Gets an enumeration of all of the localizable keys. </summary>
-        public IEnumerable<string> Keys {
-            get { return CurrentLangauge.Keys; }
-        }
+        public IEnumerable<string> Keys => CurrentLangauge.Keys;
 
         /// <summary> Localizes a key based on the currently loaded language. </summary>
         /// <param name="key"> the localization key to use. </param>
         /// <returns> the localized string </returns>
-        public string this[string key] {
-            get { return CurrentLangauge[key]; }
-        }
+        public string this[string key] => CurrentLangauge[key];
 
         /// <summary> An event that is called every time the language is changed. </summary>
         public event Action<Language> OnChangeLanguage;
@@ -130,7 +124,7 @@ namespace HouraiTeahouse.Localization {
                 return;
             _currentLanguage.Update(values);
             _currentLanguage.Name = langName;
-            OnChangeLanguage.SafeInvoke(_currentLanguage);
+            OnChangeLanguage?.Invoke(_currentLanguage);
 #if HOURAI_EVENTS
             _eventManager.Publish(new LanguageChanged {NewLanguage = _currentLanguage});
 #endif

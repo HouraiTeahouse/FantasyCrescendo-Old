@@ -26,17 +26,9 @@ namespace HouraiTeahouse.HouraiInput {
 
         public ulong UpdateTick { get; protected set; }
 
-        public bool State {
-            get { return thisState; }
-        }
-
-        public bool HasChanged {
-            get { return thisState != lastState; }
-        }
-
-        public Vector2 Vector {
-            get { return new Vector2(X, Y); }
-        }
+        public bool State => thisState;
+        public bool HasChanged => thisState != lastState;
+        public Vector2 Vector => new Vector2(X, Y);
 
         internal void Update(float x, float y, ulong updateTick) {
             lastState = thisState;
@@ -63,13 +55,9 @@ namespace HouraiTeahouse.HouraiInput {
             }
         }
 
-        public static implicit operator bool(TwoAxisInputControl control) { return control.thisState; }
-
-        public static implicit operator Vector2(TwoAxisInputControl control) { return control.Vector; }
-
-        public static implicit operator Vector3(TwoAxisInputControl control) {
-            return new Vector3(control.X, control.Y);
-        }
+        public static implicit operator bool(TwoAxisInputControl control) => control.thisState;
+        public static implicit operator Vector2(TwoAxisInputControl control) => control.Vector;
+        public static implicit operator Vector3(TwoAxisInputControl control) => new Vector3(control.X, control.Y);
 
     }
 

@@ -32,11 +32,17 @@ namespace HouraiTeahouse.SmashBrew.Stage {
             private set { OccupationChanged(value); }
         }
 
-        /// <summary> Unity callback. Called on object instantiation. </summary>
+        /// <summary>
+        /// Awake is called when the script instance is being loaded.
+        /// </summary>
         void Awake() {
             Mediator.Global.Subscribe<PlayerRespawnEvent>(OnEvent);
         }
 
+        /// <summary>
+        /// Called on the client when the connection was lost or you disconnected from the server.
+        /// </summary>
+        /// <param name="info">NetworkDisconnection data associated with this disconnect.</param>
         void OnDestroy() {
             Mediator.Global.Unsubscribe<PlayerRespawnEvent>(OnEvent);
         }

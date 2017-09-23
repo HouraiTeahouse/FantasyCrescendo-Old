@@ -7,7 +7,9 @@ using UnityEngine;
 
 namespace HouraiTeahouse {
 
-    /// <summary> A Singleton for managing a number of asynchronous operations </summary>
+    /// <summary> 
+    /// A Singleton for managing a number of asynchronous operations 
+    /// </summary>
     public class AsyncManager : MonoBehaviour {
 
         static AsyncManager _baseBehavior;
@@ -25,15 +27,15 @@ namespace HouraiTeahouse {
         // Set of all asynchronous operations managed by the manager
         static readonly List<object> _operations = new List<object>();
 
-        /// <summary> The overall progress of all of the asynchronous actions. Shown as a ratio in the range [0.0, 1.0] </summary>
-        public static float Progress {
-            get { return OperationsInProgress > 0 ? 1.0f : _operations.OfType<AsyncOperation>().Average(op => op.progress); }
-        }
+        /// <summary> 
+        /// The overall progress of all of the asynchronous actions. Shown as a ratio in the range [0.0, 1.0] 
+        /// </summary>
+        public static float Progress => OperationsInProgress > 0 ? 1.0f : _operations.OfType<AsyncOperation>().Average(op => op.progress);
 
-        /// <summary> The number of operations in progress currently </summary>
-        public static int OperationsInProgress {
-            get { return _operations.Count; }
-        }
+        /// <summary> 
+        /// The number of operations in progress currently 
+        /// </summary>
+        public static int OperationsInProgress => _operations.Count;
 
         static event Action WaitingSynchronousActions;
 
@@ -52,11 +54,21 @@ namespace HouraiTeahouse {
 
         public static void AddSynchronousAction(Action action) { WaitingSynchronousActions += action; }
 
-        void Awake() { Flush(); }
+        /// <summary>
+        /// Awake is called when the script instance is being loaded.
+        /// </summary>
+        void Awake() => Flush();
 
-        void Start() { Flush(); }
+        /// <summary>
+        /// Start is called on the frame when a script is enabled just before
+        /// any of the Update methods is called the first time.
+        /// </summary>
+        void Start() => Flush(); 
 
-        void Update() { Flush(); }
+        /// <summary>
+        /// Update is called every frame, if the MonoBehaviour is enabled.
+        /// </summary>
+        void Update() => Flush();
 
         static void Flush() {
             if (WaitingSynchronousActions == null)

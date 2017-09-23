@@ -25,8 +25,10 @@ namespace HouraiTeahouse {
             _priorities = new Dictionary<T, int>();
         }
 
-        /// <summary> Creates a PriorityList instance using the elements from the collection provided. All of the elements are
-        /// assigned to the default priority of 0. </summary>
+        /// <summary> 
+        /// Creates a PriorityList instance using the elements from the collection provided. All of the elements are
+        /// assigned to the default priority of 0. 
+        /// </summary>
         /// <param name="collection"> </param>
         /// <exception cref="ArgumentNullException"> collection is null </exception>
         public PriorityList(IEnumerable<T> collection) : this() {
@@ -36,8 +38,10 @@ namespace HouraiTeahouse {
                 _priorities[element] = 0;
         }
 
-        /// <summary> Creates a PriorityList instance using the elements and priorities provided by the dictionary. Each element is
-        /// properly mapped to their priority. </summary>
+        /// <summary> 
+        /// Creates a PriorityList instance using the elements and priorities provided by the dictionary.
+        ///  Each element is properly mapped to their priority. 
+        /// </summary>
         /// <param name="priorities"> </param>
         public PriorityList(IDictionary<T, int> priorities) {
             Argument.NotNull(priorities);
@@ -46,7 +50,9 @@ namespace HouraiTeahouse {
                 _items.GetOrAdd(priority.Value, () => new List<T>()).Add(priority.Key);
         }
 
-        /// <summary> Gets the priority of an item stored within the PriorityList. </summary>
+        /// <summary> 
+        /// Gets the priority of an item stored within the PriorityList. 
+        /// </summary>
         /// <param name="item"> the item to get the priority of </param>
         /// <exception cref="ArgumentException"> the PriorityList does not contain this item </exception>
         /// <returns> the priority of the item within the list </returns>
@@ -55,8 +61,12 @@ namespace HouraiTeahouse {
             return _priorities[item];
         }
 
-        /// <summary> Gets the priority of an item stored within the PriorityList. </summary>
-        /// <remarks> This is for elements already in the PriorityList. To add an element instead, use Add instead. </remarks>
+        /// <summary> 
+        /// Gets the priority of an item stored within the PriorityList. 
+        /// </summary>
+        /// <remarks> 
+        /// This is for elements already in the PriorityList. To add an element instead, use Add instead.
+        /// </remarks>
         /// <exception cref="ArgumentException"> the PriorityList does not contain <paramref name="item" /> </exception>
         /// <param name="item"> the item to edit the </param>
         /// <param name="priority"> the new priority </param>
@@ -83,7 +93,9 @@ namespace HouraiTeahouse {
             _priorities[item] = priority;
         }
 
-        /// <summary> Removes all elements from the PriorityList with a certain priority </summary>
+        /// <summary> 
+        /// Removes all elements from the PriorityList with a certain priority 
+        /// </summary>
         /// <param name="priority"> the priority of which to remove all elements of </param>
         /// <returns> whether elements have been removed or not </returns>
         public bool RemoveAllByPriority(int priority) {
@@ -98,7 +110,9 @@ namespace HouraiTeahouse {
             return bucket.Any(element => _priorities.Remove(element));
         }
 
-        /// <summary> Removes all elements from the PriorityList between two priorities. </summary>
+        /// <summary> 
+        /// Removes all elements from the PriorityList between two priorities. 
+        /// </summary>
         /// <remarks> If <paramref name="minPriority" /> is greater than <paramref name="maxPriority" />, the two are swapped. If
         /// <paramref name="minPriority" /> is equal to <paramref name="maxPriority" />, then this function acts the same way
         /// RemoveAllByPriority(priority) does. </remarks>
@@ -117,19 +131,20 @@ namespace HouraiTeahouse {
             return toRemove.Any(RemoveAllByPriority);
         }
 
-        #region ICollection Implementation
+        public IEnumerator<T> GetEnumerator() => _items.SelectMany(pair => pair.Value).GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        public IEnumerator<T> GetEnumerator() { return _items.SelectMany(pair => pair.Value).GetEnumerator(); }
-
-        IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
-
-        /// <summary> Adds a new element to the PriorityList with priority 0. </summary>
+        /// <summary> 
+        /// Adds a new element to the PriorityList with priority 0. 
+        /// </summary>
         /// <param name="item"> the element to add </param>
-        public void Add(T item) { Add(item, 0); }
+        public void Add(T item) => Add(item, 0);
 
-        /// <summary> Adds a new element to the PriorityList with specified priority. </summary>
+        /// <summary> 
+        /// Adds a new element to the PriorityList with specified priority. 
+        /// </summary>
         /// <param name="item"> the element to add </param>
-        /// <param name="priority"> </param>
+        /// <param name="priority"> the priority to add it at </param>
         public void Add(T item, int priority) {
             List<T> bucket = _items.GetOrAdd(priority, () => new List<T>());
             bucket.Add(item);
@@ -158,15 +173,9 @@ namespace HouraiTeahouse {
             return true;
         }
 
-        public int Count {
-            get { return _priorities.Count; }
-        }
+        public int Count => _priorities.Count;
+        public bool IsReadOnly => false;
 
-        public bool IsReadOnly {
-            get { return false; }
-        }
-
-        #endregion
     }
 
 }

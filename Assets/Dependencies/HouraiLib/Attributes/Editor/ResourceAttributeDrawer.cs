@@ -25,14 +25,12 @@ namespace HouraiTeahouse.Editor {
                 UpdateContent(content);
             }
 
-            bool Valid {
-                get { return !_path.IsNullOrEmpty(); }
-            }
+            bool IsValid => !_path.IsNullOrEmpty();
 
             public void Draw(Rect position, SerializedProperty property, Type type) {
                 EditorGUI.BeginChangeCheck();
                 Object obj;
-                using (HGUI.Color(Valid ? GUI.color : Color.red))
+                using (HGUI.Color(IsValid ? GUI.color : Color.red))
                     obj = EditorGUI.ObjectField(position, Content, _object, type, false);
                 if (!EditorGUI.EndChangeCheck())
                     return;
@@ -45,7 +43,7 @@ namespace HouraiTeahouse.Editor {
                 string message;
                 if (!_object) {
                     message = "No object specified";
-                } else if (!Valid) {
+                } else if (!IsValid) {
                     message = "Not in Resources folder or Asset Bundle. Will not be saved.";
                 } else if (_path.IndexOf(Resource.BundleSeperator) >= 0) {
                     string[] splits = _path.Split(Resource.BundleSeperator);

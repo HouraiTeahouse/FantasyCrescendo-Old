@@ -27,7 +27,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             var track = timeline.GetRootTracks().OfType<AnimationTrack>()
                                                 .FirstOrDefault(t => t != null && t.name == name);
             if (track != null) {
-                prepareFunc.SafeInvoke(track);
+                prepareFunc?.Invoke(track);
             } else {
                 track = timeline.CreateTrack<AnimationTrack>(null, name);
             }

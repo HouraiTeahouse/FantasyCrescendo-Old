@@ -49,7 +49,7 @@ namespace HouraiTeahouse.SmashBrew.States {
             var oldState = CurrentState;
             SetState(state);
             if (oldState != CurrentState)
-                OnStateChange.SafeInvoke(oldState, CurrentState);
+                OnStateChange?.Invoke(oldState, CurrentState);
         }
 
         /// <summary>

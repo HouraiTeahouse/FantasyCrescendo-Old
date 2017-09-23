@@ -71,7 +71,7 @@ namespace HouraiTeahouse.SmashBrew {
         [Tooltip("The internal name of the scene. Must be in build settings.")]
         string _scene;
 
-        public uint Id { get { return _id; } }
+        public uint Id => _id;
 
         /// <summary> The image shown on menus to represent the scene. </summary>
         public Resource<Sprite> PreviewImage { get; private set; }
@@ -80,25 +80,11 @@ namespace HouraiTeahouse.SmashBrew {
         public Resource<Sprite> Icon { get; private set; }
 
         /// <summary> Is the scene described by this SceneData a stage? </summary>
-        public SceneType Type {
-            get { return _type; }
-        }
+        public SceneType Type => _type;
 
-        public int LoadPriority {
-            get { return _loadPriority; }
-        }
-
-        public bool IsSelectable {
-            get { return _isSelectable && IsVisible; }
-        }
-
-        public bool IsVisible {
-            get { 
-                if (!Debug.isDebugBuild)
-                    return !_isDebug && _isVisible;
-                return _isVisible; 
-            }
-        }
+        public int LoadPriority => _loadPriority;
+        public bool IsSelectable => _isSelectable && IsVisible;
+        public bool IsVisible => _isVisible && (Debug.isDebugBuild || !_isDebug);
 
         public void Unload() {
             if(PreviewImage != null)
@@ -110,11 +96,7 @@ namespace HouraiTeahouse.SmashBrew {
         /// <summary> Loads the scene described by the SceneData </summary>
         public ITask Load() {
             var task = SceneLoader.LoadScene(_scene);
-            task.Then(() =>
-                Mediator.Global.Publish(new LoadSceneEvent {
-                    Scene = this
-                })
-            );
+            task.Then(() => Mediator.Global.Publish(new LoadSceneEvent { Scene = this }));
             return task;
         }
 

@@ -18,12 +18,11 @@ namespace HouraiTeahouse {
         [Tooltip("The audio source to play the music out of")]
         AudioSource _musicSource;
 
-        /// <summary> The currently playing BGM. </summary>
-        public BGMData CurrentBGM {
-            get { return _currentBGM; }
-        }
+        public BGMData CurrentBGM => _currentBGM;
 
-        /// <summary> Unity callback. Called on object instantiation </summary>
+        /// <summary>
+        /// Awake is called when the script instance is being loaded.
+        /// </summary>
         protected override void Awake() {
             if (!_group) {
                 _log.Error("No BGM for {0} specified. No ", name);

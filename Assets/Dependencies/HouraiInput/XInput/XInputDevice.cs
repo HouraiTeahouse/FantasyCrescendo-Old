@@ -45,17 +45,15 @@ namespace HouraiTeahouse.HouraiInput {
 
         public int DeviceIndex { get; private set; }
 
-        public bool IsConnected {
-            get { return state.IsConnected; }
-        }
+        public bool IsConnected => state.IsConnected;
 
         public override void Update(ulong updateTick, float deltaTime) {
             QueryState();
 
-            UpdateWithValue(InputTarget.LeftStickX, state.ThumbSticks.Left.X, updateTick);
-            UpdateWithValue(InputTarget.LeftStickY, state.ThumbSticks.Left.Y, updateTick);
-            UpdateWithValue(InputTarget.RightStickX, state.ThumbSticks.Right.X, updateTick);
-            UpdateWithValue(InputTarget.RightStickY, state.ThumbSticks.Right.Y, updateTick);
+            UpdateWithValue(InputTarget.LeftStickX, state.ThumbSticks.Left.x, updateTick);
+            UpdateWithValue(InputTarget.LeftStickY, state.ThumbSticks.Left.y, updateTick);
+            UpdateWithValue(InputTarget.RightStickX, state.ThumbSticks.Right.x, updateTick);
+            UpdateWithValue(InputTarget.RightStickY, state.ThumbSticks.Right.y, updateTick);
 
             UpdateWithValue(InputTarget.LeftTrigger, state.Triggers.Left, updateTick);
             UpdateWithValue(InputTarget.RightTrigger, state.Triggers.Right, updateTick);

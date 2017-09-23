@@ -21,16 +21,12 @@ namespace HouraiTeahouse.Options {
         /// <summary>
         /// Gets an enumeration of all currently loaded option categories.
         /// </summary>
-        public IEnumerable<CategoryInfo> Categories {
-            get { return _categories.Values; }
-        }
+        public IEnumerable<CategoryInfo> Categories => _categories.Values;
 
         /// <summary>
         /// Gets a enumeration of all currently loaded options.
         /// </summary>
-        public IEnumerable<OptionInfo> Options {
-            get { return _categories.Values.SelectMany(c => c.Options); }
-        }
+        public IEnumerable<OptionInfo> Options => _categories.Values.SelectMany(c => c.Options);
 
         /// <summary>
         /// Whether or not options automatically save their changes when set or not.

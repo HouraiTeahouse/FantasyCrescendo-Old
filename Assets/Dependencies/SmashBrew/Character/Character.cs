@@ -18,9 +18,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         public CharacterStateContext Context { get; private set; }
         public CharacterStateSummary State;
 
-        public CharacterControllerBuilder States {
-            get { return _controller; }
-        }
+        public CharacterControllerBuilder States => _controller;
 
         public const int kInputHistorySize = 3;
 
@@ -250,16 +248,12 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         /// <summary> 
         /// Gets an immutable collection of hitboxes that belong to the character.
         /// </summary>
-        public ReadOnlyCollection<Hitbox> Hitboxes {
-            get { return _hitboxes; }
-        }
+        public ReadOnlyCollection<Hitbox> Hitboxes => _hitboxes;
 
         /// <summary> 
         /// Gets an immutable collection of hurtboxes that belong to the character.
         /// </summary>
-        public ReadOnlyCollection<Hitbox> Hurtboxes {
-            get { return _hurtboxes; }
-        }
+        public ReadOnlyCollection<Hitbox> Hurtboxes => _hurtboxes;
 
         void IDataComponent<Player>.SetData(Player data) {
             gameObject.name = "Player {0} ({1},{2})".With(data.ID, data.Selection.Character.name, data.Selection.Pallete);

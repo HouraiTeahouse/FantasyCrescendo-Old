@@ -12,8 +12,12 @@ namespace HouraiTeahouse {
             set { rotationPerSecond = value; }
         }
 
-        // Update is called once per frame
-        void Update() { transform.Rotate(RotationPerSecond * Time.deltaTime); }
+        /// <summary>
+        /// Update is called every frame, if the MonoBehaviour is enabled.
+        /// </summary>
+        void Update() { 
+            transform.Rotate(RotationPerSecond * Time.deltaTime); 
+        }
 
     }
 

@@ -15,9 +15,7 @@ namespace HouraiTeahouse.Localization {
 
         string _nativeText;
 
-        public int Priority { 
-            get { return 100; }
-        }
+        public int Priority => 100;
 
         /// <summary> The UI Text object to display the localized string onto </summary>
         public Text Text {

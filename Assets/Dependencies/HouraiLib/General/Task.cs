@@ -10,7 +10,6 @@ namespace HouraiTeahouse {
             return task.Then(() => Task.FromResult(func()));
         }
 
-        #region ThenAll Overloads
         public static ITask ThenAll(this ITask task, params ITask[] set) { return task.ThenAll(set as IEnumerable<ITask>); }
         public static ITask<T[]> ThenAll<T>(this ITask task, params ITask<T>[] set) { return task.ThenAll(set as IEnumerable<ITask<T>>); }
 
@@ -47,9 +46,7 @@ namespace HouraiTeahouse {
             Argument.NotNull(set);
             return Argument.NotNull(task).Then(t => Task.All(set(t)));
         }
-#endregion
 
-#region ThenAny Overlaods
         public static ITask ThenAny(this ITask task, params ITask[] set) { return task.ThenAny(set as IEnumerable<ITask>); }
         public static ITask<T> ThenAny<T>(this ITask task, params ITask<T>[] set) { return task.ThenAny(set as IEnumerable<ITask<T>>); }
         public static ITask ThenAny(this ITask task, 
@@ -79,7 +76,6 @@ namespace HouraiTeahouse {
             Argument.NotNull(set);
             return Argument.NotNull(task).Then(t => Task.Any(set(t)));
         }
-#endregion
 
     }
 
@@ -144,9 +140,7 @@ namespace HouraiTeahouse {
         public TaskState State { get; protected set; }
         public Exception Exception { get; private set; }
 
-        public static IEnumerable<ITaskInfo> PendingTasks {
-            get { return pendingTasks; }
-        }
+        public static IEnumerable<ITaskInfo> PendingTasks => pendingTasks;
 
         static Task() {
             EnableTracking = false;
@@ -230,9 +224,7 @@ namespace HouraiTeahouse {
             var task = new Task();
             ActionHandlers(task,
                 () => {
-                    // Avoiding use of SafeInvoke here due higher chances of stack overflow
-                    if (onResolved != null)
-                        onResolved();
+                    onResolved?.Invoke();
                     task.Resolve();
                 });
             return task;
@@ -253,7 +245,7 @@ namespace HouraiTeahouse {
         public ITask Catch(Action<Exception> onError) {
             var task = new Task();
             ActionHandlers(task, task.Resolve, ex => {
-                onError.SafeInvoke(ex);
+                onError?.Invoke(ex);
                 task.Reject(ex);
             });
             return task;
@@ -269,7 +261,7 @@ namespace HouraiTeahouse {
         void InvokeResolve(Action callback, IRejectable rejectable) {
             Argument.NotNull(rejectable);
             try {
-                callback.SafeInvoke();
+                callback?.Invoke();
             } catch(Exception ex) {
                 rejectable.Reject(ex);
             }
@@ -286,7 +278,7 @@ namespace HouraiTeahouse {
         protected void InvokeReject(Action<Exception> callback, Exception exception, IRejectable rejectable) {
             Argument.NotNull(rejectable);
             try {
-                callback.SafeInvoke(exception);
+                callback?.Invoke(exception);
             } catch(Exception ex) {
                 if(rejectable != this)
                     rejectable.Reject(ex);
@@ -316,9 +308,7 @@ namespace HouraiTeahouse {
             }
         }
 
-        public static ITask Resolved {
-            get { return new Task {State = TaskState.Success}; }
-        }
+        public static ITask Resolved => new Task {State = TaskState.Success};
 
         public static ITask<T> FromResult<T>(T result) {
             var task = new Task<T>();
@@ -517,7 +507,7 @@ namespace HouraiTeahouse {
         void InvokeResolve(Action<T> callback, IRejectable rejectable) {
             Argument.NotNull(rejectable);
             try {
-                callback.SafeInvoke(Result);
+                callback?.Invoke(Result);
             } catch(Exception ex) {
                 rejectable.Reject(ex);
             }
@@ -548,7 +538,7 @@ namespace HouraiTeahouse {
             var task = new Task<T>();
             ActionHandlers(task, task.Resolve,
                 ex => {
-                    onError.SafeInvoke(ex);
+                    onError?.Invoke(ex);
                     task.Reject(ex);
                 });
             return task;

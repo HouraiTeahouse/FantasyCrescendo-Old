@@ -16,7 +16,7 @@ namespace HouraiTeahouse {
             if (!ShouldCreate(eventArgs))
                 return;
             T instance = Create(eventArgs);
-            OnCreate.SafeInvoke(instance, eventArgs);
+            OnCreate?.Invoke(instance, eventArgs);
         }
 
         /// <summary> Gets whether an instance should be spawned in response to an event or not. </summary>

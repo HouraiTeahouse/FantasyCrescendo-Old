@@ -83,19 +83,13 @@ namespace HouraiTeahouse.SmashBrew {
         string[] _extraPrefabs;
 
         /// <summary> The short name of the character. Usually just their first name. </summary>
-        public string ShortName {
-            get { return _shortName; }
-        }
+        public string ShortName => _shortName;
 
         /// <summary> The full name of the character. </summary>
-        public string FullName {
-            get { return _fullName; }
-        }
+        public string FullName => _fullName;
 
         /// <summary> Gets how many palletes </summary>
-        public int PalleteCount {
-            get { return _portraits == null ? 0 : _portraits.Length; }
-        }
+        public int PalleteCount => _portraits == null ? 0 : _portraits.Length;
 
         /// <summary> Gets the resource for the character's icon </summary>
         public Resource<Sprite> Icon { get; private set; }
@@ -115,23 +109,15 @@ namespace HouraiTeahouse.SmashBrew {
         public ReadOnlyCollection<Resource<GameObject>> ExtraPrefabs { get; private set; }
 
         /// <summary> The color used in the character's select image </summary>
-        public Color BackgroundColor {
-            get { return _backgroundColor; }
-        }
+        public Color BackgroundColor => _backgroundColor;
 
         /// <summary> Is the Character selectable from the character select screen? </summary>
-        public bool IsSelectable {
-            get { return _isSelectable && _isVisible; }
-        }
+        public bool IsSelectable => _isSelectable && _isVisible;
 
         /// <summary> Is the Character viewable in the character select screen? </summary>
-        public bool IsVisible {
-            get { return _isVisible; }
-        }
+        public bool IsVisible => _isVisible;
 
-        public uint Id {
-            get { return _id; }
-        }
+        public uint Id => _id;
 
         public void Unload() {
             Icon.Unload();

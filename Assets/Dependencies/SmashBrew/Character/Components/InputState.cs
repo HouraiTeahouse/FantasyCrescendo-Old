@@ -73,13 +73,8 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             }
         }
 
-        bool IsInvalid {
-            get { return Player == null || Player.Controller == null; }
-        }
-
-        float AbsMax(float a, float b) {
-            return Mathf.Abs(a) > Mathf.Abs(b) ? a : b;
-        }
+        bool IsInvalid => Player == null || Player.Controller == null;
+        float AbsMax(float a, float b) => Mathf.Abs(a) > Mathf.Abs(b) ? a : b;
 
         public InputSlice GetInput() {
             var valid = !IsInvalid;

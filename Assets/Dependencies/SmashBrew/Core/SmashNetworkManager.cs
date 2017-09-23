@@ -61,7 +61,7 @@ namespace HouraiTeahouse.SmashBrew {
         }
 
         public override void OnClientDisconnect(NetworkConnection conn) {
-            ClientDisconnected.SafeInvoke(conn);
+            ClientDisconnected?.Invoke(conn);
         }
 
         public override void OnClientConnect(NetworkConnection conn) {
@@ -70,41 +70,41 @@ namespace HouraiTeahouse.SmashBrew {
                 _clientStartedTask.Then(() => {
                     Log.Debug("Client connecting...");
                     ClientScene.Ready(conn);
-                    ClientConnected.SafeInvoke(conn);
+                    ClientConnected?.Invoke(conn);
                 });
             }
         }
 
         public override void OnStartServer() {
-            ServerStarted.SafeInvoke();
+            ServerStarted?.Invoke();
         }
 
         public override void OnServerReady(NetworkConnection conn) {
             NetworkServer.SetClientReady(conn);
-            ServerReady.SafeInvoke(conn);
+            ServerReady?.Invoke(conn);
         }
 
         public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId) {
-            ServerAddedPlayer.SafeInvoke(conn, playerControllerId, new PlayerSelection());
+            ServerAddedPlayer?.Invoke(conn, playerControllerId, new PlayerSelection());
         }
 
         public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId, NetworkReader extraMessageReader) {
-            ServerAddedPlayer.SafeInvoke(conn, playerControllerId, extraMessageReader.ReadMessage<PlayerSelectionMessage>().ToSelection());
+            ServerAddedPlayer?.Invoke(conn, playerControllerId, extraMessageReader.ReadMessage<PlayerSelectionMessage>().ToSelection());
         }
 
         public override void OnServerRemovePlayer(NetworkConnection conn, PlayerController playerController) {
             base.OnServerRemovePlayer(conn, playerController);
-            ServerRemovedPlayer.SafeInvoke(conn, playerController);
+            ServerRemovedPlayer?.Invoke(conn, playerController);
         }
 
         public override void OnServerDisconnect(NetworkConnection conn) {
-            ServerDisconnected.SafeInvoke(conn);
+            ServerDisconnected?.Invoke(conn);
             base.OnServerDisconnect(conn);
         }
 
         public override void OnStopClient() {
             base.OnStopClient();
-            ClientStopped.SafeInvoke();
+            ClientStopped?.Invoke();
         }
 
     }

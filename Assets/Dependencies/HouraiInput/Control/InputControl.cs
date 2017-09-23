@@ -47,36 +47,17 @@ namespace HouraiTeahouse.HouraiInput {
         /// </summary>
         public bool IsButton { get; protected set; }
 
-        internal bool IsOnZeroTick {
-            get { return UpdateTick == zeroTick; }
-        }
+        internal bool IsOnZeroTick => UpdateTick == zeroTick;
 
         public InputState State { get; private set; }
         public InputState LastState { get; private set; }
 
-        public bool HasChanged {
-            get { return thisState != lastState; }
-        }
-
-        public bool IsPressed {
-            get { return thisState.State; }
-        }
-
-        public bool WasPressed {
-            get { return thisState && !lastState; }
-        }
-
-        public bool WasReleased {
-            get { return !thisState && lastState; }
-        }
-
-        public bool IsNull {
-            get { return this == Null; }
-        }
-
-        public bool IsNotNull {
-            get { return this != Null; }
-        }
+        public bool HasChanged => thisState != lastState;
+        public bool IsPressed => thisState.State;
+        public bool WasPressed => thisState && !lastState;
+        public bool WasReleased => !thisState && lastState;
+        public bool IsNull => this == Null;
+        public bool IsNotNull => this != Null;
 
         public InputTarget? Obverse {
             get {
@@ -136,12 +117,8 @@ namespace HouraiTeahouse.HouraiInput {
 
         public override string ToString() { return "[InputControl: Handle={0}, Value={1}]".With(Handle, State.Value); }
 
-        public static implicit operator bool(InputControl control) { 
-            return control.State; }
-
-        public static implicit operator float(InputControl control) { 
-            return control.State; 
-        }
+        public static implicit operator bool(InputControl control) => control.State;
+        public static implicit operator float(InputControl control) => control.State;
 
     }
 

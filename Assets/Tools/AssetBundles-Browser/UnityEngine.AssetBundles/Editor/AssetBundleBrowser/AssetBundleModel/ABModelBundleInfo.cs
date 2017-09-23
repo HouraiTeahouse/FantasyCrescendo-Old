@@ -10,10 +10,8 @@ namespace UnityEngine.AssetBundles.AssetBundleModel
     public class BundleTreeItem : TreeViewItem
     {
         private BundleInfo m_Bundle;
-        public BundleInfo bundle
-        {
-            get { return m_Bundle; }
-        }
+        public BundleInfo bundle => m_Bundle;
+
         public BundleTreeItem(BundleInfo b, int depth, Texture2D iconTexture) : base(b.nameHashCode, depth, b.displayName)
         {
             m_Bundle = b;
@@ -55,7 +53,7 @@ namespace UnityEngine.AssetBundles.AssetBundleModel
             return fullNativeName.GetHashCode();
         }
         public string fullNativeName
-        { get { return m_FullNativeName; } }
+        => m_FullNativeName;
 
         public void SetBundleName(string bundleName, string variantName)
         {
@@ -63,15 +61,10 @@ namespace UnityEngine.AssetBundles.AssetBundleModel
             name += (variantName == "") ? "" : "." + variantName;
             SetName(name);
         }
-        public string bundleName
-        {
-            get { return m_FullBundleName; }
-            //set { SetName(value); }
-        }
-        public string shortName
-        {
-            get { return m_ShortName; }
-        }
+
+        public string bundleName => m_FullBundleName;
+        public string shortName => m_ShortName;
+
         public string variant
         {
             get { return m_VariantName; }
@@ -82,6 +75,7 @@ namespace UnityEngine.AssetBundles.AssetBundleModel
                 m_FullNativeName += (m_VariantName == "") ? "" : "." + m_VariantName;
             }
         }
+
         public List<string> pathTokens
         {
             get { return m_PathTokens; }
@@ -166,16 +160,9 @@ namespace UnityEngine.AssetBundles.AssetBundleModel
             m_Parent = parent;
         }
 
-        public BundleFolderInfo parent
-        { get { return m_Parent; } }
-        public virtual string displayName
-        {
-            get { return m_Name.shortName; }
-        }
-        public virtual int nameHashCode
-        {
-            get { return m_Name.GetHashCode(); }
-        }
+        public BundleFolderInfo parent => m_Parent;
+        public virtual string displayName => m_Name.shortName;
+        public virtual int nameHashCode => m_Name.GetHashCode();
         public abstract BundleTreeItem CreateTreeView(int depth);
 
         protected virtual void RefreshMessages()
@@ -231,9 +218,9 @@ namespace UnityEngine.AssetBundles.AssetBundleModel
         abstract public void AddAssetsToNode(AssetTreeItem node);
         abstract public void Update();
         public virtual bool doneUpdating
-        { get { return m_DoneUpdating; } }
+        => m_DoneUpdating;
         public virtual bool dirty
-        { get { return m_Dirty; } }
+        => m_Dirty;
         public void ForceNeedUpdate()
         {
             m_DoneUpdating = false;
@@ -494,7 +481,7 @@ namespace UnityEngine.AssetBundles.AssetBundleModel
         }
 
         public bool isSceneBundle
-        { get { return m_IsSceneBundle; } }
+        => m_IsSceneBundle;
 
         public override BundleTreeItem CreateTreeView(int depth)
         {
@@ -544,10 +531,9 @@ namespace UnityEngine.AssetBundles.AssetBundleModel
         {
             //parent should be auto called
         }
-        public override string displayName
-        {
-            get { return m_Name.variant; }
-        }
+
+        public override string displayName => m_Name.variant;
+
         public override void Update()
         {
             base.Update();

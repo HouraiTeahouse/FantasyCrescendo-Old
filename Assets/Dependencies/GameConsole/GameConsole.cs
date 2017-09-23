@@ -52,9 +52,7 @@ namespace HouraiTeahouse.Console {
         }
 
         /// <summary> The log history of all logged messages on the GameConsole </summary>
-        public static IEnumerable<string> History {
-            get { return _history; }
-        }
+        public static IEnumerable<string> History => _history;
 
         /// <summary> Called every time the Console is updated. </summary>
         public static event Action OnConsoleUpdate;

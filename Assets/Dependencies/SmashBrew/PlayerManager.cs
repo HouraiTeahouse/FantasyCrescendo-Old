@@ -26,9 +26,7 @@ namespace HouraiTeahouse.SmashBrew {
 
         IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
 
-        public int Count {
-            get { return _players.Length; }
-        }
+        public int Count => _players.Length;
 
         public PlayerSet() {
             // Note: These objects are not intended to be destroyed and thus do not unresgister these event handlers

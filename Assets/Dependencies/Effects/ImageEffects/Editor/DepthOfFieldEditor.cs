@@ -35,10 +35,10 @@ namespace UnityStandardAssets.ImageEffects
         AnimBool showDX11BlurSettings = new AnimBool();
         AnimBool showNearBlurOverlapSize = new AnimBool();
 
-        bool useFocalDistance { get { return focalTransform.objectReferenceValue == null; } }
-        bool useDiscBlur { get { return blurType.enumValueIndex < 1; } }
-        bool useDX11Blur { get { return blurType.enumValueIndex > 0; } }
-        bool useNearBlur { get { return nearBlur.boolValue; } }
+        bool useFocalDistance => focalTransform.objectReferenceValue == null;
+        bool useDiscBlur => blurType.enumValueIndex < 1;
+        bool useDX11Blur => blurType.enumValueIndex > 0;
+        bool useNearBlur => nearBlur.boolValue;
 
 
         void OnEnable()

@@ -71,21 +71,10 @@ namespace HouraiTeahouse.HouraiInput {
             }
         }
 
-        public bool IsHidden {
-            get { return HiddenTypes.Contains(GetType()); }
-        }
-
-        public virtual bool IsKnown {
-            get { return true; }
-        }
-
-        public int AnalogCount {
-            get { return AnalogMappings.Length; }
-        }
-
-        public int ButtonCount {
-            get { return ButtonMappings.Length; }
-        }
+        public bool IsHidden => HiddenTypes.Contains(GetType());
+        public virtual bool IsKnown => true;
+        public int AnalogCount => AnalogMappings.Length;
+        public int ButtonCount => ButtonMappings.Length;
 
         public bool HasJoystickName(string joystickName) {
             if (!IsJoystick)

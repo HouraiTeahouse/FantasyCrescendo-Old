@@ -11,24 +11,20 @@ namespace HouraiTeahouse.Editor {
     public abstract class LockableEditorWindow : EditorWindow, IHasCustomMenu {
 
         GUIStyle lockButtonStyle;
-        bool locked;
 
         /// <summary> 
         /// Gets or sets whether the EditorWindow is currently locked or not. 
         /// </summary>
-        public bool IsLocked {
-            get { return locked; }
-            set { locked = value; }
-        }
+        public bool IsLocked { get; set; }
 
         public virtual void AddItemsToMenu(GenericMenu menu) {
-            menu.AddItem(new GUIContent("Lock"), locked, () => { locked = !locked; });
+            menu.AddItem(new GUIContent("Lock"), IsLocked, () => { IsLocked = !IsLocked; });
         }
 
         void ShowButton(Rect position) {
             if (lockButtonStyle == null)
                 lockButtonStyle = "IN LockButton";
-            locked = GUI.Toggle(position, locked, GUIContent.none, lockButtonStyle);
+            IsLocked = GUI.Toggle(position, IsLocked, GUIContent.none, lockButtonStyle);
         }
 
     }

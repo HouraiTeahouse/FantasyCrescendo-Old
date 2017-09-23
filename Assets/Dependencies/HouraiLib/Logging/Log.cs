@@ -30,21 +30,10 @@ namespace HouraiTeahouse {
         [SerializeField]
         LogTypeSettings _error = new LogTypeSettings {Enabled = true, StackTrace = StackTraceLogType.ScriptOnly};
 
-        public LogTypeSettings Info {
-            get { return _info; }
-        }
-
-        public LogTypeSettings Debug {
-            get { return _debug; }
-        }
-
-        public LogTypeSettings Warning {
-            get { return _warning; }
-        }
-
-        public LogTypeSettings Error {
-            get { return _error; }
-        }
+        public LogTypeSettings Info => _info;
+        public LogTypeSettings Debug => _debug;
+        public LogTypeSettings Warning => _warning;
+        public LogTypeSettings Error => _error;
 
         public LogTypeSettings GetTypeSettings(LogLevel level) {
             switch (level) {
@@ -121,7 +110,9 @@ namespace HouraiTeahouse {
 
             string Prefix { get; set; }
 
-            public Logger(string prefix) { Prefix = prefix; }
+            public Logger(string prefix) { 
+                Prefix = prefix; 
+            }
 
             void ILog.Log(LogLevel logType, string format, params object[] objs) {
                 WriteLog(logType, "[{0}] ".With(Prefix) + format, objs);
@@ -129,13 +120,10 @@ namespace HouraiTeahouse {
 
         }
 
-        public static ILog GetLogger(string prefix) {
-            return new Logger(prefix);
-        }
-
-        public static ILog GetLogger(object obj) { return GetLogger(obj.GetType()); }
-        public static ILog GetLogger(Type type) { return GetLogger(type.Name); }
-        public static ILog GetLogger<T>() { return GetLogger(typeof(T)); }
+        public static ILog GetLogger(string prefix) => new Logger(prefix);
+        public static ILog GetLogger(object obj) => GetLogger(obj.GetType());
+        public static ILog GetLogger(Type type) => GetLogger(type.Name);
+        public static ILog GetLogger<T>() => GetLogger(typeof(T));
 
         public static void Info(object source, params object[] objs) {
             WriteLog(LogLevel.Info, source, objs);

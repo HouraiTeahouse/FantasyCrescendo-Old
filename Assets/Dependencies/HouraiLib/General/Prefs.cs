@@ -183,20 +183,24 @@ namespace HouraiTeahouse {
 
         public bool IsLoaded { get; private set; }
 
-        public string Key {
-            get { return _key; }
-        }
+        public string Key => _key;
 
         void ISerializationCallbackReceiver.OnBeforeSerialize() { }
+        void ISerializationCallbackReceiver.OnAfterDeserialize() => QueueLoad();
 
-        void ISerializationCallbackReceiver.OnAfterDeserialize() { QueueLoad(); }
-
-        /// <summary> Reads the value stored in </summary>
-        /// <returns> </returns>
+        /// <summary> 
+        /// Reads the value stored in PlayerPrefs.
+        /// </summary>
+        /// <returns>the read value</returns>
         protected abstract T Read();
 
+        /// <summary>
+        /// Writes the provided value into PlayerPrefs.
+        /// </summary>
+        /// <param name="value">the value to be stored.</param>
         protected abstract void Write(T value);
 
+        // Queues loading the on the main Unity thread.
         void QueueLoad() {
             if (IsLoaded)
                 return;

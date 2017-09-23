@@ -36,9 +36,7 @@ namespace HouraiTeahouse.HouraiInput {
             }
         }
 
-        public override bool IsKnown {
-            get { return false; }
-        }
+        public override bool IsKnown => false;
 
     }
 

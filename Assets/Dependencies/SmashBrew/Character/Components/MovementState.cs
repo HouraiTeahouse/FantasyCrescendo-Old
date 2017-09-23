@@ -46,25 +46,12 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         [SerializeField]
         Transform _skeletonRoot;
 
-        public float MaxFallSpeed {
-            get { return _maxFallSpeed; }
-        }
+        public float MaxFallSpeed => _maxFallSpeed;
+        public float FastFallSpeed => _fastFallSpeed;
+        public CharacterFacingMode FacingMode => _characterFacingMode;
+        public int MaxJumpCount => _jumpPower != null ? _jumpPower.Length : 0;
 
-        public float FastFallSpeed {
-            get { return _fastFallSpeed; }
-        }
-
-        public CharacterFacingMode FacingMode {
-            get { return _characterFacingMode; }
-        }
-
-        public int MaxJumpCount {
-            get { return _jumpPower != null ? _jumpPower.Length : 0; }
-        }
-
-        public Transform LedgeTarget {
-            get { return _ledgeTarget; }
-        }
+        public Transform LedgeTarget => _ledgeTarget;
 
         bool _direction;
         float _grabTime;
@@ -125,7 +112,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
 
         void Jump(ref CharacterStateSummary state) {
             state.CurrentLedge = null;
-            OnJump.SafeInvoke();
+            OnJump?.Invoke();
             state.Velocity.y = _jumpPower[MaxJumpCount - state.JumpCount];
             state.JumpCount--;
         }

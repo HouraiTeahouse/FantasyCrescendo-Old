@@ -25,7 +25,9 @@ namespace HouraiTeahouse {
                 _map[enumVal] = default(TValue);
         }
 
-        /// <summary> Indexer for accessing mapped values given a valid value of the source enum. </summary>
+        /// <summary> 
+        /// Indexer for accessing mapped values given a valid value of the source enum. 
+        /// </summary>
         /// <param name="enumVal"> value of the source enum </param>
         /// <returns> the mapped value </returns>
         public TValue this[TEnum enumVal] {
@@ -33,22 +35,15 @@ namespace HouraiTeahouse {
             set { _map[enumVal] = value; }
         }
 
-        /// <summary> Gets the number of elements stored in this enum map. Is always equal to the number of possible values the
-        /// enum can be. </summary>
-        public int Count {
-            get { return _map.Count; }
-        }
+        /// <summary> 
+        /// Gets the number of elements stored in this enum map. Is always equal to the number of possible values the
+        /// enum can be. 
+        /// </summary>
+        public int Count => _map.Count;
 
-        #region IEnumerable Implementation
-
-        public IEnumerator<TValue> GetEnumerator() {
-            foreach (KeyValuePair<TEnum, TValue> kvp in _map)
-                yield return kvp.Value;
-        }
-
+        public IEnumerator<TValue> GetEnumerator() => _map.Values.GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
 
-        #endregion
     }
 
 }

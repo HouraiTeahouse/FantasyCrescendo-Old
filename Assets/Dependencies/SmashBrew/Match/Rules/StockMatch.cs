@@ -27,9 +27,7 @@ namespace HouraiTeahouse.SmashBrew.Matches {
         /// <summary> Readonly indexer for how many stocks each player has remaining. </summary>
         /// <param name="player"> the Player in question </param>
         /// <returns> the number of remaining stocks they have </returns>
-        public int this[Player player] {
-            get { return _stocks[player.ID]; }
-        }
+        public int this[Player player] => _stocks[player.ID];
 
         public event Action StockChanged;
 
@@ -37,7 +35,7 @@ namespace HouraiTeahouse.SmashBrew.Matches {
         protected override void Awake() {
             base.Awake();
             _eventManager = Mediator.Global;
-            _stocks.Callback+= (op, index) => StockChanged.SafeInvoke();
+            _stocks.Callback+= (op, index) => StockChanged?.Invoke();
         }
 
         public override void OnStartServer() {

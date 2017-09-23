@@ -55,9 +55,7 @@ namespace HouraiTeahouse.SmashBrew {
             private set { _loadTask = value; }
         }
 
-        public static bool IsReady {
-            get { return LoadTask != null && LoadTask.State != TaskState.Pending; }
-        }
+        public static bool IsReady => LoadTask != null && LoadTask.State != TaskState.Pending;
 
         [RuntimeInitializeOnLoadMethod]
         static void Initialize() {

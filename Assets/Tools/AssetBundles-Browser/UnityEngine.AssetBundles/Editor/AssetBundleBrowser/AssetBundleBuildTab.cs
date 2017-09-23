@@ -44,7 +44,7 @@ namespace UnityEngine.AssetBundles
                 option = opt;
             }
             //public string prefsKey
-            //{ get { return k_BuildPrefPrefix + content.text; } }
+            //=> k_BuildPrefPrefix + content.text;
             public bool state;
             public GUIContent content;
             public BuildAssetBundleOptions option;

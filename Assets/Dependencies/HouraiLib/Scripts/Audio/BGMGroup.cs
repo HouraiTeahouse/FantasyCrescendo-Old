@@ -24,9 +24,7 @@ namespace HouraiTeahouse {
 
         public bool IsInitialized { get; private set; }
 
-        public string Name {
-            get { return _name; }
-        }
+        public string Name => _name;
 
         protected virtual void OnEnable() {
             IsInitialized = false;
@@ -113,35 +111,16 @@ namespace HouraiTeahouse {
             _baseWeight = weight;
         }
 
-        public string Name {
-            get { return _name; }
-        }
-
-        public string Artist {
-            get { return _artist; }
-        }
-
-        public string OriginalName {
-            get { return _originalName; }
-        }
-
-        public string OriginSource {
-            get { return _originSource; }
-        }
-
-        public Resource<AudioClip> BGM { 
-            get { return Resource.Get<AudioClip>(_bgm); }
-        }
+        public string Name => _name;
+        public string Artist => _artist;
+        public string OriginalName => _originalName;
+        public string OriginSource => _originSource;
+        public Resource<AudioClip> BGM => Resource.Get<AudioClip>(_bgm);
 
         public float Weight { get; private set; }
 
-        public int LoopStart {
-            get { return _loopStart; }
-        }
-
-        public int LoopEnd {
-            get { return _loopEnd; }
-        }
+        public int LoopStart => _loopStart;
+        public int LoopEnd => _loopEnd;
 
         string GetKey(string stageName) { return string.Format("{0}{1}{2}_{3}", stageName, Delimiter, _bgm, Suffix); }
 

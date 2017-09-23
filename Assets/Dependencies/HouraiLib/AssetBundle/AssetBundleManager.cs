@@ -17,13 +17,8 @@ namespace HouraiTeahouse.AssetBundles {
         readonly Dictionary<string, BundleMetadata> _validIdentifiers;
         public AssetBundleManifest Manifest { get; private set; }
 
-        public BundleMetadata this[string name] {
-            get { return _validIdentifiers[name]; }
-        }
-
-        public IEnumerable<string> BundleNames {
-            get { return _validIdentifiers.Keys; }
-        }
+        public BundleMetadata this[string name] => _validIdentifiers[name];
+        public IEnumerable<string> BundleNames => _validIdentifiers.Keys;
 
         public BundleManfiestMap(AssetBundleManifest manifest) {
             Manifest = Argument.NotNull(manifest);

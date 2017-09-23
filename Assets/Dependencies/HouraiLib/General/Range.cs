@@ -13,7 +13,9 @@ namespace HouraiTeahouse {
         [SerializeField]
         int _max;
 
-        /// <summary> The lower bound of the IntRange </summary>
+        /// <summary> 
+        /// The lower bound of the IntRange 
+        /// </summary>
         public int Min {
             get { return _min; }
             set {
@@ -27,7 +29,9 @@ namespace HouraiTeahouse {
             }
         }
 
-        /// <summary> The upper bound of the IntRange </summary>
+        /// <summary> 
+        /// The upper bound of the IntRange 
+        /// </summary>
         public int Max {
             get { return _max; }
             set {
@@ -41,42 +45,31 @@ namespace HouraiTeahouse {
             }
         }
 
-        /// <summary> Returns the width of the IntRange. Equal to the difference between Max and Min. </summary>
-        public int Width {
-            get { return Mathf.Abs(Max - Min); }
-        }
+        /// <summary> 
+        /// Returns the width of the IntRange. Equal to the difference between Max and Min. 
+        /// </summary>
+        public int Width => Mathf.Abs(Max - Min);
 
-        /// <summary> Returns the center of the IntRange </summary>
-        public int Center {
-            get { return Lerp(0.5f); }
-        }
+        /// <summary> 
+        /// Returns the center of the IntRange 
+        /// </summary>
+        public int Center => Lerp(0.5f);
 
-        /// <summary> Gets the full IntRange of real numbers, from negative infinity to positive infinity </summary>
-        public static IntRange FullRange {
-            get { return new IntRange(int.MinValue, int.MaxValue); }
-        }
+        /// <summary> 
+        /// Gets the full IntRange of real numbers, from negative infinity to positive infinity 
+        /// </summary>
+        public static IntRange FullRange => new IntRange(int.MinValue, int.MaxValue);
 
-        /// <summary> Creates an instance of IntRange. </summary>
-        /// <param name="value"> </param>
-        public IntRange(int value) {
-            _min = value;
-            _max = value;
-        }
-
-        /// <summary> Creates a instance of IntRange. </summary>
-        /// <param name="min"> the </param>
-        /// <param name="max"> </param>
         public IntRange(int min, int max) {
-            _min = Mathf.Min(min, max);
-            _max = Mathf.Max(min, max);
+            Argument.Check(min <= max);
+            _min = min;
+            _max = max;
         }
 
         /// <summary> Clamps a value to the IntRange </summary>
         /// <param name="x"> the value to clamp </param>
         /// <returns> the clamped value </returns>
-        public int Clamp(int x) {
-            return Mathf.Clamp(x, Min, Max);
-        }
+        public int Clamp(int x) => Mathf.Clamp(x, Min, Max);
 
         public bool Contains(int value, bool inclusive = true) {
             if (inclusive)
@@ -84,22 +77,25 @@ namespace HouraiTeahouse {
             return value > Min && value < Max;
         }
 
-        /// <summary> Selects a random floating point number contianed within the IntRange </summary>
+        /// <summary> 
+        /// Selects a random floating point number contianed within the IntRange 
+        /// </summary>
         /// <returns> a random number sampled from the IntRange, with uniform probabilty </returns>
         public int Random() {
             return UnityEngine.Random.Range(Min, Max);
         }
 
-        /// <summary> Linearly interpolates between the two extremes of the IntRange. If val = 1, returns Max. If val = 0, returns
-        /// Min. If betweeen, the returned value is linearly proportional to the width of the IntRange. </summary>
-        /// <param name="val"> </param>
-        /// <returns> </returns>
-        public int Lerp(float val) {
-            return Mathf.FloorToInt(((Range) this).Lerp(val));
-        }
+        /// <summary> 
+        /// Linearly interpolates between the two extremes of the IntRange. 
+        /// If val = 1, returns Max. If val = 0, returns /// Min. If betweeen, 
+        /// the returned value is linearly proportional to the width of the IntRange. 
+        /// </summary>
+        public int Lerp(float val) => Mathf.FloorToInt(((Range) this).Lerp(val));
 
-        public static implicit operator IntRange(float i) { return new IntRange(Mathf.FloorToInt(i)); }
-        public static implicit operator IntRange(int i) { return new IntRange(i); }
+        public static IntRange FromValue(int val) => new IntRange(val, val);
+
+        public static implicit operator IntRange(float i) => FromValue(Mathf.FloorToInt(i));
+        public static implicit operator IntRange(int i) => FromValue(i);
 
         public static implicit operator IntRange(Range r) {
             return new IntRange(Mathf.FloorToInt(r.Min), Mathf.FloorToInt(r.Max));
@@ -160,27 +156,17 @@ namespace HouraiTeahouse {
         }
 
         /// <summary> Returns the width of the Range. Equal to the difference between Max and Min. </summary>
-        public float Width {
-            get { return Mathf.Abs(Max - Min); }
-        }
+        public float Width => Mathf.Abs(Max - Min);
 
         /// <summary> Returns the center of the Range </summary>
-        public float Center {
-            get { return Lerp(0.5f); }
-        }
+        public float Center => Lerp(0.5f);
 
         /// <summary> Gets the full range of real numbers, from negative infinity to positive infinity </summary>
-        public static Range FullRange {
-            get { return new Range(float.NegativeInfinity, float.PositiveInfinity); }
-        }
+        public static Range FullRange => new Range(float.NegativeInfinity, float.PositiveInfinity);
 
-        public static Range Positives {
-            get { return new Range(0f, float.PositiveInfinity); }
-        }
+        public static Range Positives => new Range(0f, float.PositiveInfinity);
 
-        public static Range Negatives {
-            get { return new Range(float.NegativeInfinity, 0f); }
-        }
+        public static Range Negatives => new Range(float.NegativeInfinity, 0f);
 
         /// <summary> Creates an instance of Range. </summary>
         /// <param name="value"> </param>
@@ -213,11 +199,9 @@ namespace HouraiTeahouse {
 
         /// <summary> Selects a random floating point number contianed within the Range </summary>
         /// <returns> a random number sampled from the range, with uniform probabilty </returns>
-        public float Random() {
-            return UnityEngine.Random.Range(Min, Max);
-        }
+        public float Random() => UnityEngine.Random.Range(Min, Max);
 
-        public float InverseLerp(float val) { return Mathf.InverseLerp(Min, Max, Clamp(val)); }
+        public float InverseLerp(float val) => Mathf.InverseLerp(Min, Max, Clamp(val));
 
         /// <summary> Linearly interpolates between the two extremes of the range. If val = 1, returns Max. If val = 0, returns
         /// Min. If betweeen, the returned value is linearly proportional to the width of the Range. </summary>
@@ -227,19 +211,15 @@ namespace HouraiTeahouse {
             return Mathf.Lerp(_min, _max, val);
         }
 
-        public static implicit operator Range(float f) { return new Range(f); }
-        public static implicit operator Range(int f) { return new Range(f); }
-        public static implicit operator Range(IntRange r) { return new Range(r.Min, r.Max); }
+        public static implicit operator Range(float f) => new Range(f);
+        public static implicit operator Range(int f) => new Range(f);
+        public static implicit operator Range(IntRange r) => new Range(r.Min, r.Max);
 
-        public static Range operator +(Range r1, Range r2) { return new Range(r1.Min + r2.Min, r1.Max + r2.Max); }
-
-        public static Range operator -(Range r1, Range r2) { return new Range(r1.Min - r2.Min, r1.Max - r2.Max); }
-
-        public static Range operator *(float f, Range r) { return new Range(f * r.Min, f * r.Max); }
-
-        public static Range operator *(Range r, float f) { return new Range(f * r.Min, f * r.Max); }
-
-        public static Range operator /(Range r, float f) { return new Range(r.Min / f, r.Max / f); }
+        public static Range operator +(Range r1, Range r2) => new Range(r1.Min + r2.Min, r1.Max + r2.Max); 
+        public static Range operator -(Range r1, Range r2) => new Range(r1.Min - r2.Min, r1.Max - r2.Max); 
+        public static Range operator *(float f, Range r) =>new Range(f * r.Min, f * r.Max);
+        public static Range operator *(Range r, float f) => new Range(f * r.Min, f * r.Max);
+        public static Range operator /(Range r, float f) => new Range(r.Min / f, r.Max / f);
 
     }
 

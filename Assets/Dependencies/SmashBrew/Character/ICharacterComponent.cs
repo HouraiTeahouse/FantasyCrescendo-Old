@@ -49,9 +49,8 @@ namespace HouraiTeahouse.SmashBrew.Characters {
 
         public Character Character { get; private set; }
 
-        protected CharacterState CurrentState {
-            get { return (Character != null && Character.StateController != null) ? Character.StateController.CurrentState : null; }
-        }
+        protected CharacterState CurrentState => 
+            (Character != null && Character.StateController != null) ? Character.StateController.CurrentState : null;
 
         /// <summary>
         /// Awake is called when the script instance is being loaded.

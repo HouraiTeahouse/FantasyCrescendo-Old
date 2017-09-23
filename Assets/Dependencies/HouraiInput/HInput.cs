@@ -25,9 +25,7 @@ namespace HouraiTeahouse.HouraiInput {
         public static string Platform { get; private set; }
         public static bool InvertYAxis { get; set; }
 
-        static InputDevice DefaultActiveDevice {
-            get { return devices.Count > 0 ? devices[0] : InputDevice.Null; }
-        }
+        static InputDevice DefaultActiveDevice => devices.Count > 0 ? devices[0] : InputDevice.Null;
 
         public static InputDevice ActiveDevice {
             get { return _activeDevice ?? InputDevice.Null; }
@@ -132,7 +130,7 @@ namespace HouraiTeahouse.HouraiInput {
 
             if (lastActiveDevice == ActiveDevice)
                 return;
-            OnActiveDeviceChanged.SafeInvoke(ActiveDevice);
+            OnActiveDeviceChanged?.Invoke(ActiveDevice);
         }
 
         public static void AddDeviceManager(InputDeviceManager inputDeviceManager) {
@@ -172,7 +170,7 @@ namespace HouraiTeahouse.HouraiInput {
         static void UpdateDevices(float deltaTime) {
             foreach (var device in devices)
                 device.Update(_currentTick, deltaTime);
-            OnUpdate.SafeInvoke(_currentTick, deltaTime);
+            OnUpdate?.Invoke(_currentTick, deltaTime);
         }
 
         static void PostUpdateDevices(float deltaTime) {
@@ -189,7 +187,7 @@ namespace HouraiTeahouse.HouraiInput {
             devices.Add(inputDevice);
             devices.Sort((d1, d2) => d1.SortOrder.CompareTo(d2.SortOrder));
 
-            OnDeviceAttached.SafeInvoke(inputDevice);
+            OnDeviceAttached?.Invoke(inputDevice);
 
             if (ActiveDevice == InputDevice.Null)
                 ActiveDevice = inputDevice;
@@ -203,7 +201,7 @@ namespace HouraiTeahouse.HouraiInput {
 
             if (ActiveDevice == inputDevice)
                 ActiveDevice = InputDevice.Null;
-            OnDeviceDetached.SafeInvoke(inputDevice);
+            OnDeviceDetached?.Invoke(inputDevice);
         }
 
         public static void HideDevicesWithProfile(Type type) {

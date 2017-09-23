@@ -49,9 +49,7 @@ namespace HouraiTeahouse.Options {
         /// Gets an enumeration of OptionInfo describing all the 
         /// options under the category.
         /// </summary>
-        public IEnumerable<OptionInfo> Options {
-            get { return _options.Values; }
-        }
+        public IEnumerable<OptionInfo> Options => _options.Values;
 
         /// <summary>
         /// Gets a single OptionInfo for a specific option.

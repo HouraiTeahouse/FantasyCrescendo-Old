@@ -60,9 +60,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             /// <summary>
             /// The count of available swaps for this material swap set
             /// </summary>
-            public int Count {
-                get { return MaterialSets.Length; }
-            }
+            public int Count => MaterialSets.Length;
 
             public void Set(int palleteSwap) {
                 if (palleteSwap < 0 || palleteSwap >= MaterialSets.Length)
@@ -82,9 +80,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         /// <summary> 
         /// Gets the number of pallete swaps are available 
         /// </summary>
-        public int Count {
-            get { return !_swaps.IsNullOrEmpty() ? _swaps.Max(s => s.Count) : 0; }
-        }
+        public int Count => !_swaps.IsNullOrEmpty() ? _swaps.Max(s => s.Count) : 0;
 
         public int Pallete {
             get { return _color; }

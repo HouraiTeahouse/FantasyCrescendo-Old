@@ -1,6 +1,7 @@
 ﻿#if UNITY_STANDALONE_WIN || UNITY_EDITOR
 using System;
 using System.Runtime.InteropServices;
+using UnityEngine;
 
 namespace XInputDotNetPure {
 
@@ -24,172 +25,33 @@ namespace XInputDotNetPure {
     }
 
     public struct GamePadButtons {
-
-        ButtonState start,
-                    back,
-                    leftStick,
-                    rightStick,
-                    leftShoulder,
-                    rightShoulder,
-                    a,
-                    b,
-                    x,
-                    y;
-
-        internal GamePadButtons(ButtonState start,
-                                ButtonState back,
-                                ButtonState leftStick,
-                                ButtonState rightStick,
-                                ButtonState leftShoulder,
-                                ButtonState rightShoulder,
-                                ButtonState a,
-                                ButtonState b,
-                                ButtonState x,
-                                ButtonState y) {
-            this.start = start;
-            this.back = back;
-            this.leftStick = leftStick;
-            this.rightStick = rightStick;
-            this.leftShoulder = leftShoulder;
-            this.rightShoulder = rightShoulder;
-            this.a = a;
-            this.b = b;
-            this.x = x;
-            this.y = y;
-        }
-
-        public ButtonState Start {
-            get { return start; }
-        }
-
-        public ButtonState Back {
-            get { return back; }
-        }
-
-        public ButtonState LeftStick {
-            get { return leftStick; }
-        }
-
-        public ButtonState RightStick {
-            get { return rightStick; }
-        }
-
-        public ButtonState LeftShoulder {
-            get { return leftShoulder; }
-        }
-
-        public ButtonState RightShoulder {
-            get { return rightShoulder; }
-        }
-
-        public ButtonState A {
-            get { return a; }
-        }
-
-        public ButtonState B {
-            get { return b; }
-        }
-
-        public ButtonState X {
-            get { return x; }
-        }
-
-        public ButtonState Y {
-            get { return y; }
-        }
-
+        public ButtonState Start;
+        public ButtonState Back;
+        public ButtonState LeftStick;
+        public ButtonState RightStick;
+        public ButtonState LeftShoulder;
+        public ButtonState RightShoulder;
+        public ButtonState A;
+        public ButtonState B;
+        public ButtonState X;
+        public ButtonState Y;
     }
 
     public struct GamePadDPad {
-
-        ButtonState up,
-                    down,
-                    left,
-                    right;
-
-        internal GamePadDPad(ButtonState up, ButtonState down, ButtonState left, ButtonState right) {
-            this.up = up;
-            this.down = down;
-            this.left = left;
-            this.right = right;
-        }
-
-        public ButtonState Up {
-            get { return up; }
-        }
-
-        public ButtonState Down {
-            get { return down; }
-        }
-
-        public ButtonState Left {
-            get { return left; }
-        }
-
-        public ButtonState Right {
-            get { return right; }
-        }
-
+        public ButtonState Up;
+        public ButtonState Down;
+        public ButtonState Left;
+        public ButtonState Right;
     }
 
     public struct GamePadThumbSticks {
-
-        public struct StickValue {
-
-            float x,
-                  y;
-
-            internal StickValue(float x, float y) {
-                this.x = x;
-                this.y = y;
-            }
-
-            public float X {
-                get { return x; }
-            }
-
-            public float Y {
-                get { return y; }
-            }
-
-        }
-
-        StickValue left,
-                   right;
-
-        internal GamePadThumbSticks(StickValue left, StickValue right) {
-            this.left = left;
-            this.right = right;
-        }
-
-        public StickValue Left {
-            get { return left; }
-        }
-
-        public StickValue Right {
-            get { return right; }
-        }
-
+        public Vector2 Left;
+        public Vector2 Right;
     }
 
     public struct GamePadTriggers {
-
-        float left;
-        float right;
-
-        internal GamePadTriggers(float left, float right) {
-            this.left = left;
-            this.right = right;
-        }
-
-        public float Left {
-            get { return left; }
-        }
-
-        public float Right {
-            get { return right; }
-        }
-
+        public float Left;
+        public float Right;
     }
 
     public struct GamePadState {
@@ -255,83 +117,49 @@ namespace XInputDotNetPure {
 
             packetNumber = rawState.dwPacketNumber;
             buttons =
-                new GamePadButtons(
-                    (rawState.Gamepad.dwButtons & (uint) ButtonsConstants.Start) != 0
-                        ? ButtonState.Pressed
-                        : ButtonState.Released,
-                    (rawState.Gamepad.dwButtons & (uint) ButtonsConstants.Back) != 0
-                        ? ButtonState.Pressed
-                        : ButtonState.Released,
-                    (rawState.Gamepad.dwButtons & (uint) ButtonsConstants.LeftThumb) != 0
-                        ? ButtonState.Pressed
-                        : ButtonState.Released,
-                    (rawState.Gamepad.dwButtons & (uint) ButtonsConstants.RightThumb) != 0
-                        ? ButtonState.Pressed
-                        : ButtonState.Released,
-                    (rawState.Gamepad.dwButtons & (uint) ButtonsConstants.LeftShoulder) != 0
-                        ? ButtonState.Pressed
-                        : ButtonState.Released,
-                    (rawState.Gamepad.dwButtons & (uint) ButtonsConstants.RightShoulder) != 0
-                        ? ButtonState.Pressed
-                        : ButtonState.Released,
-                    (rawState.Gamepad.dwButtons & (uint) ButtonsConstants.A) != 0
-                        ? ButtonState.Pressed
-                        : ButtonState.Released,
-                    (rawState.Gamepad.dwButtons & (uint) ButtonsConstants.B) != 0
-                        ? ButtonState.Pressed
-                        : ButtonState.Released,
-                    (rawState.Gamepad.dwButtons & (uint) ButtonsConstants.X) != 0
-                        ? ButtonState.Pressed
-                        : ButtonState.Released,
-                    (rawState.Gamepad.dwButtons & (uint) ButtonsConstants.Y) != 0
-                        ? ButtonState.Pressed
-                        : ButtonState.Released);
+                new GamePadButtons {
+                    Start = GetState(rawState, ButtonsConstants.Start),
+                    Back  = GetState(rawState, ButtonsConstants.Start),
+                    LeftStick = GetState(rawState, ButtonsConstants.LeftThumb),
+                    RightStick = GetState(rawState, ButtonsConstants.RightThumb),
+                    LeftShoulder = GetState(rawState, ButtonsConstants.LeftShoulder),
+                    RightShoulder = GetState(rawState, ButtonsConstants.RightShoulder),
+                    A = GetState(rawState, ButtonsConstants.A),
+                    B = GetState(rawState, ButtonsConstants.B),
+                    X = GetState(rawState, ButtonsConstants.X),
+                    Y = GetState(rawState, ButtonsConstants.Y),
+                };
             dPad =
-                new GamePadDPad(
-                    (rawState.Gamepad.dwButtons & (uint) ButtonsConstants.DPadUp) != 0
-                        ? ButtonState.Pressed
-                        : ButtonState.Released,
-                    (rawState.Gamepad.dwButtons & (uint) ButtonsConstants.DPadDown) != 0
-                        ? ButtonState.Pressed
-                        : ButtonState.Released,
-                    (rawState.Gamepad.dwButtons & (uint) ButtonsConstants.DPadLeft) != 0
-                        ? ButtonState.Pressed
-                        : ButtonState.Released,
-                    (rawState.Gamepad.dwButtons & (uint) ButtonsConstants.DPadRight) != 0
-                        ? ButtonState.Pressed
-                        : ButtonState.Released);
+                new GamePadDPad {
+                    Up = GetState(rawState, ButtonsConstants.DPadUp),
+                    Down = GetState(rawState, ButtonsConstants.DPadDown),
+                    Left = GetState(rawState, ButtonsConstants.DPadLeft),
+                    Right = GetState(rawState, ButtonsConstants.DPadRight),
+                };
 
             thumbSticks =
-                new GamePadThumbSticks(
-                    Utils.ApplyLeftStickDeadZone(rawState.Gamepad.sThumbLX, rawState.Gamepad.sThumbLY, deadZone),
-                    Utils.ApplyRightStickDeadZone(rawState.Gamepad.sThumbRX, rawState.Gamepad.sThumbRY, deadZone));
-            triggers = new GamePadTriggers(Utils.ApplyTriggerDeadZone(rawState.Gamepad.bLeftTrigger, deadZone),
-                Utils.ApplyTriggerDeadZone(rawState.Gamepad.bRightTrigger, deadZone));
+                new GamePadThumbSticks {
+                    Left = Utils.ApplyLeftStickDeadZone(rawState.Gamepad.sThumbLX, rawState.Gamepad.sThumbLY, deadZone),
+                    Right = Utils.ApplyRightStickDeadZone(rawState.Gamepad.sThumbRX, rawState.Gamepad.sThumbRY, deadZone)
+                };
+            triggers =new GamePadTriggers {
+                Left = Utils.ApplyTriggerDeadZone(rawState.Gamepad.bLeftTrigger, deadZone),
+                Right = Utils.ApplyTriggerDeadZone(rawState.Gamepad.bRightTrigger, deadZone)
+            };
         }
 
-        public uint PacketNumber {
-            get { return packetNumber; }
+        static ButtonState GetState(RawState state, ButtonsConstants mask) {
+            return (state.Gamepad.dwButtons & (uint) ButtonsConstants.DPadRight) != 0
+                        ? ButtonState.Pressed
+                        : ButtonState.Released;
         }
 
-        public bool IsConnected {
-            get { return isConnected; }
-        }
-
-        public GamePadButtons Buttons {
-            get { return buttons; }
-        }
-
-        public GamePadDPad DPad {
-            get { return dPad; }
-        }
-
-        public GamePadTriggers Triggers {
-            get { return triggers; }
-        }
-
-        public GamePadThumbSticks ThumbSticks {
-            get { return thumbSticks; }
-        }
+        public uint PacketNumber => packetNumber;
+        public bool IsConnected => isConnected;
+        public GamePadButtons Buttons => buttons;
+        public GamePadDPad DPad => dPad;
+        public GamePadTriggers Triggers => triggers;
+        public GamePadThumbSticks ThumbSticks => thumbSticks;
 
     }
 

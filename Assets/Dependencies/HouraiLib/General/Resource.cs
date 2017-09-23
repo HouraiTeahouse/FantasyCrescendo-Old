@@ -38,33 +38,41 @@ namespace HouraiTeahouse {
             return _resources[location] as Resource<T>;
         }
 
-        /// <summary> Initializes a new instance of Resource with a specified Resources file path. </summary>
+        /// <summary> 
+        /// Initializes a new instance of Resource with a specified Resources file path. 
+        /// </summary>
         /// <param name="path"> the Resourrces file path to the asset </param>
         Resource(string path) {
             _path = path ?? string.Empty;
         }
 
-        /// <summary> The Resources path that the asset is stored at. </summary>
-        public string Path {
-            get { return _path; }
-        }
+        /// <summary> 
+        /// The Resources path that the asset is stored at. 
+        /// </summary>
+        public string Path => _path;
 
-        /// <summary> Checks whether the </summary>
-        public bool IsBundled {
-            get { return _path.IndexOf(BundleSeperator) >= 0; }
-        }
+        /// <summary> 
+        /// Checks whether the asset was bundled in an AssetBundle or not.
+        /// </summary>
+        public bool IsBundled => _path.IndexOf(BundleSeperator) >= 0;
 
-        /// <summary> Whether the asset has been loaded in or not. </summary>
-        public bool IsLoaded {
-            get { return Asset; }
-        }
+        /// <summary> 
+        /// Whether the asset has been loaded in or not. 
+        /// </summary>
+        public bool IsLoaded => Asset != null;
 
-        /// <summary> The asset handled by the Resource. Will be null if it has not been loaded yet. </summary>
+        /// <summary> 
+        /// The asset handled by the Resource. Will be null if it has not been loaded yet. 
+        /// </summary>
         public T Asset { get; private set; }
 
         ITask<T> LoadTask { get; set; }
 
-        /// <summary> Loads the asset specifed by the Resource into memory. </summary>
+        /// <summary> 
+        /// Loads the asset specifed by the Resource into memory. 
+        /// Note: This is a synchronous function. It will block use of the main
+        /// thread until it's finished loading.
+        /// </summary>
         /// <returns> the loaded asset </returns>
         public T Load() {
             if (IsLoaded)
@@ -92,15 +100,16 @@ namespace HouraiTeahouse {
             return Asset;
         }
 
-        /// <summary> Unloads the asset from memory. Asset will be null after this. </summary>
+        /// <summary> 
+        /// Unloads the asset from memory. Asset will be null after this. 
+        /// </summary>
         public void Unload() {
             Asset = null;
-            //if (LoadTask != null && LoadTask.State == TaskState.Pending)
-            //    LoadTask.Reject(new Exception("Loading of {0} canceled.".With(_path)));
             LoadTask = null;
             // Logs error if trying to unload a GameObject as a whole
             if (!IsLoaded)
                 return;
+            // Prefabs cannot be unloaded, only destroyed.
             if (Asset is GameObject)
                 Object.Destroy(Asset);
             else
@@ -111,7 +120,9 @@ namespace HouraiTeahouse {
                 log.Info("Unloaded \"{0}\" ({1})", _path, typeof(T).Name);
         }
 
-        /// <summary> Loads the asset in an asynchronous manner. If no AsyncManager is currently availble, </summary>
+        /// <summary> 
+        /// Loads the asset in an asynchronous manner. If no AsyncManager is currently availble, 
+        /// </summary>
         /// <param name="priority"> optional parameter, the priority of the resource request </param>
         /// <returns> the ResourceRequest associated with the load. Null if </returns>
         public ITask<T> LoadAsync(int priority = 0) {

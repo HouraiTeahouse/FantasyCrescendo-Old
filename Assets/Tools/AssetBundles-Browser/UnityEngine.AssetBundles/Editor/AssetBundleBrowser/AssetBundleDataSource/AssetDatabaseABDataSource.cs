@@ -66,16 +66,9 @@ namespace UnityEngine.AssetBundles.AssetBundleDataSource
             AssetDatabase.RemoveUnusedAssetBundleNames ();
         }
 
-        public bool CanSpecifyBuildTarget { 
-            get { return true; } 
-        }
-        public bool CanSpecifyBuildOutputDirectory { 
-            get { return true; } 
-        }
-
-        public bool CanSpecifyBuildOptions { 
-            get { return true; } 
-        }
+        public bool CanSpecifyBuildTarget => true; 
+        public bool CanSpecifyBuildOutputDirectory => true; 
+        public bool CanSpecifyBuildOptions => true; 
 
         public bool BuildAssetBundles (ABBuildInfo info) {
             BuildPipeline.BuildAssetBundles(info.outputDirectory, info.options, info.buildTarget);

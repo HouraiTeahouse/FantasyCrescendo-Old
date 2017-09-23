@@ -36,26 +36,20 @@ namespace HouraiTeahouse.HouraiInput {
         public TwoAxisInputControl RightStick { get; protected set; }
         public TwoAxisInputControl DPad { get; protected set; }
 
-        public InputControl this[InputTarget target] {
-            get { return GetControl(target); }
-        }
+        public InputControl this[InputTarget target] => GetControl(target);
 
         Vector2 DPadVector {
             get {
-                float x = DPadLeft.State ? -DPadLeft : DPadRight;
-                float t = DPadUp.State ? DPadUp : -DPadDown;
+                float x = DPad.Left.State ? -DPad.Left : DPad.Right;
+                float t = DPad.Up.State ? DPad.Up : -DPad.Down;
                 float y = HInput.InvertYAxis ? -t : t;
                 return new Vector2(x, y).normalized;
             }
         }
 
-        public virtual bool IsSupportedOnThisPlatform {
-            get { return true; }
-        }
+        public virtual bool IsSupportedOnThisPlatform => true;
 
-        public virtual bool IsKnown {
-            get { return true; }
-        }
+        public virtual bool IsKnown => true;
 
         public bool MenuWasPressed {
             get {
@@ -73,90 +67,6 @@ namespace HouraiTeahouse.HouraiInput {
                 }
                 return InputControl.Null;
             }
-        }
-
-        public InputControl LeftStickX {
-            get { return GetControl(InputTarget.LeftStickX); }
-        }
-
-        public InputControl LeftStickY {
-            get { return GetControl(InputTarget.LeftStickY); }
-        }
-
-        public InputControl RightStickX {
-            get { return GetControl(InputTarget.RightStickX); }
-        }
-
-        public InputControl RightStickY {
-            get { return GetControl(InputTarget.RightStickY); }
-        }
-
-        public InputControl DPadUp {
-            get { return GetControl(InputTarget.DPadUp); }
-        }
-
-        public InputControl DPadDown {
-            get { return GetControl(InputTarget.DPadDown); }
-        }
-
-        public InputControl DPadLeft {
-            get { return GetControl(InputTarget.DPadLeft); }
-        }
-
-        public InputControl DPadRight {
-            get { return GetControl(InputTarget.DPadRight); }
-        }
-
-        public InputControl Action1 {
-            get { return GetControl(InputTarget.Action1); }
-        }
-
-        public InputControl Action2 {
-            get { return GetControl(InputTarget.Action2); }
-        }
-
-        public InputControl Action3 {
-            get { return GetControl(InputTarget.Action3); }
-        }
-
-        public InputControl Action4 {
-            get { return GetControl(InputTarget.Action4); }
-        }
-
-        public InputControl LeftTrigger {
-            get { return GetControl(InputTarget.LeftTrigger); }
-        }
-
-        public InputControl RightTrigger {
-            get { return GetControl(InputTarget.RightTrigger); }
-        }
-
-        public InputControl LeftBumper {
-            get { return GetControl(InputTarget.LeftBumper); }
-        }
-
-        public InputControl RightBumper {
-            get { return GetControl(InputTarget.RightBumper); }
-        }
-
-        public InputControl LeftStickButton {
-            get { return GetControl(InputTarget.LeftStickButton); }
-        }
-
-        public InputControl RightStickButton {
-            get { return GetControl(InputTarget.RightStickButton); }
-        }
-
-        public float DPadX {
-            get { return DPad.X; }
-        }
-
-        public float DPadY {
-            get { return DPad.Y; }
-        }
-
-        public TwoAxisInputControl Direction {
-            get { return DPad.UpdateTick > LeftStick.UpdateTick ? DPad : LeftStick; }
         }
 
         public InputControl GetControl(InputTarget inputTarget) {
@@ -207,8 +117,8 @@ namespace HouraiTeahouse.HouraiInput {
             }
 
             // Update two-axis controls.
-            LeftStick.Update(LeftStickX, LeftStickY, updateTick);
-            RightStick.Update(RightStickX, RightStickY, updateTick);
+            LeftStick.Update(LeftStick.X, LeftStick.Y, updateTick);
+            RightStick.Update(RightStick.X, RightStick.Y, updateTick);
 
             Vector2 dpv = DPadVector;
             DPad.Update(dpv.x, dpv.y, updateTick);

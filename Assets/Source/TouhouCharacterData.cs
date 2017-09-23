@@ -50,24 +50,15 @@ namespace HouraiTeahouse.FantasyCrescendo {
     public class TouhouCharacterData : ScriptableObject {
 
         [SerializeField]
+        [Tooltip("The original game or media the character is from ")]
         TouhouGame _sourceGame = TouhouGame.Other;
 
         [SerializeField]
+        [Tooltip("The source stage the character is from ")]
         TouhouStage _sourceStage = TouhouStage.Other;
 
-        /// <summary> 
-        /// The original game or media the character is from 
-        /// </summary>
-        public TouhouGame SourceGame {
-            get { return _sourceGame; }
-        }
-
-        /// <summary> 
-        /// The source stage the character is from 
-        /// </summary>
-        public TouhouStage SourceStage {
-            get { return _sourceStage; }
-        }
+        public TouhouGame SourceGame => _sourceGame;
+        public TouhouStage SourceStage => _sourceStage;
 
     }
 

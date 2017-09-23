@@ -8,9 +8,7 @@ namespace HouraiTeahouse.SmashBrew.States {
 
         internal readonly HashSet<T> _states;
         public T DefaultState { get; set; }
-        public IEnumerable<T> States {
-            get { return _states.Select(x => x); }
-        }
+        public IEnumerable<T> States => _states.Select(x => x);
 
         public StateControllerBuilder() {
             _states = new HashSet<T>();
