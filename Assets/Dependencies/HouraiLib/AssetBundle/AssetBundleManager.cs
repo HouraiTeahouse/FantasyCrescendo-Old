@@ -183,8 +183,6 @@ namespace HouraiTeahouse.AssetBundles {
 	    static string GetStreamingAssetsPath() {
 	        if (Application.isEditor)
 				return "file://" +  Environment.CurrentDirectory.Replace("\\", "/"); // Use the build output folder directly.
-	        if (Application.isWebPlayer)
-	            return Path.GetDirectoryName(Application.absoluteURL).Replace("\\", "/")+ "/StreamingAssets";
 	        if (Application.isMobilePlatform || Application.isConsolePlatform)
 	            return Application.streamingAssetsPath;
 	        return "file://" +  Application.streamingAssetsPath;
