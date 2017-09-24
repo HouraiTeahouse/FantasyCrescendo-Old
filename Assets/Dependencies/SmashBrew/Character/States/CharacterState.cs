@@ -9,15 +9,13 @@ namespace HouraiTeahouse.SmashBrew.Characters {
 
         public string Name { get; private set; }
         public CharacterStateData Data { get; private set; }
-        public string AnimatorName { get; private set; }
-        public int AnimatorHash { get; private set; }
+        public string AnimatorName => Name.Replace(".", "-");
+        public int AnimatorHash => Animator.StringToHash(AnimatorName);
 
         public CharacterState(string name,
                               CharacterStateData data) {
             Name = name;
             Data = Argument.NotNull(data);
-            AnimatorName = Name.Replace(".", "-");
-            AnimatorHash = Animator.StringToHash(AnimatorName);
         }
 
         public CharacterState AddTransitionTo(CharacterState state, 
@@ -57,22 +55,19 @@ namespace HouraiTeahouse.SmashBrew.Characters {
 
         public static IEnumerable<CharacterState> AddTransitionTo(this IEnumerable<CharacterState> states,
                                                                 State<CharacterStateContext> state) {
-            Func<CharacterStateContext, State<CharacterStateContext>> transition =
-                ctx => ctx.NormalizedAnimationTime >= 1.0f ? state : null;
             foreach (CharacterState characterState in states)
-                characterState.AddTransition(transition);
+                characterState.AddTransition(ctx => ctx.NormalizedAnimationTime >= 1.0f ? state : null);
             return states;
         }
 
         public static void Chain(this IEnumerable<CharacterState> states) {
-            var enumerator = Argument.NotNull(states).GetEnumerator();
             CharacterState last = null;
-            while (enumerator.MoveNext()) {
-                if (enumerator.Current == null)
+            foreach (CharacterState state in states) {
+                if (state == null)
                     continue;
                 if (last != null)
-                    last.AddTransitionTo(enumerator.Current);
-                last = enumerator.Current;
+                    last.AddTransitionTo(state);
+                last = state;
             }
         }
 

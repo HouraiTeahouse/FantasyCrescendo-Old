@@ -7,24 +7,32 @@ using UnityEngine.Networking;
 
 namespace HouraiTeahouse.SmashBrew.Matches {
 
-    /// <summary> A Match Rule defining a Stock-based Match. AllPlayers will have a fixed number of lives to lose, via exiting
+    /// <summary> 
+    /// A Match Rule defining a Stock-based Match. AllPlayers will have a fixed number of lives to lose, via exiting
     /// the blast zone. After which they will no longer respawn, and cannot further participate. The winner is the last player
-    /// standing. </summary>
+    /// standing. 
+    /// </summary>
     [DisallowMultipleComponent]
     [AddComponentMenu("Smash Brew/Matches/Stock Match")]
     public sealed class StockMatch : MatchRule {
 
         Mediator _eventManager;
 
-        /// <summary> The store of how many lijes each player currently has. </summary>
+        /// <summary> 
+        /// The store of how many lives each player currently has. 
+        /// </summary>
         [SerializeField]
         SyncListInt _stocks = new SyncListInt();
 
-        /// <summary> The number of stock the players start with. </summary>
+        /// <summary> 
+        /// The number of stock the players start with. 
+        /// </summary>
         [SerializeField]
         int stock = 5;
 
-        /// <summary> Readonly indexer for how many stocks each player has remaining. </summary>
+        /// <summary> 
+        /// Readonly indexer for how many stocks each player has remaining. 
+        /// </summary>
         /// <param name="player"> the Player in question </param>
         /// <returns> the number of remaining stocks they have </returns>
         public int this[Player player] => _stocks[player.ID];
@@ -50,19 +58,27 @@ namespace HouraiTeahouse.SmashBrew.Matches {
             }
         }
 
+        /// <summary>
+        /// Start is called on the frame when a script is enabled just before
+        /// any of the Update methods is called the first time.
+        /// </summary>
         protected override void Start() {
             base.Start();
             _eventManager.Subscribe<PlayerSpawnEvent>(OnSpawn);
             _eventManager.Subscribe<PlayerDieEvent>(OnPlayerDie);
         }
 
-        /// <summary> Unity Callback. Called on object destruction. </summary>
+        /// <summary>
+        /// This function is called when the MonoBehaviour will be destroyed.
+        /// </summary>
         void OnDestroy() {
             _eventManager.Unsubscribe<PlayerSpawnEvent>(OnSpawn);
             _eventManager.Unsubscribe<PlayerDieEvent>(OnPlayerDie);
         }
 
-        /// <summary> Unity Callback. Called once every frame. </summary>
+        /// <summary>
+        /// Update is called every frame, if the MonoBehaviour is enabled.
+        /// </summary>
         void Update() {
             if (!IsActive)
                 return;
