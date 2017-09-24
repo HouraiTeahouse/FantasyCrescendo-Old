@@ -305,7 +305,7 @@ namespace HouraiTeahouse.AssetBundles {
             // For manifest assetbundle, always download it as we don't have hash for it.
             var task = pathTask.Then(path => {
                 var operation = AssetBundle.LoadFromFileAsync(path);
-                return AsyncManager.AddOperation(operation).Then(request => {
+                return operation.ToTask().Then(request => {
                     var assetBundle = request.assetBundle;
                     if (assetBundle == null)
                         throw new Exception("{0} is not a valid asset bundle.".With(name));
@@ -402,7 +402,7 @@ namespace HouraiTeahouse.AssetBundles {
 		        task = LoadAssetBundleInternal(assetBundleName, true);
             else
                 task = RemapVariantName(assetBundleName).Then(bundleName => LoadAssetBundleAsync(bundleName));
-            var assetTask = task.Then(bundle => AsyncManager.AddOperation(bundle.AssetBundle.LoadAssetAsync<T>(assetName)));
+            var assetTask = task.Then(bundle => bundle.AssetBundle.LoadAssetAsync<T>(assetName).ToTask());
             assetTask.Then(() => log.Info("Loaded {0} from {1}", assetName, assetBundleName));
             return assetTask.Then(request => request.asset as T);
 		}
@@ -429,12 +429,12 @@ namespace HouraiTeahouse.AssetBundles {
                     //TODO: The error needs to differentiate that an asset bundle name doesn't exist from that there right scene does not exist in the asset bundle...
                     return Task.FromError(new Exception("There is no scene with name \"" + levelName + "\" in " + assetBundleName));
                 }
-		        return AsyncManager.AddOperation(SceneManager.LoadSceneAsync(levelPaths[0], loadMode));
+		        return SceneManager.LoadSceneAsync(levelPaths[0], loadMode).ToTask();
 		    }
 #endif
             return RemapVariantName(assetBundleName)
                 .Then(bundleName => LoadAssetBundleAsync(bundleName))
-                .Then(bundle => AsyncManager.AddOperation(SceneManager.LoadSceneAsync(levelName, loadMode)));
+                .Then(bundle => SceneManager.LoadSceneAsync(levelName, loadMode).ToTask());
 		}
 	} 
 }

@@ -154,7 +154,7 @@ namespace HouraiTeahouse {
         ITask<T> LoadFromResources(int priority) {
             var request = Resources.LoadAsync<T>(_path);
             request.priority = priority;
-            return AsyncManager.AddOperation(request).Then(req => req.asset as T);
+            return request.ToTask().Then(req => req.asset as T);
         }
 
     }
