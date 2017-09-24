@@ -47,11 +47,16 @@ namespace HouraiTeahouse {
         /// <exception cref="ArgumentNullException"> <paramref name="callback" /> is null </exception>
         public void Subscribe<T>(Event<T> callback) {
             Argument.NotNull(callback);
-            Type tp = typeof(T);
-            if (_subscribers.ContainsKey(tp))
-                _subscribers[tp] = Delegate.Combine(_subscribers[tp], callback);
+            Subscribe(typeof(T), callback);
+        }
+
+        internal void Subscribe(Type type, Delegate callback) {
+            Assert.IsNotNull(type);
+            Assert.IsNotNull(callback);
+            if (_subscribers.ContainsKey(type))
+                _subscribers[type] = Delegate.Combine(_subscribers[type], callback);
             else
-                _subscribers.Add(tp, callback);
+                _subscribers.Add(type, callback);
         }
 
         /// <summary> Removes a listener from a specfic event type. </summary>
@@ -60,15 +65,18 @@ namespace HouraiTeahouse {
         /// <exception cref="ArgumentNullException"> <paramref name="callback" /> is null </exception>
         public void Unsubscribe<T>(Event<T> callback) {
             Argument.NotNull(callback);
-            Type eventType = typeof(T);
-            if (!_subscribers.ContainsKey(eventType))
+            Unsubscribe(typeof(T), callback);
+        }
+
+        internal void Unsubscribe(Type type, Delegate callback) {
+            if (!_subscribers.ContainsKey(type))
                 return;
-            Delegate d = _subscribers[eventType];
+            Delegate d = _subscribers[type];
             d = Delegate.Remove(d, callback);
             if (d == null)
-                _subscribers.Remove(eventType);
+                _subscribers.Remove(type);
             else
-                _subscribers[eventType] = d;
+                _subscribers[type] = d;
         }
 
         /// <summary> 

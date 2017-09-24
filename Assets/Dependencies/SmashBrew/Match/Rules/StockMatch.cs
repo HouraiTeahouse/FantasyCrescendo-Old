@@ -64,16 +64,9 @@ namespace HouraiTeahouse.SmashBrew.Matches {
         /// </summary>
         protected override void Start() {
             base.Start();
-            _eventManager.Subscribe<PlayerSpawnEvent>(OnSpawn);
-            _eventManager.Subscribe<PlayerDieEvent>(OnPlayerDie);
-        }
-
-        /// <summary>
-        /// This function is called when the MonoBehaviour will be destroyed.
-        /// </summary>
-        void OnDestroy() {
-            _eventManager.Unsubscribe<PlayerSpawnEvent>(OnSpawn);
-            _eventManager.Unsubscribe<PlayerDieEvent>(OnPlayerDie);
+            var context = _eventManager.CreateUnityContext(this);
+            context.Subscribe<PlayerSpawnEvent>(OnSpawn);
+            context.Subscribe<PlayerDieEvent>(OnPlayerDie);
         }
 
         /// <summary>
