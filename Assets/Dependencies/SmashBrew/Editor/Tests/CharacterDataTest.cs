@@ -27,7 +27,7 @@ namespace HouraiTeahouse.SmashBrew {
             foreach (T datum in data) {
                 object result = func(datum);
                 if (result == null)
-                    Log.Error(datum);
+                    Log.Error("{0} is invalid!".With(datum));
                 Assert.NotNull(result);
             }
         }
@@ -37,7 +37,7 @@ namespace HouraiTeahouse.SmashBrew {
             foreach (T datum in data) {
                 foreach (object obj in func(datum)) {
                     if (obj == null)
-                        Log.Error(datum);
+                        Log.Error("{0} is invalid!".With(data));
                     Assert.NotNull(obj);
                 }
             }
@@ -49,13 +49,7 @@ namespace HouraiTeahouse.SmashBrew {
     internal class CharacterDataTest : AbstractDataTest<CharacterData> {
 
         [Test]
-        public void PrefabTest() {
-            // Checks that the Character's prefab is not null
-            Check(d => d.Prefab.Load());
-        }
-
-        [Test]
-        public void PrefabStatusTest() {
+        public void every_character_prefab_has_disabled_statuses() {
             LoadData();
             foreach (CharacterData character in data) {
                 Assert.NotNull(character.Prefab.Load());
@@ -65,13 +59,15 @@ namespace HouraiTeahouse.SmashBrew {
         }
 
         [Test]
-        public void HasCharacterComponentTest() {
-            // Checks that the Character's prefab has a Character script attached
-            Check(d => d.Prefab.Load().GetComponent<Character>());
-        }
+        public void every_character_has_a_prefab() => Check(d => d.Prefab.Load());
+
 
         [Test]
-        public void PalleteCountTest() {
+        public void every_character_prefab_has_character_component() =>
+            Check(d => d.Prefab.Load().GetComponent<Character>());
+
+        [Test]
+        public void every_character_has_equal_pallete_and_portrait_counts() {
             // Checks that the pallete count is the same between MaterialSwap and CharacterData
             LoadData();
             foreach (CharacterData character in data) {
@@ -81,7 +77,7 @@ namespace HouraiTeahouse.SmashBrew {
         }
 
         [Test]
-        public void PortraitTest() {
+        public void every_character_has_valid_portraits() {
             // Checks that all of the portraits for each of the character is not null
             LoadData();
             foreach (CharacterData character in data)
@@ -90,22 +86,13 @@ namespace HouraiTeahouse.SmashBrew {
         }
 
         [Test]
-        public void IconTest() {
-            // Checks that all of the icons for each character is not null
-            Check(d => d.Icon.Load());
-        }
+        public void every_character_has_valid_icons() => Check(d => d.Icon.Load());
 
         [Test]
-        public void HomeStageTest() {
-            // Check that all of the home stages for each character is not null
-            Check(d => d.HomeStage.Load());
-        }
+        public void every_character_has_valid_home_stage() => Check(d => d.HomeStage.Load());
 
         [Test]
-        public void VictoryThemeTest() {
-            // Check that all of the victory theme for each character is not null
-            Check(d => d.VictoryTheme.Load());
-        }
+        public void every_character_has_valid_victory_theme() => Check(d => d.VictoryTheme.Load());
 
     }
 
