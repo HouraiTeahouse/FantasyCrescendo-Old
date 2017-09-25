@@ -6,6 +6,8 @@ using HouraiTeahouse.SmashBrew.Characters;
 using HouraiTeahouse.SmashBrew.Characters.Statuses;
 using NUnit.Framework;
 using UnityEngine;
+using UnityEditor;
+using HouraiTeahouse.Editor;
 
 namespace HouraiTeahouse.SmashBrew {
 
@@ -19,7 +21,7 @@ namespace HouraiTeahouse.SmashBrew {
 
         protected void LoadData() {
             if (data == null)
-                data = Resources.LoadAll<T>(string.Empty).Where(d => d != null && d.IsSelectable && d.IsVisible);
+                data = Assets.LoadAll<T>().Where(d => d != null && d.IsSelectable && d.IsVisible);
         }
 
         protected void Check(AssetFunc func) {
