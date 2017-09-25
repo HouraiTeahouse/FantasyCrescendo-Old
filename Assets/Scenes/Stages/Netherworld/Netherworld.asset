@@ -15,12 +15,16 @@ MonoBehaviour:
   backgroundMusicData:
   - _name: Bloom Nobly, Ink-Black Cherry Blossoms
     _artist: crescentia
+    _originalName: 
+    _originSource: 
     _bgm: bgm/netherworld:Bloom_Nobly_Ink-Black_Cherry_Blossoms
     _baseWeight: 1
     _loopStart: 1013209
     _loopEnd: 12664885
   - _name: Mary the Magician
     _artist: crescentia
+    _originalName: 
+    _originSource: 
     _bgm: bgm/netherworld:Mary_the_Magician
     _baseWeight: 1
     _loopStart: 1247796
@@ -32,5 +36,5 @@ MonoBehaviour:
   _isSelectable: 1
   _isVisible: 1
   _isDebug: 0
-  _previewImage: icons:youmu_icon
+  _previewImage: icons:reimu_icon
   _scene: scenes/stages/netherworld/scene:Netherworld

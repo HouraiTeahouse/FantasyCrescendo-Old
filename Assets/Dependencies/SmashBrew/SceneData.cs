@@ -65,7 +65,6 @@ namespace HouraiTeahouse.SmashBrew {
         [Tooltip("The image shown on menus to represent the scene.")]
         string _previewImage;
 
-        /// <summary> The internal name of the scene. Must be in build settings. </summary>
         [SerializeField]
         [Scene]
         [Tooltip("The internal name of the scene. Must be in build settings.")]
@@ -73,13 +72,19 @@ namespace HouraiTeahouse.SmashBrew {
 
         public uint Id => _id;
 
-        /// <summary> The image shown on menus to represent the scene. </summary>
-        public Resource<Sprite> PreviewImage { get; private set; }
+        /// <summary> 
+        /// The image shown on menus to represent the scene. 
+        /// </summary>
+        public Resource<Sprite> PreviewImage => Resource.Get<Sprite>(_previewImage);
 
-        /// <summary> The icon used on menus to represent the scene. </summary>
-        public Resource<Sprite> Icon { get; private set; }
+        /// <summary> 
+        /// The icon used on menus to represent the scene. 
+        /// </summary>
+        public Resource<Sprite> Icon => Resource.Get<Sprite>(_icon);
 
-        /// <summary> Is the scene described by this SceneData a stage? </summary>
+        /// <summary> 
+        /// Is the scene described by this SceneData a stage? 
+        /// </summary>
         public SceneType Type => _type;
 
         public int LoadPriority => _loadPriority;
@@ -100,14 +105,9 @@ namespace HouraiTeahouse.SmashBrew {
             return task;
         }
 
-        /// <summary> Unity Callback. Called when ScriptableObject is loaded. </summary>
-        protected override void OnEnable() {
-            base.OnEnable();
-            PreviewImage = Resource.Get<Sprite>(_previewImage);
-            Icon = Resource.Get<Sprite>(_icon);
-        }
-
-        /// <summary> Unity callback. Called when ScriptableObject is unloaded. </summary>
+        /// <summary>
+        /// This function is called when the behaviour becomes disabled or inactive.
+        /// </summary>
         protected override void OnDisable() {
             base.OnDisable();
             Unload();

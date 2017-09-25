@@ -15,6 +15,8 @@ MonoBehaviour:
   backgroundMusicData:
   - _name: Centennial Festival
     _artist: Pigu
+    _originalName: 
+    _originSource: 
     _bgm: Audio/BGM/Scarlet Devil Mansion/Centennial Festival
     _baseWeight: 1
     _loopStart: 1250749
@@ -22,9 +24,9 @@ MonoBehaviour:
   _id: 417666332
   _type: 0
   _loadPriority: 0
-  _icon: Icons/marisa_icon
+  _icon: icons:reimu_icon
   _isSelectable: 0
   _isVisible: 0
   _isDebug: 0
-  _previewImage: Icons/marisa_icon
+  _previewImage: icons:reimu_icon
   _scene: 

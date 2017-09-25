@@ -15,7 +15,7 @@ MonoBehaviour:
   _id: 1237922517
   _isSelectable: 1
   _isVisible: 1
-  _homeStage: Stages/Forest of Magic
+  _homeStage: scenes/stages/netherworld/info:Netherworld
   _icon: icons:youmu_icon
   _portraits:
   - characters/youmu/portraits:youmu_portrait_1
@@ -29,6 +29,6 @@ MonoBehaviour:
   _shortName: Youmu
   _fullName: Youmu Konpaku
   _announcerClip: Characters/004_Youmu/Audio/youmu_announcer
-  _victoryTheme: Characters/004_Youmu/Audio/youmu_announcer
+  _victoryTheme: bgm/netherworld:Bloom_Nobly_Ink-Black_Cherry_Blossoms
   _extraPrefabs:
   - characters/youmu/player:Myon

@@ -40,9 +40,9 @@ MonoBehaviour:
   _id: 1061120406
   _type: 2
   _loadPriority: 0
-  _icon: Icons/marisa_icon
+  _icon: icons:reimu_icon
   _isSelectable: 1
   _isVisible: 1
   _isDebug: 0
-  _previewImage: Icons/marisa_icon
+  _previewImage: icons:reimu_icon
   _scene: scenes/menus/main/scene:Main Menu

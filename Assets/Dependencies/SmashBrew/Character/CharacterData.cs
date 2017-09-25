@@ -39,8 +39,6 @@ namespace HouraiTeahouse.SmashBrew {
         [SerializeField, Resource(typeof(Sprite))]
         string[] _portraits;
 
-        Resource<Sprite>[] _portraitResources;
-
         [SerializeField]
         [Tooltip("The center of the crop for smaller cropped views")]
         Vector2 _cropPositon;
@@ -91,30 +89,46 @@ namespace HouraiTeahouse.SmashBrew {
         /// <summary> Gets how many palletes </summary>
         public int PalleteCount => _portraits == null ? 0 : _portraits.Length;
 
-        /// <summary> Gets the resource for the character's icon </summary>
-        public Resource<Sprite> Icon { get; private set; }
+        /// <summary> 
+        /// Gets the resource for the character's icon 
+        /// </summary>
+        public Resource<Sprite> Icon => Resource.Get<Sprite>(_icon);
 
-        /// <summary> Get the resource for the character's home stage </summary>
-        public Resource<SceneData> HomeStage { get; private set; }
+        /// <summaryw> 
+        /// Get the resource for the character's home stage 
+        /// </summary>
+        public Resource<SceneData> HomeStage  => Resource.Get<SceneData>(_homeStage);
 
-        /// <summary> Gets the resource for the character's prefab </summary>
-        public Resource<GameObject> Prefab { get; private set; }
+        /// <summary> 
+        /// Gets the resource for the character's prefab 
+        /// </summary>
+        public Resource<GameObject> Prefab => Resource.Get<GameObject>(_prefab);
 
-        /// <summary> Gets the resource for the character's announcer clip </summary>
-        public Resource<AudioClip> Announcer { get; private set; }
+        /// <summary> 
+        /// Gets the resource for the character's announcer clip 
+        /// </summary>
+        public Resource<AudioClip> Announcer => Resource.Get<AudioClip>(_announcerClip);
 
-        /// <summary> Gets the resource for the character's victory theme clip </summary>
-        public Resource<AudioClip> VictoryTheme { get; private set; }
+        /// <summary> 
+        /// Gets the resource for the character's victory theme clip 
+        /// </summary>
+        public Resource<AudioClip> VictoryTheme => Resource.Get<AudioClip>(_victoryTheme);
 
         public ReadOnlyCollection<Resource<GameObject>> ExtraPrefabs { get; private set; }
 
-        /// <summary> The color used in the character's select image </summary>
+        /// <summary> 
+        /// The color used in the character's select image 
+        /// </summary>
         public Color BackgroundColor => _backgroundColor;
 
-        /// <summary> Is the Character selectable from the character select screen? </summary>
+        /// <summary> 
+        /// Is the Character selectable from the character select screen? 
+        /// </summary>
         public bool IsSelectable => _isSelectable && _isVisible;
 
-        /// <summary> Is the Character viewable in the character select screen? </summary>
+        /// <summary> 
+        /// Is the Character viewable in the character select screen? 
+        /// </summary>
         public bool IsVisible => _isVisible;
 
         public uint Id => _id;
@@ -124,8 +138,8 @@ namespace HouraiTeahouse.SmashBrew {
             Prefab.Unload();
             HomeStage.Unload();
             VictoryTheme.Unload();
-            foreach (Resource<Sprite> portrait in _portraitResources)
-                portrait.Unload();
+            for (var i = 0; i < _portraits.Length; i++)
+                GetPortrait(i).Unload();
         }
 
         /// <summary> Gets the crop rect relative to a texture </summary>
@@ -146,38 +160,30 @@ namespace HouraiTeahouse.SmashBrew {
         /// <returns> </returns>
         public Resource<Sprite> GetPortrait(int pallete) {
             Argument.Check("pallete", Check.Range(pallete, PalleteCount));
-            if (_portraitResources == null || _portraits.Length != _portraitResources.Length)
-                RegeneratePortraits();
-            return _portraitResources[pallete];
+            return Resource.Get<Sprite>(_portraits[pallete]);
         }
 
-        /// <summary> Unity Callback. Called when the asset instance is loaded into memory. </summary>
+        /// <summary>
+        /// This function is called when the object becomes enabled and active.
+        /// </summary>
         void OnEnable() {
             if (_portraits == null)
                 return;
-            Icon = Resource.Get<Sprite>(_icon);
-            Prefab = Resource.Get<GameObject>(_prefab);
-            HomeStage = Resource.Get<SceneData>(_homeStage);
-            Announcer = Resource.Get<AudioClip>(_announcerClip);
-            VictoryTheme = Resource.Get<AudioClip>(_victoryTheme);
             if (_extraPrefabs == null)
                 _extraPrefabs = new string[0];
             ExtraPrefabs = new ReadOnlyCollection<Resource<GameObject>>(_extraPrefabs.Select(Resource.Get<GameObject>).ToArray());
-            RegeneratePortraits();
         }
 
-        /// <summary> Unity callback. Called when the asset instance is unloaded from memory. </summary>
-        void OnDisable() {
-            Unload();
-        }
+        /// <summary>
+        /// This function is called when the behaviour becomes disabled or inactive.
+        /// </summary>
+        void OnDisable() => Unload();
 
-        void Reset() {
-            RegenerateID();
-        }
-
-        void RegeneratePortraits() { 
-            _portraitResources = _portraits.Select(Resource.Get<Sprite>).ToArray(); 
-        }
+        /// <summary>
+        /// Reset is called when the user hits the Reset button in the Inspector's
+        /// context menu or when adding the component the first time.
+        /// </summary>
+        void Reset() => RegenerateID();
 
         [ContextMenu("Regenerate ID")]
         void RegenerateID() { 

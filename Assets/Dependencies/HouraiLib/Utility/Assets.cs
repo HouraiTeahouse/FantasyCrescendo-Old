@@ -1,9 +1,11 @@
 #if UNITY_EDITOR
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace HouraiTeahouse.Editor {
 
@@ -87,12 +89,15 @@ namespace HouraiTeahouse.Editor {
             return path.IndexOf(Resource.BundleSeperator) >= 0; 
         }
 
-        public static Object LoadBundledAsset(string assetPath) {
+        public static T LoadBundledAsset<T>(string assetPath) where T : Object =>
+            LoadBundledAsset(assetPath, typeof(T)) as T;
+
+        public static Object LoadBundledAsset(string assetPath, Type type) {
             if (!IsBundlePath(assetPath))
                 return null;
             string[] splits = assetPath.Split(Resource.BundleSeperator);
             string[] path = AssetDatabase.GetAssetPathsFromAssetBundleAndAssetName(splits[0], splits[1]);
-            return AssetDatabase.LoadMainAssetAtPath(path.FirstOrDefault());
+            return AssetDatabase.LoadAssetAtPath(path.FirstOrDefault(), type);
         }
 
         public static string GetResourcePath(Object asset) {

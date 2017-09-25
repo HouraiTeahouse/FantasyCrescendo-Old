@@ -15,24 +15,32 @@ MonoBehaviour:
   backgroundMusicData:
   - _name: Love Colored Magic
     _artist: Squiggle Glitz
+    _originalName: 
+    _originSource: 
     _bgm: bgm/forest:Love Colored Magic
     _baseWeight: 1
     _loopStart: 2304
     _loopEnd: 4460928
   - _name: Magus Night
     _artist: Pigu
+    _originalName: 
+    _originSource: 
     _bgm: bgm/forest:Magus Night
     _baseWeight: 1
     _loopStart: 276480
     _loopEnd: 6912007
   - _name: Ghostly Eyes
     _artist: Flurrybolt
+    _originalName: 
+    _originSource: 
     _bgm: bgm/forest:Ghostly Eyes
     _baseWeight: 1
     _loopStart: 0
     _loopEnd: 13011176
   - _name: Doll Judgement
     _artist: crescentia
+    _originalName: 
+    _originSource: 
     _bgm: bgm/forest:Doll Judgement
     _baseWeight: 1
     _loopStart: 0
@@ -40,9 +48,9 @@ MonoBehaviour:
   _id: 434952689
   _type: 1
   _loadPriority: 0
-  _icon: Icons/marisa_icon
+  _icon: icons:reimu_icon
   _isSelectable: 1
   _isVisible: 1
   _isDebug: 0
-  _previewImage: Icons/marisa_icon
+  _previewImage: icons:reimu_icon
   _scene: scenes/stages/forest/scene:Forest of Magic Stage

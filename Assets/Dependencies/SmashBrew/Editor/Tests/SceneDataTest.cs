@@ -12,11 +12,11 @@ namespace HouraiTeahouse.SmashBrew {
     internal class SceneDataTest : AbstractDataTest<SceneData> {
 
         [Test, TestCaseSource("TestData")]
-        public void every_scene_has_valid_preview_image(SceneData scene) => 
+        public void has_valid_preview_image(SceneData scene) => 
             Assert.NotNull(scene.PreviewImage.Load());
 
         [Test, TestCaseSource("TestData")]
-        public void every_scene_has_valid_icon(SceneData scene) =>  
+        public void has_valid_icon(SceneData scene) =>  
             Assert.NotNull(scene.PreviewImage.Load());
 
     }

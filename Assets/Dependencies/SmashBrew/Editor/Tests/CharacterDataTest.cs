@@ -63,43 +63,44 @@ namespace HouraiTeahouse.SmashBrew {
     internal class CharacterDataTest : AbstractDataTest<CharacterData> {
 
         [Test, TestCaseSource("TestData")]
-        public void every_character_prefab_has_disabled_statuses(CharacterData character) {
+        public void has_disabled_statuses(CharacterData character) {
             Assert.NotNull(character.Prefab.Load());
             foreach (Status status in character.Prefab.Load().GetComponentsInChildren<Status>())
                 Assert.False(status.enabled);
         }
 
         [Test, TestCaseSource("TestData")]
-        public void every_character_has_a_prefab(CharacterData character) => 
+        public void has_a_prefab(CharacterData character) => 
             Assert.NotNull(character.Prefab.Load());
 
         [Test, TestCaseSource("TestData")]
-        public void every_character_prefab_has_character_component(CharacterData character) =>
+        public void has_character_component(CharacterData character) =>
             Assert.NotNull(character.Prefab.Load().GetComponent<Character>());
 
         [Test, TestCaseSource("TestData")]
-        public void every_character_has_equal_pallete_and_portrait_counts(CharacterData character) {
+        public void has_equal_pallete_and_portrait_counts(CharacterData character) {
             var swap = character.Prefab.Load().GetComponent<ColorState>();
             Assert.NotNull(swap);
             Assert.AreEqual(swap.Count, character.PalleteCount);
         }
 
         [Test, TestCaseSource("TestData")]
-        public void every_character_has_valid_portraits(CharacterData character) {
-            for (var i = 0; i < character.PalleteCount; i++)
+        public void has_valid_portraits(CharacterData character) {
+            for (var i = 0; i < character.PalleteCount; i++) {
                 Assert.NotNull(character.GetPortrait(i).Load());
+            }
         }
 
         [Test, TestCaseSource("TestData")]
-        public void every_character_has_valid_icons(CharacterData character) => 
+        public void has_valid_icons(CharacterData character) => 
             Assert.NotNull(character.Icon.Load());
 
         [Test, TestCaseSource("TestData")]
-        public void every_character_has_valid_home_stage(CharacterData character) => 
+        public void has_valid_home_stage(CharacterData character) => 
             Assert.NotNull(character.HomeStage.Load());
 
         [Test, TestCaseSource("TestData")]
-        public void every_character_has_valid_victory_theme(CharacterData character) => 
+        public void has_valid_victory_theme(CharacterData character) => 
             Assert.NotNull(character.VictoryTheme.Load());
 
     }

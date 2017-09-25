@@ -81,7 +81,7 @@ namespace HouraiTeahouse {
             if (IsBundled) {
 #if UNITY_EDITOR
                 if (!EditorApplication.isPlayingOrWillChangePlaymode) {
-                    loadedObject = Assets.LoadBundledAsset(_path) as T;
+                    loadedObject = Assets.LoadBundledAsset<T>(_path);
                 }
                 else
 #endif

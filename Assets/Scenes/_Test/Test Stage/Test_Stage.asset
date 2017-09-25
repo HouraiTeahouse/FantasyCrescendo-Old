@@ -16,9 +16,9 @@ MonoBehaviour:
   _id: 1776695040
   _type: 1
   _loadPriority: 100
-  _icon: 
+  _icon: icons:reimu_icon
   _isSelectable: 1
   _isVisible: 1
   _isDebug: 1
-  _previewImage: 
+  _previewImage: icons:reimu_icon
   _scene: scenes/stages/test/scene:Test Stage
