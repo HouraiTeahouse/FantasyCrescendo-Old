@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine.Assertions;
 
 namespace HouraiTeahouse {
@@ -11,6 +12,7 @@ namespace HouraiTeahouse {
     public class Mediator {
 
         public delegate void Event<in T>(T arg);
+        public delegate ITask AsyncEvent<in T>(T arg);
 
         static readonly ILog log = Log.GetLogger("Events");
 
@@ -18,82 +20,126 @@ namespace HouraiTeahouse {
         public static readonly Mediator Global = new Mediator();
 
         // Maps types of events to a set of handlers
-        readonly Dictionary<Type, Delegate> _subscribers;
+        readonly Dictionary<Type, List<Delegate>> _subscribers;
         readonly Dictionary<Type, Type[]> _typeCache;
 
         /// <summary> 
         /// Initializes an instance of Mediator 
         /// </summary>
         public Mediator() {
-            _subscribers = new Dictionary<Type, Delegate>();
+            _subscribers = new Dictionary<Type, List<Delegate>>();
             _typeCache = new Dictionary<Type, Type[]>();
         }
 
         // Internal only, for testing
-        internal Mediator(Dictionary<Type, Delegate> subscribers) : this() {
+        internal Mediator(Dictionary<Type, List<Delegate>> subscribers) : this() {
             Argument.NotNull(subscribers);
-            _subscribers = new Dictionary<Type, Delegate>(subscribers);
+            _subscribers = new Dictionary<Type, List<Delegate>>(subscribers);
         }
 
         /// <summary> 
         /// Adds a listener/handler for a specific event type. 
         /// </summary>
         /// <remarks> 
-        /// The event dispatch system does not work with polymorphism and inhertance. If A is a subclass of B,
-        /// it cannot recieve events of type B, only events of type A. 
+        /// Note: subscription is always O(n) where n is the number of subscribers to
+        /// the given type.
         /// </remarks>
         /// <typeparam name="T"> the type of event to listen for </typeparam>
         /// <param name="callback"> the handler to call when an event of type <typeparamref name="T" /> is published. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="callback" /> is null </exception>
-        public void Subscribe<T>(Event<T> callback) {
-            Argument.NotNull(callback);
-            Subscribe(typeof(T), callback);
-        }
-
+        public void Subscribe<T>(Event<T> callback) => Subscribe(typeof(T), Argument.NotNull(callback));
+        public void Subscribe<T>(AsyncEvent<T> callback) => Subscribe(typeof(T), Argument.NotNull(callback));
         internal void Subscribe(Type type, Delegate callback) {
             Assert.IsNotNull(type);
             Assert.IsNotNull(callback);
-            if (_subscribers.ContainsKey(type))
-                _subscribers[type] = Delegate.Combine(_subscribers[type], callback);
-            else
-                _subscribers.Add(type, callback);
+            List<Delegate> typeSubscribers;
+            if (!_subscribers.TryGetValue(type, out typeSubscribers)) {
+                _subscribers.Add(type, new List<Delegate> { callback });
+            } else {
+            }
+                if (!typeSubscribers.Contains(callback))
+                    typeSubscribers.Add(callback);
         }
 
-        /// <summary> Removes a listener from a specfic event type. </summary>
+        /// <summary> 
+        /// Removes a listener from a specfic event type. 
+        /// </summary>
+        /// <remarks> 
+        /// Note: unsubscription is always O(n) where n is the number of subscribers to
+        /// the given type.
+        /// </remarks>
         /// <typeparam name="T"> the type of event to remove the handler from </typeparam>
         /// <param name="callback"> the handler to remove </param>
         /// <exception cref="ArgumentNullException"> <paramref name="callback" /> is null </exception>
-        public void Unsubscribe<T>(Event<T> callback) {
-            Argument.NotNull(callback);
-            Unsubscribe(typeof(T), callback);
-        }
-
+        public void Unsubscribe<T>(Event<T> callback) => Unsubscribe(typeof(T), Argument.NotNull(callback));
+        public void Unsubscribe<T>(AsyncEvent<T> callback) => Unsubscribe(typeof(T), Argument.NotNull(callback));
         internal void Unsubscribe(Type type, Delegate callback) {
-            if (!_subscribers.ContainsKey(type))
+            List<Delegate> typeSubscribers;
+            if (!_subscribers.TryGetValue(type, out typeSubscribers))
                 return;
-            Delegate d = _subscribers[type];
-            d = Delegate.Remove(d, callback);
-            if (d == null)
+            typeSubscribers.Remove(callback);
+            if (typeSubscribers.Count <= 0)
                 _subscribers.Remove(type);
-            else
-                _subscribers[type] = d;
         }
 
         /// <summary> 
         /// Publishes a new event. 
         /// </summary>
         /// <remarks> 
-        /// Execution is immediate. All handler code will be executed before returning from this method. There is no
-        /// specification saying that the event object may not be mutated. The object may be altered after execution. 
+        /// Execution is immediate. All handler code will be executed before returning from this method. 
+        /// The event object may be mutated. The object may be altered after execution. 
+        /// 
+        /// Any asynchronous callbacks will not be awaited. To await the completion of all 
+        /// callbacks, use PublishAsync instead.
         /// </remarks>
         /// <param name="evnt"> the event object </param>
         /// <exception cref="ArgumentNullException"> <paramref name="evnt" /> is null </exception>
         public void Publish(object evnt) {
             Type eventType = Argument.NotNull(evnt).GetType();
             log.Info("Published: " + eventType.Name);
-            foreach (Type type in GetEventTypes(eventType))
-                if (_subscribers.ContainsKey(type))
-                    _subscribers[type].DynamicInvoke(evnt);
+            foreach (Type type in GetEventTypes(eventType)) {
+                List<Delegate> typeSubscribers;
+                if (!_subscribers.TryGetValue(type, out typeSubscribers))
+                    continue;
+                foreach (var subscriber in typeSubscribers)
+                    subscriber.DynamicInvoke(evnt);
+            }
+        }
+
+        /// <summary> 
+        /// Publishes a new event. 
+        /// </summary>
+        /// <remarks> 
+        /// Execution is immediate. All handler code will be executed before returning from this method. 
+        /// The event object may be mutated. The object may be altered after execution. 
+        /// 
+        /// All synchronous callbacks will be waited on to complete.
+        /// Returned task will resolve only when all event handlers are resulved.
+        /// To avoid awaiting asynchronous callbacks, use Publish instead.
+        /// </remarks>
+        /// <param name="evnt"> the event object </param>
+        /// <returns>a ITask that resolves only when all event handlers are finished executing</returns>
+        /// <exception cref="ArgumentNullException"> <paramref name="evnt" /> is null </exception>
+        public ITask PublishAsync(object evnt) {
+            Type eventType = Argument.NotNull(evnt).GetType();
+            log.Info("Published: " + eventType.Name);
+            List<ITask> subtasks = null;
+            foreach (Type type in GetEventTypes(eventType)) {
+                List<Delegate> typeSubscribers;
+                if (!_subscribers.TryGetValue(type, out typeSubscribers))
+                    continue;
+                foreach (var subscriber in typeSubscribers) {
+                    var task = subscriber.DynamicInvoke(evnt)  as ITask;
+                    if (task == null)
+                        continue;
+                    if (subtasks == null)
+                        subtasks = new List<ITask>();
+                    subtasks.Add(task);
+                }
+            }
+            if (subtasks == null)
+                return Task.Resolved;
+            return Task.All(subtasks);
         }
 
         /// <summary> 
@@ -101,16 +147,19 @@ namespace HouraiTeahouse {
         /// </summary>
         /// <typeparam name="T"> the type of event to check for. </typeparam>
         /// <returns> how many subscribers said event has. </returns>
-        public int GetCount<T>() { 
-            return GetCount(typeof(T)); 
-        }
+        public int GetCount<T>() => GetCount(typeof(T)); 
 
-        /// <summary> Gets the count of subscribers to certain type of event. </summary>
+        /// <summary> 
+        /// Gets the count of subscribers to certain type of event. 
+        /// </summary>
         /// <param name="type"> the type of event to check for. </param>
         /// <returns> how many subscribers said event has </returns>
         public int GetCount(Type type) {
             Argument.NotNull(type);
-            return _subscribers.ContainsKey(type) ? _subscribers[type].GetInvocationList().Length : 0;
+            List<Delegate> typeSubscribers;
+            if (_subscribers.TryGetValue(type, out typeSubscribers))
+                return typeSubscribers.Sum(callback => callback.GetInvocationList().Length);
+            return 0;
         }
 
         /// <summary> 
@@ -118,9 +167,7 @@ namespace HouraiTeahouse {
         /// </summary>
         /// <typeparam name="T"> the type of event to remove </typeparam>
         /// <returns> whether it was removed or not </returns>
-        public bool Reset<T>() { 
-            return Reset(typeof(T)); 
-        }
+        public bool Reset<T>() => Reset(typeof(T)); 
 
         /// <summary> 
         /// Removes all subscribers from a single event.
@@ -128,9 +175,7 @@ namespace HouraiTeahouse {
         /// <param name="type"> the type of event to remove </param>
         /// <returns> whether it was removed or not </returns>
         /// <exception cref="ArgumentNullException"> <paramref name="type" /> is null </exception>
-        public bool Reset(Type type) { 
-            return _subscribers.Remove(Argument.NotNull(type)); 
-        }
+        public bool Reset(Type type) => _subscribers.Remove(Argument.NotNull(type)); 
 
         /// <summary> 
         /// Removes all subscribers from all events. 

@@ -15,20 +15,28 @@ namespace HouraiTeahouse {
             _subscriptions = new Dictionary<Type, List<Delegate>>();
         }
 
-        public virtual void Subscribe<T>(Mediator.Event<T> callback) {
+        public virtual void Subscribe<T>(Mediator.Event<T> callback) 
+            =>  SubscribeImpl(typeof(T), callback);
+
+        public virtual void Subscribe<T>(Mediator.AsyncEvent<T> callback) 
+            =>  SubscribeImpl(typeof(T), callback);
+
+        protected void SubscribeImpl(Type type, Delegate callback) {
             List<Delegate> typeSubs;
-            if (!_subscriptions.TryGetValue(typeof(T), out typeSubs)) {
+            if (!_subscriptions.TryGetValue(type, out typeSubs)) {
                 typeSubs = new List<Delegate>();
-                _subscriptions.Add(typeof(T), typeSubs);
+                _subscriptions.Add(type, typeSubs);
             }
             typeSubs.Add(callback);
-            Mediator.Subscribe<T>(callback);
+            Mediator.Subscribe(type, callback);
         }
 
         public virtual void Dispose() {
-            foreach(var kv in _subscriptions)
-                foreach (var sub in kv.Value)
+            foreach(var kv in _subscriptions) {
+                foreach (var sub in kv.Value) {
                     Mediator.Unsubscribe(kv.Key, sub);
+                }
+            }
         }
 
     }
@@ -51,6 +59,18 @@ namespace HouraiTeahouse {
                     callback?.Invoke(args);
                 else
                     Dispose();
+            };
+            base.Subscribe(checkedCallback);
+        }
+
+        public override void Subscribe<T>(Mediator.AsyncEvent<T> callback) {
+            Mediator.AsyncEvent<T> checkedCallback = (args) => {
+                if (!isDisposed && obj != null) {
+                    return callback?.Invoke(args);
+                } else if (obj == null) {
+                    Dispose();
+                } 
+                return Task.Resolved;
             };
             base.Subscribe(checkedCallback);
         }
