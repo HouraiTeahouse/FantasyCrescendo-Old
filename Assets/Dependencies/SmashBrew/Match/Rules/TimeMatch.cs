@@ -9,11 +9,6 @@ namespace HouraiTeahouse.SmashBrew.Matches {
     [AddComponentMenu("Smash Brew/Matches/Time Match")]
     public sealed class TimeMatch : MatchRule {
 
-        Mediator _eventManager;
-
-        [SerializeField]
-        float _time = 180f;
-
         [SyncVar, SerializeField, ReadOnly]
         float _currentTime;
 
@@ -26,29 +21,16 @@ namespace HouraiTeahouse.SmashBrew.Matches {
             }
         }
 
-        /// <summary> Gets the winner of the Match. Null if the rule does not declare one. </summary>
-        /// <remarks> TimeMatch doesn't determine winners, so this will always be null. </remarks>
-        /// <returns> the winner of the match. Always null. </returns>
-        public override Player GetWinner() { return null; }
+        protected override bool CheckActive(MatchConfig config) => config.Time > 0;
 
-        /// <summary> Unity Callback. Called on object instantiation. </summary>
-        protected override void Start() {
-            base.Start();
-            _eventManager = Mediator.Global;
-            _eventManager.Subscribe<MatchStartEvent>(OnMatchStart);
+        protected override void OnInitialize(MatchConfig config)  {
+            CurrentTime = config.Time;
         }
 
-        /// <summary> Events callback. Called when the Match starts and ends. </summary>
-        /// <param name="startEventArgs"> the event parameters </param>
-        void OnMatchStart(MatchStartEvent startEventArgs) { CurrentTime = _time; }
-
-        /// <summary> Unity Callback. Called once every frame. </summary>
-        void Update() {
-            if (!IsActive)
-                return;
+        internal override void OnMatchTick() {
             CurrentTime -= Time.unscaledDeltaTime;
             if (CurrentTime <= 0)
-                Match.FinishMatch(false);
+                Match.Finish(MatchResult.Tie, null);
         }
 
     }

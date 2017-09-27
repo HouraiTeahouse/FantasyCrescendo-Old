@@ -1,4 +1,5 @@
 ﻿using HouraiTeahouse.HouraiInput;
+using HouraiTeahouse.SmashBrew.Matches;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -54,7 +55,7 @@ namespace HouraiTeahouse.SmashBrew.Stage {
             enabled = SmashTimeManager.Paused;
             if (enabled) {
                 var player = SmashTimeManager.PausedPlayer;
-                player = PlayerManager.Instance.MatchPlayers.Get(player.ID);
+                player = Match.Current.Players.Get(player.ID);
                 if (player != null && player.PlayerObject != null) {
                     transform.position = player.PlayerObject.transform.position + _startOffset;
                     transform.localRotation = _defaultRotation;

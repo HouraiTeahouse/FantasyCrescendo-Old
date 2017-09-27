@@ -27,18 +27,18 @@ namespace HouraiTeahouse.SmashBrew.Stage {
             // Filter only for player characters
             var character = other.GetComponentInParent<Character>();
             var networkIdentity = other.GetComponent<NetworkIdentity>();
-            if (!isServer || character == null || networkIdentity == null)
-                return;
-            Player player = Player.Get(other);
-            if (player == null)
+            if (!isServer || character == null || character.Player != null || networkIdentity == null)
                 return;
 
             Vector3 position = other.transform.position;
             if (_col.ClosestPointOnBounds(position) == position)
                 return;
             
-            player.PlayerObject.gameObject.SetActive(false);
-            _eventManager.Publish(new PlayerDieEvent { Player = player, Revived = false });
+            character.gameObject.SetActive(false);
+            _eventManager.Publish(new PlayerDieEvent { 
+                Player = character.Player, 
+                Revived = false 
+            });
         }
 
     }

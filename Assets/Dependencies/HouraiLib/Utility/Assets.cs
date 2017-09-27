@@ -32,8 +32,10 @@ namespace HouraiTeahouse.Editor {
         }
 
         public static bool IsAsset(this Object obj) {
-            return AssetDatabase.IsMainAsset(obj) || AssetDatabase.IsSubAsset(obj) || AssetDatabase.IsForeignAsset(obj)
-                || AssetDatabase.IsNativeAsset(obj);
+            return AssetDatabase.IsMainAsset(obj) || 
+                AssetDatabase.IsSubAsset(obj) || 
+                AssetDatabase.IsForeignAsset(obj) || 
+                AssetDatabase.IsNativeAsset(obj);
         }
 
         public static void CreateAsset(string folder, Object obj, string suffix = null) {
@@ -85,9 +87,7 @@ namespace HouraiTeahouse.Editor {
             return !string.IsNullOrEmpty(AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(asset)).assetBundleName);
         }
 
-        public static bool IsBundlePath(string path) { 
-            return path.IndexOf(Resource.BundleSeperator) >= 0; 
-        }
+        public static bool IsBundlePath(string path) => path.IndexOf(Resource.BundleSeperator) >= 0; 
 
         public static T LoadBundledAsset<T>(string assetPath) where T : Object =>
             LoadBundledAsset(assetPath, typeof(T)) as T;

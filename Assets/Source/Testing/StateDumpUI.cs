@@ -1,10 +1,11 @@
-﻿using System.Collections;
+﻿using HouraiTeahouse.SmashBrew;
+using HouraiTeahouse.SmashBrew.Characters;
+using HouraiTeahouse.SmashBrew.Matches;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Text;
-using HouraiTeahouse.SmashBrew;
-using HouraiTeahouse.SmashBrew.Characters;
 
 namespace HouraiTeahouse.FantasyCrescendo {
 
@@ -30,13 +31,13 @@ namespace HouraiTeahouse.FantasyCrescendo {
         void Update() {
             if (_text == null)
                 return;
-            var manager = PlayerManager.Instance;
-            if (manager == null) {
+            var match = Match.Current;
+            if (match == null) {
                 _text.text = string.Empty;
                 return;
             }
             var builder = new StringBuilder();
-            foreach(var player in manager.MatchPlayers) {
+            foreach(var player in match.Players) {
                 if (player.PlayerObject != null) {
                     var character = player.PlayerObject.GetComponentInChildren<Character>();
                     if (character != null) {

@@ -53,12 +53,11 @@ namespace HouraiTeahouse {
             Assert.IsNotNull(type);
             Assert.IsNotNull(callback);
             List<Delegate> typeSubscribers;
-            if (!_subscribers.TryGetValue(type, out typeSubscribers)) {
-                _subscribers.Add(type, new List<Delegate> { callback });
+            if (_subscribers.TryGetValue(type, out typeSubscribers)) {
+                typeSubscribers.Add(callback);
             } else {
+                _subscribers.Add(type, new List<Delegate> { callback });
             }
-                if (!typeSubscribers.Contains(callback))
-                    typeSubscribers.Add(callback);
         }
 
         /// <summary> 
@@ -94,15 +93,22 @@ namespace HouraiTeahouse {
         /// </remarks>
         /// <param name="evnt"> the event object </param>
         /// <exception cref="ArgumentNullException"> <paramref name="evnt" /> is null </exception>
-        public void Publish(object evnt) {
+        public void Publish<T>(T evnt) {
             Type eventType = Argument.NotNull(evnt).GetType();
             log.Info("Published: " + eventType.Name);
             foreach (Type type in GetEventTypes(eventType)) {
                 List<Delegate> typeSubscribers;
                 if (!_subscribers.TryGetValue(type, out typeSubscribers))
                     continue;
-                foreach (var subscriber in typeSubscribers)
-                    subscriber.DynamicInvoke(evnt);
+                foreach (var subscriber in typeSubscribers.ToArray()) {
+                    var sync = subscriber as Event<T>;
+                    if (sync != null)
+                        sync.Invoke(evnt);
+                    var async = subscriber as AsyncEvent<T>;
+                    if (async != null)
+                        async.Invoke(evnt);
+                    Assert.IsTrue(sync != null || async != null);
+                }
             }
         }
 
@@ -120,7 +126,7 @@ namespace HouraiTeahouse {
         /// <param name="evnt"> the event object </param>
         /// <returns>a ITask that resolves only when all event handlers are finished executing</returns>
         /// <exception cref="ArgumentNullException"> <paramref name="evnt" /> is null </exception>
-        public ITask PublishAsync(object evnt) {
+        public ITask PublishAsync<T>(T evnt) {
             Type eventType = Argument.NotNull(evnt).GetType();
             log.Info("Published: " + eventType.Name);
             List<ITask> subtasks = null;
@@ -128,13 +134,17 @@ namespace HouraiTeahouse {
                 List<Delegate> typeSubscribers;
                 if (!_subscribers.TryGetValue(type, out typeSubscribers))
                     continue;
-                foreach (var subscriber in typeSubscribers) {
-                    var task = subscriber.DynamicInvoke(evnt)  as ITask;
-                    if (task == null)
-                        continue;
-                    if (subtasks == null)
-                        subtasks = new List<ITask>();
-                    subtasks.Add(task);
+                foreach (var subscriber in typeSubscribers.ToArray()) {
+                    var sync = subscriber as Event<T>;
+                    if (sync != null)
+                        sync.Invoke(evnt);
+                    var async = subscriber as AsyncEvent<T>;
+                    if (async != null) {
+                        if (subtasks == null)
+                            subtasks = new List<ITask>();
+                        subtasks.Add(async.Invoke(evnt));
+                    }
+                    Assert.IsTrue(sync != null || async != null);
                 }
             }
             if (subtasks == null)

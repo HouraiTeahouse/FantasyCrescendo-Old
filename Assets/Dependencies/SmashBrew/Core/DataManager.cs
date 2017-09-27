@@ -135,7 +135,7 @@ namespace HouraiTeahouse.SmashBrew {
             var networkManager = SmashNetworkManager.Instance;
             if (networkManager == null)
                 return;
-            networkManager.ClientStarted += client => {
+            Mediator.Global.CreateUnityContext(this).Subscribe<NetworkClientStarted>(args => {
                 return LoadTask.Then(() => {
                     return Task.All(Characters.SelectMany(character => GetPrefabs(character))
                         .Distinct()
@@ -147,7 +147,7 @@ namespace HouraiTeahouse.SmashBrew {
                             Log.Info("Registered Network Prefab: {0} ({1})", pref.Value.name, pref.Key);
                     });
                 });
-            };
+            });
         }
         
         static IEnumerable<Resource<GameObject>> GetPrefabs(CharacterData character) {

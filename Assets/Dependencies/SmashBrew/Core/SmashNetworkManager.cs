@@ -17,94 +17,129 @@ namespace HouraiTeahouse.SmashBrew {
         public const short UpdatePlayer = MsgType.Highest + 1;
         public const short PlayerInput = MsgType.Highest + 1;
     }
+
+    public class NetworkClientConnected {
+        public NetworkConnection Connection;
+    }
+
+    public class NetworkClientDisconnected {
+        public NetworkConnection Connection;
+    }
+
+    public class NetworkClientStarted {
+        public NetworkClient Client;
+    }
+
+    public class NetworkClientStopped {
+    }
+
+    public class NetworkServerAddedPlayer {
+        public NetworkConnection Connection;
+        public short PlayerID;
+        public PlayerSelection Selection;
+    }
+
+    public class NetworkServerRemovedPlayer {
+        public NetworkConnection Connection;
+        public PlayerController PlayerController;
+    }
+
+    public class NetworkServerStarted {
+    }
+
+    public class NetworkServerReady {
+        public NetworkConnection Connection;
+    }
+
+    public class NetworkServerDisconnected {
+        public NetworkConnection Connection;
+    }
     
     [RequireComponent(typeof(PlayerManager))]
     public class SmashNetworkManager : NetworkManager {
 
         public static SmashNetworkManager Instance { get; private set; }
 
+        public Mediator Mediator { get; private set; }
+
         ITask _clientStartedTask;
-        List<Func<NetworkClient, ITask>> _clientStartedCallbacks;
-
-        public event Func<NetworkClient, ITask> ClientStarted {
-            add { _clientStartedCallbacks.Add(value); }
-            remove { _clientStartedCallbacks.Remove(value); }
-        }
-
-        public event Action<NetworkConnection> ClientConnected;
-        public event Action<NetworkConnection> ClientDisconnected;
-        public event Action ClientStopped;
-
-        public event Action<NetworkConnection, short, PlayerSelection> ServerAddedPlayer;
-        public event Action<NetworkConnection, PlayerController> ServerRemovedPlayer;
-        public event Action ServerStarted;
-        public event Action<NetworkConnection> ServerReady;
-        public event Action<NetworkConnection> ServerDisconnected;
 
         /// <summary>
         /// Awake is called when the script instance is being loaded.
         /// </summary>
         void Awake() {
             Instance = this;
-            _clientStartedCallbacks = new List<Func<NetworkClient, ITask>>();
+            Mediator = Mediator.Global;
         }
 
         public override void OnStartClient(NetworkClient client) {
             base.OnStartClient(client);
-            _clientStartedTask = new Task();
             Log.Info("Starting client initialization.");
-            _clientStartedTask = Task.All(_clientStartedCallbacks.Select(fun => fun(client)))
-                .Then(() => {
-                    _clientStartedTask.Resolve();
-                    Log.Info("Client initialized.");
-                });
+            _clientStartedTask = Mediator.PublishAsync(new NetworkClientStarted {
+                Client = client
+            });
+            _clientStartedTask.Then(() => {
+                Log.Info("Client initialized.");
+            });
         }
 
         public override void OnClientDisconnect(NetworkConnection conn) {
-            ClientDisconnected?.Invoke(conn);
+            Mediator.Publish(new NetworkClientDisconnected());
         }
 
         public override void OnClientConnect(NetworkConnection conn) {
-            if (!clientLoadedScene) {
-                // Ready/AddPlayer is usually triggered by a scene load completing. if no scene was loaded, then Ready/AddPlayer it here instead.
-                _clientStartedTask.Then(() => {
-                    Log.Debug("Client connecting...");
-                    ClientScene.Ready(conn);
-                    ClientConnected?.Invoke(conn);
-                });
-            }
+            if (clientLoadedScene) 
+                return;
+            // Ready/AddPlayer is usually triggered by a scene load completing. 
+            // If no scene was loaded, then Ready/AddPlayer it here instead.
+            _clientStartedTask.Then(() => {
+                Log.Debug("Client connecting...");
+                ClientScene.Ready(conn);
+                Mediator.Publish(new NetworkClientConnected());
+            });
         }
 
         public override void OnStartServer() {
-            ServerStarted?.Invoke();
+            Mediator.Publish(new NetworkServerStarted());
         }
 
         public override void OnServerReady(NetworkConnection conn) {
             NetworkServer.SetClientReady(conn);
-            ServerReady?.Invoke(conn);
+            Mediator.Publish(new NetworkServerReady());
         }
 
         public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId) {
-            ServerAddedPlayer?.Invoke(conn, playerControllerId, new PlayerSelection());
+            Mediator.Publish(new NetworkServerAddedPlayer {
+                Connection = conn,
+                PlayerID = playerControllerId
+            });
         }
 
         public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId, NetworkReader extraMessageReader) {
-            ServerAddedPlayer?.Invoke(conn, playerControllerId, extraMessageReader.ReadMessage<PlayerSelectionMessage>().ToSelection());
+            Mediator.Publish(new NetworkServerAddedPlayer {
+                Connection = conn,
+                PlayerID = playerControllerId
+            });
         }
 
         public override void OnServerRemovePlayer(NetworkConnection conn, PlayerController playerController) {
             base.OnServerRemovePlayer(conn, playerController);
-            ServerRemovedPlayer?.Invoke(conn, playerController);
+            Mediator.Publish(new NetworkServerRemovedPlayer {
+                Connection = conn,
+                PlayerController = playerController 
+            });
         }
 
         public override void OnServerDisconnect(NetworkConnection conn) {
-            ServerDisconnected?.Invoke(conn);
+            Mediator.Publish(new NetworkServerDisconnected {
+                Connection = conn
+            });
             base.OnServerDisconnect(conn);
         }
 
         public override void OnStopClient() {
             base.OnStopClient();
-            ClientStopped?.Invoke();
+            Mediator.Publish(new NetworkClientStopped());
         }
 
     }

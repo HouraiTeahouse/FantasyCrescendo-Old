@@ -25,8 +25,6 @@ namespace HouraiTeahouse.SmashBrew {
         public PlayerSet() {
             // Note: These objects are not intended to be destroyed and thus do not unresgister these event handlers
             // If there is a need to remove or replace them, this will need to be changed.
-            GameMode.OnRegister += mode => RebuildPlayerArray();
-            GameMode.OnChangeGameMode += mode => RebuildPlayerArray();
             _players = new Player[0];
             RebuildPlayerArray();
         }

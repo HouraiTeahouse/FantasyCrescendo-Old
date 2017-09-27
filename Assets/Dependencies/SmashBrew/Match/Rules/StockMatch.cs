@@ -17,18 +17,13 @@ namespace HouraiTeahouse.SmashBrew.Matches {
     public sealed class StockMatch : MatchRule {
 
         Mediator _eventManager;
+        int startStocks;
 
         /// <summary> 
         /// The store of how many lives each player currently has. 
         /// </summary>
         [SerializeField]
         SyncListInt _stocks = new SyncListInt();
-
-        /// <summary> 
-        /// The number of stock the players start with. 
-        /// </summary>
-        [SerializeField]
-        int stock = 5;
 
         /// <summary> 
         /// Readonly indexer for how many stocks each player has remaining. 
@@ -39,56 +34,42 @@ namespace HouraiTeahouse.SmashBrew.Matches {
 
         public event Action StockChanged;
 
-        /// <summary> Unity Callback. Called on object instantiation. </summary>
-        protected override void Awake() {
-            base.Awake();
-            _eventManager = Mediator.Global;
-            _stocks.Callback+= (op, index) => StockChanged?.Invoke();
-        }
+        protected override bool CheckActive(MatchConfig config) => config.Stocks > 0;
 
-        public override void OnStartServer() {
+        protected override void OnInitialize(MatchConfig config) {
+            startStocks = config.Stocks;
             _stocks.Clear();
-            IsActive = true;
-            foreach (var player in PlayerManager.Instance.MatchPlayers) {
+            foreach (var player in Match.Players) {
                 _stocks.Add(-1);
                 player.Changed += () => {
                     if (player.Type.IsActive && _stocks[player.ID] < 0)
-                        _stocks[player.ID] = stock;
+                        _stocks[player.ID] = startStocks;
                 };
             }
-        }
-
-        /// <summary>
-        /// Start is called on the frame when a script is enabled just before
-        /// any of the Update methods is called the first time.
-        /// </summary>
-        protected override void Start() {
-            base.Start();
+            _eventManager = Mediator.Global;
+            _stocks.Callback+= (op, index) => StockChanged?.Invoke();
             var context = _eventManager.CreateUnityContext(this);
             context.Subscribe<PlayerSpawnEvent>(OnSpawn);
             context.Subscribe<PlayerDieEvent>(OnPlayerDie);
         }
 
-        /// <summary>
-        /// Update is called every frame, if the MonoBehaviour is enabled.
-        /// </summary>
-        void Update() {
-            if (!IsActive)
-                return;
-            if (hasAuthority && 
-                PlayerManager.Instance.MatchPlayers.Count(p => p.Type.IsActive) > 1 &&
-                _stocks.Count(lives => lives > 0) <= 1)
-                Match.FinishMatch(false);
-        }
-
-        /// <summary> Gets the winner of the match. </summary>
-        /// <remarks> Note this will return the player with the greatest number of remaining lives left. If there are more than
-        /// player with the maximum number of stocks, no winner will be declared, and this method will return null. </remarks>
-        /// <returns> the winning Player, null if it is a tie </returns>
-        public override Player GetWinner() {
-            if (_stocks.Count <= 0)
-                return null;
-            return PlayerManager.Instance.MatchPlayers.Get(_stocks.ArgMax());
+        internal override void OnMatchTick() {
+            var players = Match.Players;
+            Player winner = null;
+            MatchResult? result = MatchResult.Tie;
+            for (var i = 0; i < _stocks.Count; i++) {
+                if (_stocks[i] <= 0)
+                    continue;
+                if (winner == null) {
+                    winner = players.Get(i);
+                    result = MatchResult.HasWinner;
+                } else {
+                    winner = null;
+                    result = null;
+                }
+            }
+            if (result != null)
+                Match.Finish(result.Value, winner);
         }
 
         bool RespawnCheck(Player character) {
@@ -97,24 +78,18 @@ namespace HouraiTeahouse.SmashBrew.Matches {
             return _stocks[character.ID] > 1;
         }
 
-        /// <summary> Events callback. Called every time a Player dies. </summary>
-        /// <param name="eventArgs"> the death event arguments </param>
         void OnPlayerDie(PlayerDieEvent eventArgs) {
-            _stocks[eventArgs.Player.ID]--;
-            if (eventArgs.Revived || _stocks[eventArgs.Player.ID] <= 0)
+            if (eventArgs.Revived || _stocks[eventArgs.Player.ID] - 1 < 0)
                 return;
+            _stocks[eventArgs.Player.ID]--;
             _eventManager.Publish(new PlayerRespawnEvent {Player = eventArgs.Player});
             eventArgs.Revived = true;
         }
 
-        /// <summary> Events callback. Called every time a Player spawns for the first time. Note this is not called when the
-        /// player respawns. </summary>
-        /// <param name="eventArgs"> the spawn event arguments </param>
         void OnSpawn(PlayerSpawnEvent eventArgs) {
             if (!IsActive)
                 return;
-            _stocks[eventArgs.Player.ID] = stock;
-            //eventArgs.Player.PlayerObject.GetComponent<DamageState>().Type = DamageType.Percent;
+            _stocks[eventArgs.Player.ID] = startStocks;
         }
 
     }

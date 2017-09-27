@@ -8,44 +8,36 @@ namespace HouraiTeahouse.SmashBrew.Matches {
     [RequireComponent(typeof(Match))]
     public abstract class MatchRule : NetworkBehaviour {
 
-        [SyncVar, SerializeField, ReadOnly]
+        [SyncVar(hook = "LogActive"), SerializeField, ReadOnly]
         bool _isActive;
 
-        /// <summary> The PlayerPrefs key to check for whether the rule is used or not. Stored as an integer. If 0, the rule is
-        /// disabled. If any other number, it is enabled. If the key does not exist. The rule remains in whatever state it was left
-        /// in the editor. </summary>
-        [SerializeField]
-        string _playerPrefCheck;
+        public bool IsActive {
+            get { return _isActive; }
+            private set { _isActive = value; }
+        }
 
         /// <summary> A refernce to the central Match object. </summary>
         protected static Match Match { get; private set; }
 
-        public bool IsActive {
-            get { return _isActive; }
-            protected set { _isActive = value; }
-        }
-
-        /// <summary> Unity Callback. Called on object instantiation. </summary>
-        protected virtual void Start() {
-            Log.Info("Match rule enabled: {0}".With(ToString()));
-        }
-
         protected virtual void Awake() {
             Match = this.SafeGetComponent<Match>();
-#if !UNITY_EDITOR
-            if (Prefs.Exists(_playerPrefCheck))
-                _isActive = Prefs.GetBool(_playerPrefCheck);
-#endif
         }
 
-        public override void OnStartServer() {
-            base.OnStartServer();
-            _isActive = true;
+        internal void Initialize(MatchConfig config) {
+            IsActive = CheckActive(config);
+            if (IsActive)
+                OnInitialize(config);
         }
 
-        /// <summary> Gets the winner of the Match, according to the Match Rule. </summary>
-        /// <returns> the Player that won. Null if there is a tie, or no winner is declared. </returns>
-        public abstract Player GetWinner();
+        protected abstract bool CheckActive(MatchConfig config);
+        protected virtual void OnInitialize(MatchConfig config) { }
+        internal virtual void OnMatchTick() { }
+
+        void LogActive(bool isActive) {
+            IsActive = isActive;
+            if (IsActive)
+                Log.Info("Match rule enabled: {0}".With(this));
+        }
 
     }
 

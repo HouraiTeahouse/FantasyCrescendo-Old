@@ -1,8 +1,9 @@
-using System;
-using System.Collections.Generic;
 using HouraiTeahouse.Console;
 using HouraiTeahouse.Localization;
 using HouraiTeahouse.SmashBrew.Characters;
+using HouraiTeahouse.SmashBrew.Matches;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace HouraiTeahouse.SmashBrew {
@@ -74,12 +75,12 @@ namespace HouraiTeahouse.SmashBrew {
 
         Player GetPlayer(string playerNumber) {
             int? playerNum = IntParse(playerNumber);
-            var playerManager = PlayerManager.Instance;
-            if (playerNum != null) {
-                if (playerNum <= 0 || playerNum > playerManager.MaxPlayers)
-                    GameConsole.Log("There is no Player #{0}, try between 1 and {1}", playerNum, playerManager.MaxPlayers);
+            var match = Match.Current;
+            if (playerNum != null && match) {
+                if (playerNum <= 0 || playerNum > match.Players.Count)
+                    GameConsole.Log("There is no Player #{0}, try between 1 and {1}", playerNum, match.Players.Count);
                 else
-                    return playerManager.MatchPlayers.Get(playerNum.Value - 1);
+                    return match.Players.Get(playerNum.Value - 1);
             }
             else {
                 GameConsole.Log("The term {0} cannot be converted to a player number.", playerNumber);

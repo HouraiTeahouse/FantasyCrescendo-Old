@@ -129,7 +129,7 @@ namespace HouraiTeahouse {
         public void publish() {
             Mediator mediator = CreateTestMediator();
             ExecuteTest(mediator, aCount, bCount, cCount, iCount);
-            Assert.Catch<ArgumentNullException>(delegate { mediator.Publish(null); });
+            Assert.Catch<ArgumentNullException>(delegate { mediator.Publish<object>(null); });
         }
 
         [Test]
@@ -158,6 +158,12 @@ namespace HouraiTeahouse {
             Assert.AreEqual(cCount - 1, mediator.GetCount<C>());
             ExecuteTest(mediator, aCount - 2, bCount - 1, cCount - 1, iCount);
             Assert.Catch<ArgumentNullException>(delegate { mediator.Unsubscribe<A>(null); });
+        }
+
+        [Test]
+        public void can_mix_match_subscriber_types() {
+            Mediator mediator = CreateTestMediator();
+            Assert.DoesNotThrow(() => mediator.Subscribe<A>(a => Task.Resolved));
         }
 
     }

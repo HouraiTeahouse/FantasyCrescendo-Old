@@ -1,3 +1,4 @@
+using HouraiTeahouse.SmashBrew.Matches;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,8 +23,11 @@ namespace HouraiTeahouse.SmashBrew.UI {
 
         Action[] _callbacks;
 
-        /// <summary> Unity callback. Called on object instantiation. </summary>
-        void Awake() {
+        /// <summary>
+        /// Start is called on the frame when a script is enabled just before
+        /// any of the Update methods is called the first time.
+        /// </summary>
+        void Start() {
             if (!_container) {
                 enabled = false;
                 return;
@@ -40,7 +44,7 @@ namespace HouraiTeahouse.SmashBrew.UI {
             initialSpace.name = _spacePrefab.name;
             _finalSpace.name = _spacePrefab.name;
 
-            var players = PlayerManager.Instance.MatchPlayers;
+            var players = Match.Current.Players;
 
             _callbacks = new Action[players.Count];
 
@@ -65,9 +69,8 @@ namespace HouraiTeahouse.SmashBrew.UI {
         void OnDestroy() {
             if (_callbacks == null)
                 return;
-            var players = PlayerManager.Instance.MatchPlayers;
             var i = 0;
-            foreach (var player in players) {
+            foreach (var player in Match.Current.Players) {
                 player.Changed -= _callbacks[i];
                 i++;
             }

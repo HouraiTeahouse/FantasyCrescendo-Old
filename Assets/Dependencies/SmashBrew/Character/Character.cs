@@ -17,6 +17,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         public StateController<CharacterState, CharacterStateContext> StateController { get; private set; }
         public CharacterStateContext Context { get; private set; }
         public CharacterStateSummary State;
+        public Player Player { get; private set; }
 
         public CharacterControllerBuilder States => _controller;
 
@@ -256,6 +257,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         public ReadOnlyCollection<Hitbox> Hurtboxes => _hurtboxes;
 
         void IDataComponent<Player>.SetData(Player data) {
+            Player = data;
             gameObject.name = "Player {0} ({1},{2})".With(data.ID, data.Selection.Character.name, data.Selection.Pallete);
             if (isServer)
                 RpcSetPlayerId((byte)data.ID);
