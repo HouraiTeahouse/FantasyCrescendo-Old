@@ -13,48 +13,6 @@ namespace HouraiTeahouse.SmashBrew {
         public override int GetHashCode() { return ConnectionID * 37 + PlayerControllerID; }
     }
 
-    public class SmashNetworkMessages {
-        public const short UpdatePlayer = MsgType.Highest + 1;
-        public const short PlayerInput = MsgType.Highest + 1;
-    }
-
-    public class NetworkClientConnected {
-        public NetworkConnection Connection;
-    }
-
-    public class NetworkClientDisconnected {
-        public NetworkConnection Connection;
-    }
-
-    public class NetworkClientStarted {
-        public NetworkClient Client;
-    }
-
-    public class NetworkClientStopped {
-    }
-
-    public class NetworkServerAddedPlayer {
-        public NetworkConnection Connection;
-        public short PlayerID;
-        public PlayerSelection Selection;
-    }
-
-    public class NetworkServerRemovedPlayer {
-        public NetworkConnection Connection;
-        public PlayerController PlayerController;
-    }
-
-    public class NetworkServerStarted {
-    }
-
-    public class NetworkServerReady {
-        public NetworkConnection Connection;
-    }
-
-    public class NetworkServerDisconnected {
-        public NetworkConnection Connection;
-    }
-    
     [RequireComponent(typeof(PlayerManager))]
     public class SmashNetworkManager : NetworkManager {
 
@@ -76,6 +34,7 @@ namespace HouraiTeahouse.SmashBrew {
             base.OnStartClient(client);
             Log.Info("Starting client initialization.");
             _clientStartedTask = Mediator.PublishAsync(new NetworkClientStarted {
+                NetworkManager = this,
                 Client = client
             });
             _clientStartedTask.Then(() => {
@@ -84,7 +43,9 @@ namespace HouraiTeahouse.SmashBrew {
         }
 
         public override void OnClientDisconnect(NetworkConnection conn) {
-            Mediator.Publish(new NetworkClientDisconnected());
+            Mediator.Publish(new NetworkClientDisconnected {
+                NetworkManager = this
+            });
         }
 
         public override void OnClientConnect(NetworkConnection conn) {
@@ -95,21 +56,28 @@ namespace HouraiTeahouse.SmashBrew {
             _clientStartedTask.Then(() => {
                 Log.Debug("Client connecting...");
                 ClientScene.Ready(conn);
-                Mediator.Publish(new NetworkClientConnected());
+                Mediator.Publish(new NetworkClientConnected {
+                    NetworkManager = this
+                });
             });
         }
 
         public override void OnStartServer() {
-            Mediator.Publish(new NetworkServerStarted());
+            Mediator.Publish(new NetworkServerStarted {
+                NetworkManager = this
+            });
         }
 
         public override void OnServerReady(NetworkConnection conn) {
             NetworkServer.SetClientReady(conn);
-            Mediator.Publish(new NetworkServerReady());
+            Mediator.Publish(new NetworkServerReady {
+                NetworkManager = this
+            });
         }
 
         public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId) {
             Mediator.Publish(new NetworkServerAddedPlayer {
+                NetworkManager = this,
                 Connection = conn,
                 PlayerID = playerControllerId
             });
@@ -117,6 +85,7 @@ namespace HouraiTeahouse.SmashBrew {
 
         public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId, NetworkReader extraMessageReader) {
             Mediator.Publish(new NetworkServerAddedPlayer {
+                NetworkManager = this,
                 Connection = conn,
                 PlayerID = playerControllerId
             });
@@ -125,6 +94,7 @@ namespace HouraiTeahouse.SmashBrew {
         public override void OnServerRemovePlayer(NetworkConnection conn, PlayerController playerController) {
             base.OnServerRemovePlayer(conn, playerController);
             Mediator.Publish(new NetworkServerRemovedPlayer {
+                NetworkManager = this,
                 Connection = conn,
                 PlayerController = playerController 
             });
@@ -132,6 +102,7 @@ namespace HouraiTeahouse.SmashBrew {
 
         public override void OnServerDisconnect(NetworkConnection conn) {
             Mediator.Publish(new NetworkServerDisconnected {
+                NetworkManager = this,
                 Connection = conn
             });
             base.OnServerDisconnect(conn);
