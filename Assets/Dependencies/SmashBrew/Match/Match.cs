@@ -159,7 +159,7 @@ namespace HouraiTeahouse.SmashBrew.Matches {
                 playerObj = Instantiate(prefab, startPos, startRot);
                 var characterComponent = playerObj.SafeGetComponent<Character>();
                 characterComponent.State.Position = startPos;
-                // NetworkServer.AddPlayerForConnection(conn, playerObj, playerControllerId);
+                NetworkServer.AddPlayerForConnection(conn, playerObj, playerControllerId);
                 player.Selection = selection;
                 player.Type = config.Type;
                 player.PlayerObject = playerObj.GetComponentInChildren<Character>();
@@ -173,8 +173,12 @@ namespace HouraiTeahouse.SmashBrew.Matches {
             }).Done();
         }
 
+        public override void OnStartServer() {
+            Log.Warning("SERVER MATCH STARTED");
+        }
+
         void SetupNetworkEvents() {
-            // var context = Mediator.Global.CreateUnityContext(this);
+            var context = Mediator.Global.CreateUnityContext(this);
             // context.Subscribe<NetworkClientStarted>(args =>{
             //     DestroyLeftoverPlayers();
             //     args.Client.RegisterHandler(SmashNetworkMessages.UpdatePlayer,

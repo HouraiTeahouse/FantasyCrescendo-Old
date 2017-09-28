@@ -13,6 +13,9 @@ namespace HouraiTeahouse.SmashBrew.UI {
         [SerializeField]
         PlayerIndicator _prefab;
 
+        [SerializeField]
+        Canvas _container;
+
         /// <summary>
         /// Start is called on the frame when a script is enabled just before
         /// any of the Update methods is called the first time.
@@ -22,6 +25,11 @@ namespace HouraiTeahouse.SmashBrew.UI {
                 PlayerIndicator indicator = Instantiate(_prefab);
                 indicator.GetComponentsInChildren<IDataComponent<Player>>().SetData(player);
                 indicator.gameObject.SetActive(player.Type.IsActive);
+                #if UNITY_EDITOR
+                indicator.gameObject.name = indicator.gameObject.name.Replace("(Clone)", " {0}".With(player.ID + 1));
+                #endif
+                if (_container != null)
+                    indicator.transform.SetParent(_container.transform, true);
                 player.Changed += () => indicator.gameObject.SetActive(player.Type.IsActive);
             }
         }

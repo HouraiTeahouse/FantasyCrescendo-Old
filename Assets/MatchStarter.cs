@@ -23,7 +23,7 @@ namespace HouraiTeahouse.SmashBrew.Matches {
         /// </summary>
         void Awake() {
             MatchConfig config = MatchConfig;
-            SmashNetworkManager.Instance.StartHost();
+            var client = SmashNetworkManager.Instance.StartHost();
             if (config == null) {
 #if UNITY_EDITOR
                 Log.Warning("No prior match config found. Building default.");
@@ -34,7 +34,10 @@ namespace HouraiTeahouse.SmashBrew.Matches {
             }
             if (Match.Current == null)
                 throw new InvalidOperationException("A match instance cannot be found!");
+            foreach (var localPlayer in config.PlayerSelections)
+                ClientScene.AddPlayer(client.connection, localPlayer.PlayerControllerId);
             Match.Current.Initialize(config);
+            NetworkServer.SpawnObjects();
         }
 
         MatchConfig BuildTestConfig() {

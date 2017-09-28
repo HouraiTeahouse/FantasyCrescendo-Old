@@ -4,12 +4,15 @@ using UnityEngine.UI;
 
 namespace HouraiTeahouse.SmashBrew.UI {
 
-    /// <summary> UI element that shows where players are </summary>
+    /// <summary> 
+    /// UI element that shows where players are 
+    /// </summary>
     [RequireComponent(typeof(Text), typeof(PlayerUIColor))]
     public sealed class PlayerIndicator : PlayerUIComponent<Graphic> {
 
         CharacterController _characterController;
         Transform _trackingTarget;
+
         // the canvas's RectTransform
         RectTransform _cTransform;
 
@@ -20,15 +23,21 @@ namespace HouraiTeahouse.SmashBrew.UI {
         // the indicator's RectTransform
         RectTransform _rTransform;
 
-        /// <summary> Unity callback. Called on object instantiation. </summary>
-        protected override void Awake() {
-            base.Awake();
+        /// <summary>
+        /// Start is called on the frame when a script is enabled just before
+        /// any of the Update methods is called the first time.
+        /// </summary>
+        protected override void Start() {
+            base.Start();
             _rTransform = GetComponent<RectTransform>();
             _rTransform.localScale = Vector3.one;
             _cTransform = GetComponentInParent<Canvas>().GetComponent<RectTransform>();
         }
 
-        /// <summary> Unity callback. Called once every frame, after all Update calls are processed. </summary>
+        /// <summary>
+        /// LateUpdate is called every frame, if the Behaviour is enabled.
+        /// It is called after all Update functions have been called.
+        /// </summary>
         void LateUpdate() {
             //then you calculate the position of the UI element
             //0,0 for the canvas is at the center of the screen, whereas WorldToViewPortPoint treats the lower left corner as 0,0. Because of this,
