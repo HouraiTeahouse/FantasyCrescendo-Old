@@ -37,12 +37,9 @@ namespace HouraiTeahouse.FantasyCrescendo {
             });
             mediator.Subscribe<MatchStartEvent>(e => Analytics.CustomEvent("matchStarted"));
             mediator.Subscribe<MatchEndEvent>(e => {
-                CharacterData winningCharacter = null;
-                if (e.Winner != null)
-                    winningCharacter =  e.Winner.Selection.Character;
                 Analytics.CustomEvent("matchFinished", new Dictionary<string, object> {
-                    { "result", e.MatchResult.ToString() },
-                    { "winningCharacter", winningCharacter != null ? winningCharacter.name : "N/A" }
+                    { "result", e.Result.ToString() },
+                    { "winningCharacter", e.Winner?.Selection?.Character.name ?? "N/A" }
                 });
             });
         }

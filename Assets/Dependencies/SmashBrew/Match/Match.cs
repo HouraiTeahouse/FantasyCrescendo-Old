@@ -96,7 +96,10 @@ namespace HouraiTeahouse.SmashBrew.Matches {
 
         public void Finish(MatchResult result, Player winner) {
             Status = MatchStatus.Completed;
-            _eventManager.Publish(new MatchEndEvent(result, winner));
+            _eventManager.Publish(new MatchEndEvent{
+                Result = result, 
+                Winner = winner
+            });
         }
 
         void SpawnPlayer(Player player, MatchPlayerConfig config) {
