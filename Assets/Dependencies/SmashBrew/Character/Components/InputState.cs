@@ -88,24 +88,10 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             };
         }
 
-        void IDataComponent<Player>.SetData(Player data) {
-            Player = data;
-        }
-
-        Vector2 DirectionClamp(Vector2 dir) {
-            dir.x = Mathf.Clamp(dir.x, -1, 1); 
-            dir.y = Mathf.Clamp(dir.y, -1, 1); 
-            return dir;
-        }
-
-        bool GetKeys(params KeyCode[] keys) {
-            return keys.Any(Input.GetKey);
-        }
-
-        float ButtonAxis(bool neg, bool pos) {
-            var val = neg ? -1f : 0f;
-            return val + (pos ? 1f : 0f);
-        }
+        void IDataComponent<Player>.SetData(Player data) => Player = data;
+        Vector2 DirectionClamp(Vector2 dir) => new Vector2(Mathf.Clamp(dir.x, -1, 1), Mathf.Clamp(dir.y, -1, 1));
+        bool GetKeys(params KeyCode[] keys) => Player != null && Player.ID == 0 && keys.Any(Input.GetKey);
+        float ButtonAxis(bool neg, bool pos) => (neg ? -1 : 0f) + (pos ? 1f : 0f);
 
         /// <summary>
         /// This function is called every fixed framerate frame, if the MonoBehaviour is enabled.
