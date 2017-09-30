@@ -55,7 +55,8 @@ namespace HouraiTeahouse.SmashBrew {
             // If no scene was loaded, then Ready/AddPlayer it here instead.
             _clientStartedTask.Then(() => {
                 Log.Debug("Client connecting...");
-                ClientScene.Ready(conn);
+                if (!ClientScene.ready)
+                    ClientScene.Ready(conn);
                 Mediator.Publish(new NetworkClientConnected {
                     NetworkManager = this
                 });

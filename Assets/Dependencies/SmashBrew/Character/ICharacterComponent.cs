@@ -22,6 +22,8 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         public float Hitstun;                   // 4 bytes
 
         public float ShieldHealth;              // 4 bytes
+
+        public byte Stocks;                     // 1 byte
     }
 
     public interface ICharacterComponent {

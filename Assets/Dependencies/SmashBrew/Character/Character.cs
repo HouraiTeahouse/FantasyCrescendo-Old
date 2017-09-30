@@ -290,7 +290,6 @@ namespace HouraiTeahouse.SmashBrew.Characters {
                 _cachedInputSet = new PlayerInputSet {
                     Inputs = new InputSlice[kInputHistorySize]
                 };
-            Log.Warning(id);
             _cachedInputSet.PlayerId = id;
         }
 

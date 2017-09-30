@@ -24,6 +24,8 @@ namespace HouraiTeahouse.SmashBrew.Matches {
         void Awake() {
             MatchConfig config = MatchConfig;
             var client = SmashNetworkManager.Instance.StartHost();
+            NetworkServer.SpawnObjects();
+            NetworkServer.dontListen = true;
             if (config == null) {
 #if UNITY_EDITOR
                 Log.Warning("No prior match config found. Building default.");
@@ -37,7 +39,6 @@ namespace HouraiTeahouse.SmashBrew.Matches {
             foreach (var localPlayer in config.PlayerSelections)
                 ClientScene.AddPlayer(client.connection, localPlayer.PlayerControllerId);
             Match.Current.Initialize(config);
-            NetworkServer.SpawnObjects();
         }
 
         MatchConfig BuildTestConfig() {

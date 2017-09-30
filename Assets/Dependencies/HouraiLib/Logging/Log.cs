@@ -83,12 +83,6 @@ namespace HouraiTeahouse {
 
     public static class Log {
 
-        static Log() {
-            //Task.UnhandledException += (src, args) => {
-            //    Error(args.ExceptionObject);
-            //};
-        }
-
         public static event Action<string> OnLog;
 
         static LogSettings _settings = new LogSettings();
@@ -125,21 +119,17 @@ namespace HouraiTeahouse {
         public static ILog GetLogger(Type type) => GetLogger(type.Name);
         public static ILog GetLogger<T>() => GetLogger(typeof(T));
 
-        public static void Info(object source, params object[] objs) {
+        public static void Info(object source, params object[] objs) =>
             WriteLog(LogLevel.Info, source, objs);
-        }
 
-        public static void Debug(object source, params object[] objs) {
+        public static void Debug(object source, params object[] objs) =>
             WriteLog(LogLevel.Debug, source, objs);
-        }
 
-        public static void Warning(object source, params object[] objs) {
+        public static void Warning(object source, params object[] objs) =>
             WriteLog(LogLevel.Warning, source, objs);
-        }
 
-        public static void Error(object source, params object[] objs) {
+        public static void Error(object source, params object[] objs) =>
             WriteLog(LogLevel.Error, source, objs);
-        }
 
         static void WriteLog(LogLevel log, object source, params object[] objs) {
             if (!Settings.GetTypeSettings(log).Enabled)

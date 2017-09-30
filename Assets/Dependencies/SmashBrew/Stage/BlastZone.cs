@@ -12,7 +12,9 @@ namespace HouraiTeahouse.SmashBrew.Stage {
         Collider _col;
         Mediator _eventManager;
 
-        /// <summary> Unity Callback. Called on object instantiation. </summary>
+        /// <summary>
+        /// Awake is called when the script instance is being loaded.
+        /// </summary>
         void Awake() {
             _eventManager = Mediator.Global;
             _col = GetComponent<Collider>();
@@ -21,19 +23,20 @@ namespace HouraiTeahouse.SmashBrew.Stage {
                 col.isTrigger = true;
         }
 
-        /// <summary> Unity Callback. Called on Trigger Collider entry. </summary>
-        /// <param name="other"> the other collider that entered the c </param>
+        /// <summary>
+        /// OnTriggerExit is called when the Collider other has stopped touching the trigger.
+        /// </summary>
+        /// <param name="other">The other Collider involved in this collision.</param>
         void OnTriggerExit(Collider other) {
             // Filter only for player characters
             var character = other.GetComponentInParent<Character>();
-            var networkIdentity = other.GetComponent<NetworkIdentity>();
-            if (!isServer || character == null || character.Player != null || networkIdentity == null)
+            if (!isServer || character == null || character.Player == null)
                 return;
 
             Vector3 position = other.transform.position;
             if (_col.ClosestPointOnBounds(position) == position)
                 return;
-            
+           
             character.gameObject.SetActive(false);
             _eventManager.Publish(new PlayerDieEvent { 
                 Player = character.Player, 

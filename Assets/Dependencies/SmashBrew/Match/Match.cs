@@ -65,8 +65,6 @@ namespace HouraiTeahouse.SmashBrew.Matches {
             if (Status != MatchStatus.Initialization)
                 throw new InvalidOperationException("Cannot initialize an already initialized Match");
             Config = config;
-            _log.Warning(config.PlayerSelections.Length.ToString());
-            _log.Info("Initializing match...");
             _rules = GetComponents<MatchRule>();
             foreach (var rule in _rules)
                 rule.Initialize(Config);
@@ -75,8 +73,7 @@ namespace HouraiTeahouse.SmashBrew.Matches {
             Status = MatchStatus.Spawning;
             Assert.IsNotNull(Config);
             for (var i = 0; i < Config.PlayerSelections.Length; i++) {
-                Log.Info("Spawning player {0}", i + 1);
-                Log.Debug(Config.PlayerSelections[i].Selection);
+                Log.Info("Spawning player {0}...", i + 1);
                 SpawnPlayer(Players.Get(i), Config.PlayerSelections[i]);
             }
             Status = MatchStatus.Running;
@@ -85,9 +82,23 @@ namespace HouraiTeahouse.SmashBrew.Matches {
         }
 
         /// <summary>
-        /// Update is called every frame, if the MonoBehaviour is enabled.
+        /// This function is called when the object becomes enabled and active.
         /// </summary>
-        void Update() {
+        void OnEnable() {
+            Log.Error("ENABLED");
+        }
+
+        /// <summary>
+        /// This function is called when the behaviour becomes disabled or inactive.
+        /// </summary>
+        void OnDisable() {
+            Log.Error("DISABLED");
+        }
+
+        /// <summary>
+        /// This function is called every fixed framerate frame, if the MonoBehaviour is enabled.
+        /// </summary>
+        void FixedUpdate() {
             if (!hasAuthority || Status != MatchStatus.Running)
                 return;
             foreach (var rule in _rules)
@@ -162,10 +173,15 @@ namespace HouraiTeahouse.SmashBrew.Matches {
                 playerObj = Instantiate(prefab, startPos, startRot);
                 var characterComponent = playerObj.SafeGetComponent<Character>();
                 characterComponent.State.Position = startPos;
-                NetworkServer.AddPlayerForConnection(conn, playerObj, playerControllerId);
                 player.Selection = selection;
                 player.Type = config.Type;
-                player.PlayerObject = playerObj.GetComponentInChildren<Character>();
+                player.PlayerObject = characterComponent;
+                Log.Warning("HELLO");
+                _eventManager.Publish(new PlayerSpawnEvent {
+                    Player = player,
+                    PlayerObject = playerObj
+                });
+                NetworkServer.AddPlayerForConnection(conn, playerObj, playerControllerId);
                 NetworkServer.SendToAll(SmashNetworkMessages.UpdatePlayer, UpdatePlayerMessage.FromPlayer(player));
                 var playerConnection = new PlayerConnection {
                     ConnectionID = conn.connectionId,
@@ -174,10 +190,6 @@ namespace HouraiTeahouse.SmashBrew.Matches {
                 // PlayerMap[playerConnection] = player;
                 playerObj.GetComponentsInChildren<IDataComponent<Player>>().SetData(player);
             }).Done();
-        }
-
-        public override void OnStartServer() {
-            Log.Warning("SERVER MATCH STARTED");
         }
 
         void SetupNetworkEvents() {

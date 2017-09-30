@@ -46,8 +46,7 @@ namespace HouraiTeahouse {
         readonly UnityEngine.Object obj;
         bool isDisposed = false;
 
-        internal UnityMeditatorContext(Mediator mediator, UnityEngine.Object obj) 
-            : base(mediator) {
+        internal UnityMeditatorContext(Mediator mediator, UnityEngine.Object obj) : base(mediator) {
             obj = Argument.NotNull(obj);
         }
 
@@ -65,12 +64,14 @@ namespace HouraiTeahouse {
 
         public override void Subscribe<T>(Mediator.AsyncEvent<T> callback) {
             Mediator.AsyncEvent<T> checkedCallback = (args) => {
-                if (!isDisposed && obj != null) {
+                if (isDisposed)
+                    return Task.Resolved;
+                if (obj != null) {
                     return callback?.Invoke(args);
-                } else if (obj == null) {
+                } else {
                     Dispose();
+                    return Task.Resolved;
                 } 
-                return Task.Resolved;
             };
             base.Subscribe(checkedCallback);
         }

@@ -3,9 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using HouraiTeahouse.SmashBrew.Characters;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.Networking;
 
 namespace HouraiTeahouse.SmashBrew.Matches {
+
+    public class PlayerStockChanged {
+        public Player Player;
+        public int Stocks;
+    }
 
     /// <summary> 
     /// A Match Rule defining a Stock-based Match. AllPlayers will have a fixed number of lives to lose, via exiting
@@ -19,77 +25,63 @@ namespace HouraiTeahouse.SmashBrew.Matches {
         Mediator _eventManager;
         int startStocks;
 
-        /// <summary> 
-        /// The store of how many lives each player currently has. 
-        /// </summary>
-        [SerializeField]
-        SyncListInt _stocks = new SyncListInt();
-
-        /// <summary> 
-        /// Readonly indexer for how many stocks each player has remaining. 
-        /// </summary>
-        /// <param name="player"> the Player in question </param>
-        /// <returns> the number of remaining stocks they have </returns>
-        public int this[Player player] => _stocks[player.ID];
-
-        public event Action StockChanged;
+        protected override void Awake() {
+            base.Awake();
+            _eventManager = Mediator.Global;
+            // var context = _eventManager.CreateUnityContext(this);
+            _eventManager.Subscribe<PlayerSpawnEvent>(args => {
+                if (!IsActive)
+                    return;
+                var character = args.Player.PlayerObject;
+                Assert.IsNotNull(character);
+                var state = character.State;
+                state.Stocks = (byte)startStocks;
+                character.State = state;
+            });
+            _eventManager.Subscribe<PlayerDieEvent>(args => {
+                var stocks = GetStock(args.Player);
+                if (args.Revived || stocks == null || stocks.Value - 1 < 0)
+                    return;
+                args.Player.PlayerObject.State.Stocks--;
+                _eventManager.Publish(new PlayerStockChanged {
+                    Player = args.Player,
+                    Stocks = stocks.Value - 1
+                });
+                if (stocks.Value > 0)
+                    _eventManager.Publish(new PlayerRespawnEvent {Player = args.Player});
+                args.Revived = true;
+                MatchFinishCheck();
+            });
+        }
 
         protected override bool CheckActive(MatchConfig config) => config.Stocks > 0;
 
-        protected override void OnInitialize(MatchConfig config) {
-            startStocks = config.Stocks;
-            _stocks.Clear();
-            foreach (var player in Match.Players) {
-                _stocks.Add(-1);
-                player.Changed += () => {
-                    if (player.Type.IsActive && _stocks[player.ID] < 0)
-                        _stocks[player.ID] = startStocks;
-                };
-            }
-            _eventManager = Mediator.Global;
-            _stocks.Callback+= (op, index) => StockChanged?.Invoke();
-            var context = _eventManager.CreateUnityContext(this);
-            context.Subscribe<PlayerSpawnEvent>(OnSpawn);
-            context.Subscribe<PlayerDieEvent>(OnPlayerDie);
-        }
+        protected override void OnInitialize(MatchConfig config) => startStocks = config.Stocks;
 
-        internal override void OnMatchTick() {
+        internal override void OnMatchTick() => MatchFinishCheck();
+
+        int? GetStock(Player player) => player?.PlayerObject?.State.Stocks;
+
+        void MatchFinishCheck() {
             var players = Match.Players;
             Player winner = null;
             MatchResult? result = MatchResult.Tie;
-            for (var i = 0; i < _stocks.Count; i++) {
-                if (_stocks[i] <= 0)
+            Log.Debug(Match.Players.Count);
+            foreach (var player in Match.Players) {
+                var stockCount = GetStock(player);
+                if (stockCount == null || stockCount.Value <= 0)
                     continue;
                 if (winner == null) {
-                    winner = players.Get(i);
+                    winner = player;
                     result = MatchResult.HasWinner;
                 } else {
                     winner = null;
                     result = null;
+                    break;
                 }
             }
             if (result != null)
                 Match.Finish(result.Value, winner);
-        }
-
-        bool RespawnCheck(Player character) {
-            if (!IsActive || !Check.Range(character.ID, _stocks))
-                return false;
-            return _stocks[character.ID] > 1;
-        }
-
-        void OnPlayerDie(PlayerDieEvent eventArgs) {
-            if (eventArgs.Revived || _stocks[eventArgs.Player.ID] - 1 < 0)
-                return;
-            _stocks[eventArgs.Player.ID]--;
-            _eventManager.Publish(new PlayerRespawnEvent {Player = eventArgs.Player});
-            eventArgs.Revived = true;
-        }
-
-        void OnSpawn(PlayerSpawnEvent eventArgs) {
-            if (!IsActive)
-                return;
-            _stocks[eventArgs.Player.ID] = startStocks;
         }
 
     }
