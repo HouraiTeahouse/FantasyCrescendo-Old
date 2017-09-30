@@ -9,9 +9,6 @@ EditorBuildSettings:
     path: Assets/Scenes/Game Bootstrap.unity
     guid: 646be26f9cb0ad54c98570c4c79bb300
   - enabled: 1
-    path: Assets/Scenes/_Test/Lighting Test Scene.unity
-    guid: 19280723c1746f8438709cb3bebfc851
-  - enabled: 1
     path: Assets/Scenes/_Test/Test Stage/Test Stage.unity
     guid: a900224f6bd91b341b45710540086ab3
   - enabled: 1
