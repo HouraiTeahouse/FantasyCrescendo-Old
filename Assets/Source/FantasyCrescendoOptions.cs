@@ -114,8 +114,8 @@ namespace HouraiTeahouse {
             if (storedValue != null && storedValue != "null")
                 manager.LoadLanguage(storedValue);
             else {
-                Log.Debug(manager.CurrentLangauge.Name);
-                lang.SetPropertyValue(manager.CurrentLangauge.Name);
+                Log.Debug(manager.CurrentLanguage.Name);
+                lang.SetPropertyValue(manager.CurrentLanguage.Name);
             }
         }
 
@@ -164,7 +164,7 @@ namespace HouraiTeahouse {
 
     }
 
-    public class HouraiOptionLangaugeStorage : ILanguageStorageDelegate {
+    public class HouraiOptionLangaugeStorage : ILanguageStorage {
 
         readonly OptionInfo _option;
 

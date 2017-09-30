@@ -8,19 +8,18 @@ using UnityEngine;
 namespace HouraiTeahouse.Localization {
 
     public class LanguageChanged {
-
-        public Language NewLanguage;
-
+        public LanguageManager Manager;
+        public Language Language;
     }
 
-    public interface ILanguageStorageDelegate {
+    public interface ILanguageStorage {
         event Action<string> OnChangeLangauge;
 
         string GetStoredLangaugeId(string defaultLangauge);
         void SetStoredLanguageId(string language);
     }
 
-    public class PlayerPrefLanguageStorageDelegate : ILanguageStorageDelegate {
+    public class PlayerPrefLanguageStorageDelegate : ILanguageStorage {
 
         readonly string _playerPrefKey;
 
@@ -50,13 +49,12 @@ namespace HouraiTeahouse.Localization {
     /// </summary>
     public sealed class LanguageManager : Singleton<LanguageManager> {
 
-        internal static readonly ILog log = Log.GetLogger("Language");
+        internal static readonly ILog _log = Log.GetLogger("Language");
         public const string FileExtension = ".json";
-        Language _currentLanguage;
         string _storageDirectory;
         HashSet<string> _languages;
 
-        static ILanguageStorageDelegate _storageDelegate;
+        static ILanguageStorage _storageDelegate;
 
         static LanguageManager() {
             Storage = new PlayerPrefLanguageStorageDelegate("lang");
@@ -68,7 +66,7 @@ namespace HouraiTeahouse.Localization {
             Instance.LoadLanguage(language);
         }
 
-        public static ILanguageStorageDelegate Storage {
+        public static ILanguageStorage Storage {
             get { return _storageDelegate; }
             set { 
                 Argument.NotNull(value);
@@ -79,10 +77,6 @@ namespace HouraiTeahouse.Localization {
                     _storageDelegate.OnChangeLangauge += StorageChangeLangauge;
             }
         }
-
-#if HOURAI_EVENTS
-        Mediator _eventManager;
-#endif
 
         [SerializeField]
         [Tooltip("The default language to use if the Player's current language is not supported")]
@@ -96,49 +90,43 @@ namespace HouraiTeahouse.Localization {
         [Tooltip("The Resources directory to load the Language files from")]
         string localizationDirectory = "lang";
 
-        /// <summary> The currently used language. </summary>
-        public Language CurrentLangauge => _currentLanguage;
+        /// <summary> 
+        /// The currently used language. 
+        /// </summary>
+        public Language CurrentLanguage { get; private set; }
 
-        /// <summary> All available languages currently supported by the system. </summary>
-        public IEnumerable<string> AvailableLanguages {
-            get {
-                if (_languages != null)
-                    return _languages;
-                return Enumerable.Empty<string>();
-            }
-        }
+        /// <summary> 
+        /// All available languages currently supported by the system. 
+        /// </summary>
+        public IEnumerable<string> AvailableLanguages => _languages.EmptyIfNull();
 
-        /// <summary> Gets an enumeration of all of the localizable keys. </summary>
-        public IEnumerable<string> Keys => CurrentLangauge.Keys;
-
-        /// <summary> Localizes a key based on the currently loaded language. </summary>
-        /// <param name="key"> the localization key to use. </param>
-        /// <returns> the localized string </returns>
-        public string this[string key] => CurrentLangauge[key];
-
-        /// <summary> An event that is called every time the language is changed. </summary>
-        public event Action<Language> OnChangeLanguage;
+        /// <summary> 
+        /// Gets an enumeration of all of the localizable keys. 
+        /// </summary>
+        public IEnumerable<string> Keys => CurrentLanguage.Keys;
 
         void SetLanguage(string langName, IDictionary<string, string> values) {
-            if (_currentLanguage.Name == langName)
+            if (CurrentLanguage.Name == langName)
                 return;
-            _currentLanguage.Update(values);
-            _currentLanguage.Name = langName;
-            OnChangeLanguage?.Invoke(_currentLanguage);
-#if HOURAI_EVENTS
-            _eventManager.Publish(new LanguageChanged {NewLanguage = _currentLanguage});
-#endif
-            log.Info("Set language to {0}", Language.GetName(langName));
+            CurrentLanguage.Update(values);
+            CurrentLanguage.Name = langName;
+            Mediator.Global.Publish(new LanguageChanged {
+                Manager = this,
+                Language = CurrentLanguage
+            });
+            _log.Info("Set language to {0}", Language.GetName(langName));
         }
 
-        string GetLanguagePath(string identifier) {
-            return Path.Combine(_storageDirectory, identifier + FileExtension);
-        }
+        string GetLanguagePath(string identifier) => 
+            Path.Combine(_storageDirectory, identifier + FileExtension);
 
+        /// <summary>
+        /// Awake is called when the script instance is being loaded.
+        /// </summary>
         protected override void Awake() {
             base.Awake();
 
-            _currentLanguage = new Language();
+            CurrentLanguage = new Language();
 #if HOURAI_EVENTS
             _eventManager = Mediator.Global;
 #endif
@@ -152,7 +140,7 @@ namespace HouraiTeahouse.Localization {
             SystemLanguage systemLang = Application.systemLanguage;
             string currentLang = Storage.GetStoredLangaugeId(systemLang.ToIdentifier());
             if (!_languages.Contains(currentLang) || systemLang == SystemLanguage.Unknown) {
-                log.Info("No language data for \"{0}\" found. Loading default language: {1}", _defaultLanguage, currentLang);
+                _log.Info("No language data for \"{0}\" found. Loading default language: {1}", _defaultLanguage, currentLang);
                 currentLang = _defaultLanguage;
             }
             LoadLanguage(currentLang);
@@ -162,18 +150,24 @@ namespace HouraiTeahouse.Localization {
                 DontDestroyOnLoad(this);
         }
 
-        /// <summary> Unity Callback. Called on object destruction. </summary>
-        void OnDestroy() { Save(); }
+        /// <summary>
+        /// This function is called when the MonoBehaviour will be destroyed.
+        /// </summary>
+        void OnDestroy() => Save();
 
-        /// <summary> Unity Callback. Called when entire application exits. </summary>
-        void OnApplicationQuit() { Save(); }
+        /// <summary>
+        /// Callback sent to all game objects before the application is quit.
+        /// </summary>
+        void OnApplicationQuit() => Save();
 
-        /// <summary> Saves the current language preferences to PlayerPrefs to keep it persistent. </summary>
-        void Save() {
-            Storage.SetStoredLanguageId(CurrentLangauge.Name);
-        }
+        /// <summary> 
+        /// Saves the current language preferences to PlayerPrefs to keep it persistent. 
+        /// </summary>
+        void Save() => Storage.SetStoredLanguageId(CurrentLanguage.Name);
 
-        /// <summary> Loads a new language given the Microsoft language identifier. </summary>
+        /// <summary> 
+        /// Loads a new language given the Microsoft language identifier. 
+        /// </summary>
         /// <param name="identifier"> the Microsoft identifier for a lanuguage </param>
         /// <returns> the localization language </returns>
         /// <exception cref="ArgumentNullException"> <paramref name="identifier" /> is null. </exception>
@@ -186,7 +180,7 @@ namespace HouraiTeahouse.Localization {
                 throw new InvalidOperationException("Language with identifier of {0} is not supported.".With(identifier));
             var languageValues = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(GetLanguagePath(identifier)));
             SetLanguage(identifier, languageValues);
-            return CurrentLangauge;
+            return CurrentLanguage;
         }
 
     }

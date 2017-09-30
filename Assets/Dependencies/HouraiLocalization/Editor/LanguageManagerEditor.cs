@@ -25,9 +25,9 @@ namespace HouraiTeahouse.Localization.Editor {
             if (_availableLanguages == null) {
                 _availableLanguages = langManager.AvailableLanguages.ToArray();
                 _display = _availableLanguages.Select(Language.GetName).ToArray();
-                Language language = langManager.CurrentLangauge;
+                Language language = langManager.CurrentLanguage;
                 if (language != null)
-                    _index = Array.LastIndexOf(_availableLanguages, langManager.CurrentLangauge.Name);
+                    _index = Array.LastIndexOf(_availableLanguages, langManager.CurrentLanguage.Name);
             }
 
             GUI.enabled = EditorApplication.isPlayingOrWillChangePlaymode;

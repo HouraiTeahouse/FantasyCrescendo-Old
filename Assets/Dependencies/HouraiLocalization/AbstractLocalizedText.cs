@@ -4,7 +4,9 @@ using TMPro;
 
 namespace HouraiTeahouse.Localization {
 
-    /// <summary> An abstract MonoBehaviour class that localizes the strings displayed on UI Text objects. </summary>
+    /// <summary> 
+    /// An abstract MonoBehaviour class that localizes the strings displayed on UI Text objects. 
+    /// </summary>
     public abstract class AbstractLocalizedText : MonoBehaviour, ITextAcceptor {
 
         [SerializeField]
@@ -17,7 +19,9 @@ namespace HouraiTeahouse.Localization {
 
         public int Priority => 100;
 
-        /// <summary> The UI Text object to display the localized string onto </summary>
+        /// <summary> 
+        /// The UI Text object to display the localized string onto 
+        /// </summary>
         public Text Text {
             get { return _text; }
             set { 
@@ -34,7 +38,9 @@ namespace HouraiTeahouse.Localization {
             }
         }
 
-        /// <summary> The localization key used to lookup the localized string. </summary>
+        /// <summary> 
+        /// The localization key used to lookup the localized string. 
+        /// </summary>
         protected string NativeText {
             get { return _nativeText; }
             set {
@@ -45,15 +51,17 @@ namespace HouraiTeahouse.Localization {
             }
         }
 
-        protected bool HasComponent() {
-            return _text || _textMesh;
-        }
+        protected bool HasComponent() => _text || _textMesh;
 
-        /// <summary> Unity Callback. Called once upon object instantiation. </summary>
+        /// <summary>
+        /// Awake is called when the script instance is being loaded.
+        /// </summary>
         protected virtual void Awake() {
             if (!HasComponent())
                 ResetComponents();
             enabled = HasComponent();
+            var context = Mediator.Global.CreateUnityContext(this);
+            context.Subscribe<LanguageChanged>(OnChangeLanguage);
         }
 
         protected void ResetComponents() {
@@ -67,7 +75,7 @@ namespace HouraiTeahouse.Localization {
             if (string.IsNullOrEmpty(text)) {
                 LanguageManager languageManager = LanguageManager.Instance;
                 if (languageManager)
-                    text = Process(languageManager[NativeText]);
+                    text = Process(languageManager.CurrentLanguage[NativeText]);
                 else
                     text = string.Empty;
             }
@@ -80,46 +88,36 @@ namespace HouraiTeahouse.Localization {
 
         protected string GetText() {
             string text = string.Empty;
-            if (Text)
+            if (Text != null)
                 text = Text.text;
-            if (TextMesh)
+            if (TextMesh != null)
                 text = TextMesh.text;
             return text;
         }
 
-        protected virtual void Reset() {
-            ResetComponents();
-        }
+        protected virtual void Reset() => ResetComponents();
 
         /// <summary> Unity Callback. Called on the first frame before Update is called. </summary>
         protected virtual void Start() {
-            LanguageManager languageManager = LanguageManager.Instance;
-            if (languageManager == null)
-                return;
-            languageManager.OnChangeLanguage += OnChangeLanguage;
-            if (string.IsNullOrEmpty(_nativeText))
-                return;
             SetText();
         }
 
-        protected virtual void OnDestroy() {
-            LanguageManager languageManager = LanguageManager.Instance;
-            if (languageManager != null)
-                languageManager.OnChangeLanguage -= OnChangeLanguage;
-        }
-
-        /// <summary> Events callback for when the system wide language is changed. </summary>
-        /// <param name="language"> the language set that was changed to. </param>
-        void OnChangeLanguage(Language language) {
-            if (language == null || NativeText == null)
+        /// <summary> 
+        /// Events callback for when the system wide language is changed. 
+        /// </summary>
+        /// <param name="args"> the language set that was changed to. </param>
+        void OnChangeLanguage(LanguageChanged args) {
+            if (args == null || NativeText == null)
                 return;
-            SetText(language[NativeText]);
+            SetText(args.Language[NativeText]);
         }
 
-        /// <summary> Post-Processing on the retrieved localized string. </summary>
+        /// <summary> 
+        /// Post-Processing on the retrieved localized string. 
+        /// </summary>
         /// <param name="val"> the pre-processed localized string </param>
         /// <returns> the post-processed localized string </returns>
-        protected virtual string Process(string val) { return val; }
+        protected virtual string Process(string val) => val;
 
         void ITextAcceptor.SetText(string text) {
             NativeText = text;
