@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace HouraiTeahouse {
 
@@ -44,6 +45,8 @@ namespace HouraiTeahouse {
         /// any of the Update methods is called the first time.
         /// </summary>
         void Start() {
+            var defaultMenu = _currentMenu;
+            Log.Error(defaultMenu);
             if (_menuBreadcrumnbs == null) {
                 _menuBreadcrumnbs = new Stack<string>();
             } else {
@@ -57,6 +60,9 @@ namespace HouraiTeahouse {
             foreach (Menu inactiveMenu in _availableMenus.Values)
                 if (inactiveMenu != null)
                     inactiveMenu.gameObject.SetActive(false);
+            if (_currentMenu != null)
+                _currentMenu = defaultMenu;
+            Assert.IsNotNull(_currentMenu);
             _currentMenu.gameObject.SetActive(true);
         }
 

@@ -26,13 +26,17 @@ namespace HouraiTeahouse {
             set { _scenes = value; }
         }
 
+        bool isLoading;
+
         /// <summary>
         ///     <see cref="SingleActionBehaviour.Action" />
         /// </summary>
-        public override void Action() { Load(); }
+        public override void Action() => Load();
 
         /// <summary> Loads the scenes </summary>
         public void Load() {
+            if (isLoading)
+                return;
             var paths = new HashSet<string>();
             for (var i = 0; i < SceneManager.sceneCount; i++) {
                 var path = SceneManager.GetSceneAt(i).path;
@@ -41,7 +45,10 @@ namespace HouraiTeahouse {
             foreach (string scenePath in _scenes) {
                 if (!_ignoreLoadedScenes && paths.Contains("Assets/{0}.unity".With(scenePath)))
                     continue;
-                SceneLoader.LoadScene(scenePath, _mode);
+                isLoading = true;
+                SceneLoader.LoadScene(scenePath, _mode).Then(() => {
+                    isLoading = false;
+                });
             }
         }
 

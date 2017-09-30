@@ -29,3 +29,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Stages/Netherworld/Netherworld.unity
     guid: 6224ceb15e489e64e868f674dd925830
+  - enabled: 1
+    path: Assets/Scenes/MatchCompleted.unity
+    guid: f0f75b660d7797f4a82a0c666c1bed05
