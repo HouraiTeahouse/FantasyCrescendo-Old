@@ -82,20 +82,6 @@ namespace HouraiTeahouse.SmashBrew.Matches {
         }
 
         /// <summary>
-        /// This function is called when the object becomes enabled and active.
-        /// </summary>
-        void OnEnable() {
-            Log.Error("ENABLED");
-        }
-
-        /// <summary>
-        /// This function is called when the behaviour becomes disabled or inactive.
-        /// </summary>
-        void OnDisable() {
-            Log.Error("DISABLED");
-        }
-
-        /// <summary>
         /// This function is called every fixed framerate frame, if the MonoBehaviour is enabled.
         /// </summary>
         void FixedUpdate() {
@@ -176,7 +162,6 @@ namespace HouraiTeahouse.SmashBrew.Matches {
                 player.Selection = selection;
                 player.Type = config.Type;
                 player.PlayerObject = characterComponent;
-                Log.Warning("HELLO");
                 _eventManager.Publish(new PlayerSpawnEvent {
                     Player = player,
                     PlayerObject = playerObj

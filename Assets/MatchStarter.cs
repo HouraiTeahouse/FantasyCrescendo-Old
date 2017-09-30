@@ -19,9 +19,10 @@ namespace HouraiTeahouse.SmashBrew.Matches {
         int _testStockCount = 5;
 
         /// <summary>
-        /// Awake is called when the script instance is being loaded.
+        /// Start is called on the frame when a script is enabled just before
+        /// any of the Update methods is called the first time.
         /// </summary>
-        void Awake() {
+        void Start() {
             MatchConfig config = MatchConfig;
             var client = SmashNetworkManager.Instance.StartHost();
             NetworkServer.SpawnObjects();

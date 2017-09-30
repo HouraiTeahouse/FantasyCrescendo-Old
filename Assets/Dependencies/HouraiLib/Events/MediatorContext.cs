@@ -43,18 +43,18 @@ namespace HouraiTeahouse {
 
     public sealed class UnityMeditatorContext : MediatorContext {
 
-        readonly UnityEngine.Object obj;
+        readonly UnityEngine.Object unityObject;
         bool isDisposed = false;
 
         internal UnityMeditatorContext(Mediator mediator, UnityEngine.Object obj) : base(mediator) {
-            obj = Argument.NotNull(obj);
+            unityObject = Argument.NotNull(obj);
         }
 
         public override void Subscribe<T>(Mediator.Event<T> callback) {
             Mediator.Event<T> checkedCallback = (args) => {
                 if (isDisposed)
                     return;
-                if (obj != null)
+                if (unityObject != null)
                     callback?.Invoke(args);
                 else
                     Dispose();
@@ -66,7 +66,7 @@ namespace HouraiTeahouse {
             Mediator.AsyncEvent<T> checkedCallback = (args) => {
                 if (isDisposed)
                     return Task.Resolved;
-                if (obj != null) {
+                if (unityObject != null) {
                     return callback?.Invoke(args);
                 } else {
                     Dispose();

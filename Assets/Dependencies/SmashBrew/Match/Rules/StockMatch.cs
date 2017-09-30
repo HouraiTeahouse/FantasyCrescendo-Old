@@ -23,13 +23,13 @@ namespace HouraiTeahouse.SmashBrew.Matches {
     public sealed class StockMatch : MatchRule {
 
         Mediator _eventManager;
+        MediatorContext _context;
         int startStocks;
 
-        protected override void Awake() {
-            base.Awake();
+        public override void OnStartServer() {
             _eventManager = Mediator.Global;
-            // var context = _eventManager.CreateUnityContext(this);
-            _eventManager.Subscribe<PlayerSpawnEvent>(args => {
+            _context = _eventManager.CreateUnityContext(this);
+            _context.Subscribe<PlayerSpawnEvent>(args => {
                 if (!IsActive)
                     return;
                 var character = args.Player.PlayerObject;
@@ -38,7 +38,7 @@ namespace HouraiTeahouse.SmashBrew.Matches {
                 state.Stocks = (byte)startStocks;
                 character.State = state;
             });
-            _eventManager.Subscribe<PlayerDieEvent>(args => {
+            _context.Subscribe<PlayerDieEvent>(args => {
                 var stocks = GetStock(args.Player);
                 if (args.Revived || stocks == null || stocks.Value - 1 < 0)
                     return;
