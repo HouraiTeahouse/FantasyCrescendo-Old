@@ -10,11 +10,12 @@ using Random = UnityEngine.Random;
 namespace HouraiTeahouse.SmashBrew.Matches {
 
     public enum MatchStatus {
-        Initialization = 0,     // Initializing and setting up
+        Initialization = 0,     // Initializing and setting up match.
         WaitingOnServer,        // Wait on server to initialize
         Spawning,               // Match is spawning characters, players do not currently have control.
         Running,                // Players currently have control of their characters.
-        Completed               // Match completed. Waiting on resolution.
+        Completed,              // Match completed. Waiting on resolution.
+        Resolved                // All MatchCompleted handlers completed, safe to change scenes.
     }
 
     public struct MatchPlayerConfig {
@@ -47,7 +48,6 @@ namespace HouraiTeahouse.SmashBrew.Matches {
 
         Mediator _eventManager;
         MatchRule[] _rules;
-        ITask _initialization;
 
         /// <summary>
         /// Awake is called when the script instance is being loaded.
@@ -55,21 +55,18 @@ namespace HouraiTeahouse.SmashBrew.Matches {
         void Awake() {
             Current = this;
             Players = new PlayerSet();
-            Status = MatchStatus.Initialization;
             _eventManager = Mediator.Global;
-            _initialization = new Task();
-            SetupNetworkEvents();
+            _rules = GetComponents<MatchRule>();
+            Status = MatchStatus.Initialization;
         }
 
         public void Initialize(MatchConfig config) {
             if (Status != MatchStatus.Initialization)
                 throw new InvalidOperationException("Cannot initialize an already initialized Match");
             Config = config;
-            _rules = GetComponents<MatchRule>();
             foreach (var rule in _rules)
                 rule.Initialize(Config);
             _rules = _rules.Where(r => r.IsActive).ToArray();
-            _initialization.Resolve();
             Status = MatchStatus.Spawning;
             Assert.IsNotNull(Config);
             for (var i = 0; i < Config.PlayerSelections.Length; i++) {
@@ -78,7 +75,7 @@ namespace HouraiTeahouse.SmashBrew.Matches {
             }
             Status = MatchStatus.Running;
             _log.Info("Starting match...");
-            _eventManager.Publish(new MatchStartEvent());
+            _eventManager.Publish(new MatchStarted{ Match = this });
         }
 
         /// <summary>
@@ -93,11 +90,14 @@ namespace HouraiTeahouse.SmashBrew.Matches {
 
         public void Finish(MatchResult result, Player winner) {
             Status = MatchStatus.Completed;
-            _eventManager.Publish(new MatchEndEvent {
+            _eventManager.PublishAsync(new MatchCompleted {
+                Match = this,
                 Result = result, 
                 Winner = winner
+            }).Then(() => {
+                _log.Info("Match Completed, Result: {0}, Winner: {1}", result, winner);
+                _eventManager.Publish(new MatchResolved { Match = this });
             });
-            _log.Info("Match Completed, Result: {0}, Winner: {1}", result, winner);
         }
 
         void SpawnPlayer(Player player, MatchPlayerConfig config) {
@@ -175,89 +175,6 @@ namespace HouraiTeahouse.SmashBrew.Matches {
                 // PlayerMap[playerConnection] = player;
                 playerObj.GetComponentsInChildren<IDataComponent<Player>>().SetData(player);
             }).Done();
-        }
-
-        void SetupNetworkEvents() {
-            var context = Mediator.Global.CreateUnityContext(this);
-            // context.Subscribe<NetworkClientStarted>(args =>{
-            //     DestroyLeftoverPlayers();
-            //     args.Client.RegisterHandler(SmashNetworkMessages.UpdatePlayer,
-            //         msg => {
-            //             var update = msg.ReadMessage<UpdatePlayerMessage>();
-            //             var player = MatchPlayers.Get(update.ID);
-            //             update.UpdatePlayer(player);
-            //         });
-            // });
-            // context.Subscribe<NetworkClientConnected>(args => {
-            //     foreach (var player in Players.Where(p => p.Type.IsActive)) {
-            //         ClientScene.AddPlayer(args.Connection, localPlayerCount, PlayerSelectionMessage.FromSelection(player.Selection));
-            //         localPlayerCount++;
-            //     }
-            // });
-        //     context.Subscribe<NetworkClientDisconnected>(args => {
-        //         DestroyLeftoverPlayers();
-        //     });
-        //     context.Subscribe<NetworkClientStarted>(args => {
-        //         DestroyLeftoverPlayers();
-        //         NetworkServer.RegisterHandler(SmashNetworkMessages.PlayerInput,
-        //             msg => {
-        //                 // TODO(james7132): check for client authority
-        //                 var message = msg.ReadMessage<PlayerInputSet>();
-        //                 var player = Players.Get(message.PlayerId);
-        //                 if (player == null || player.PlayerObject == null)
-        //                     return;
-        //                 player.PlayerObject.ServerRecieveInput(message);
-        //             });
-        //         // Update players when they change
-        //         foreach (var player in Players) {
-        //             player.Changed += () => {
-        //                 if (Network.isServer) {
-        //                     NetworkServer.SendToAll(SmashNetworkMessages.UpdatePlayer, UpdatePlayerMessage.FromPlayer(player));
-        //                 }
-        //             };
-        //         }
-        //     });
-        //     context.Subscribe<NetworkServerReady>(args => {
-        //         foreach (var player in MatchPlayers)
-        //             args.Connection.Send(SmashNetworkMessages.UpdatePlayer, 
-        //                                  UpdatePlayerMessage.FromPlayer(player));
-        //     });
-        //     context.Subscribe<NetworkServerDisconnected>(args => {
-        //         foreach (var playerController in args.Connection.playerControllers)
-        //             RemovePlayer(args.Connection, playerController);
-        //     });
-        //     context.Subscribe<NetworkServerAddedPlayer>(AddPlayer);
-        //     context.Subscribe<NetworkServerRemovedPlayer>(args => RemovePlayer(args.Connection, args.PlayerController));
-        //     context.Subscribe<NetworkClientStopped>(args => {
-        //         playerCount = 0;
-        //         Players.ResetAll();
-        //     });
-        // }
-
-        // void RemovePlayer(NetworkConnection conn, PlayerController controller) {
-        //     var playerConnection = new PlayerConnection {
-        //         ConnectionID = conn.connectionId,
-        //         PlayerControllerID = controller.playerControllerId
-        //     };
-        //     if(PlayerMap.ContainsKey(playerConnection)) {
-        //         var player = PlayerMap[playerConnection];
-        //         player.Type = PlayerType.None;
-        //         player.Selection = new PlayerSelection();
-        //         PlayerMap.Remove(playerConnection);
-        //     }
-        //     playerCount = Mathf.Max(0, playerCount - 1);
-        }
-
-
-        void DestroyLeftoverPlayers() {
-            // localPlayerCount = 0;
-            // playerCount = 0;
-            // var players = Resources.FindObjectsOfTypeAll<Character>();
-            // foreach (Character character in players) {
-            //     if (character.gameObject.scene.isLoaded)
-            //         Destroy(character.gameObject);
-            // }
-            // MatchPlayers.ResetAll();
         }
 
     }

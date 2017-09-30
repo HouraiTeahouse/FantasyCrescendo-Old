@@ -4,12 +4,18 @@ using UnityEngine;
 
 namespace HouraiTeahouse.SmashBrew.Matches {
 
-    public class MatchEndEvent {
+    public class MatchStarted {
+        public Match Match;
+    }
+
+    public class MatchCompleted {
+        public Match Match;
         public MatchResult Result;
         public Player Winner;
     }
 
-    public class MatchStartEvent {
+    public class MatchResolved {
+        public Match Match;
     }
 
 }

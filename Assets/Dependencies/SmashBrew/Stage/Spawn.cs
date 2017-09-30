@@ -8,7 +8,7 @@ namespace HouraiTeahouse.SmashBrew.Stage {
 
     /// <summary> A EventHandler for spawning characters at the start of the match </summary>
     [AddComponentMenu("Smash Brew/Stage/Spawn")]
-    public class Spawn : EventBehaviour<MatchStartEvent> {
+    public class Spawn : EventBehaviour<MatchStarted> {
 
         [Serializable]
         class SpawnPoint {
@@ -24,7 +24,7 @@ namespace HouraiTeahouse.SmashBrew.Stage {
 
         /// <summary> Spawns players when the match begins. </summary>
         /// <param name="eventArgs"> </param>
-        protected override void OnEvent(MatchStartEvent eventArgs) {
+        protected override void OnEvent(MatchStarted eventArgs) {
             //var i = 0;
             //var playerManager = PlayerManager.Instance;
             //IEnumerator<Player> activePlayers = playerManager.MatchPlayers.Where(p => p.Type.IsActive).GetEnumerator();

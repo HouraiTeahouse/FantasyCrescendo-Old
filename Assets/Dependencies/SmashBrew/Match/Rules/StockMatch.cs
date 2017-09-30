@@ -79,10 +79,8 @@ namespace HouraiTeahouse.SmashBrew.Matches {
                     break;
                 }
             }
-            if (result != null) {
-                Log.Debug(string.Join(" ", Match.Players.Select(GetStock).ToArray()));
+            if (result != null)
                 Match.Finish(result.Value, winner);
-            }
         }
 
     }
