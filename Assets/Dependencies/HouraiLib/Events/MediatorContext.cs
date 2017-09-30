@@ -32,6 +32,7 @@ namespace HouraiTeahouse {
         }
 
         public virtual void Dispose() {
+            Log.Warning("DISPOSED");
             foreach(var kv in _subscriptions) {
                 foreach (var sub in kv.Value) {
                     Mediator.Unsubscribe(kv.Key, sub);

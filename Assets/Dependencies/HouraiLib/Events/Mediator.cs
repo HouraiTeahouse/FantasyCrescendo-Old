@@ -95,20 +95,14 @@ namespace HouraiTeahouse {
         /// <exception cref="ArgumentNullException"> <paramref name="evnt" /> is null </exception>
         public void Publish<T>(T evnt) {
             Type eventType = Argument.NotNull(evnt).GetType();
-            log.Info("Published: " + eventType.Name);
-            foreach (Type type in GetEventTypes(eventType)) {
-                List<Delegate> typeSubscribers;
-                if (!_subscribers.TryGetValue(type, out typeSubscribers))
-                    continue;
-                foreach (var subscriber in typeSubscribers.ToArray()) {
-                    var sync = subscriber as Event<T>;
-                    if (sync != null)
-                        sync.Invoke(evnt);
-                    var async = subscriber as AsyncEvent<T>;
-                    if (async != null)
-                        async.Invoke(evnt);
-                    Assert.IsTrue(sync != null || async != null);
-                }
+            log.Debug("Published: " + eventType.Name);
+            var handlers = GetEventTypes(eventType)
+                    .Where(t => _subscribers.ContainsKey(t))
+                    .SelectMany(t => _subscribers[t])
+                    .ToArray();
+            foreach (var subscriber in handlers) {
+                (subscriber as Event<T>)?.Invoke(evnt);
+                (subscriber as AsyncEvent<T>)?.Invoke(evnt);
             }
         }
 
@@ -128,23 +122,19 @@ namespace HouraiTeahouse {
         /// <exception cref="ArgumentNullException"> <paramref name="evnt" /> is null </exception>
         public ITask PublishAsync<T>(T evnt) {
             Type eventType = Argument.NotNull(evnt).GetType();
-            log.Info("Published: " + eventType.Name);
+            log.Debug("Published: " + eventType.Name);
             List<ITask> subtasks = null;
-            foreach (Type type in GetEventTypes(eventType)) {
-                List<Delegate> typeSubscribers;
-                if (!_subscribers.TryGetValue(type, out typeSubscribers))
-                    continue;
-                foreach (var subscriber in typeSubscribers.ToArray()) {
-                    var sync = subscriber as Event<T>;
-                    if (sync != null)
-                        sync.Invoke(evnt);
-                    var async = subscriber as AsyncEvent<T>;
-                    if (async != null) {
-                        if (subtasks == null)
-                            subtasks = new List<ITask>();
-                        subtasks.Add(async.Invoke(evnt));
-                    }
-                    Assert.IsTrue(sync != null || async != null);
+            var handlers = GetEventTypes(eventType)
+                    .Where(t => _subscribers.ContainsKey(t))
+                    .SelectMany(t => _subscribers[t])
+                    .ToArray();
+            foreach (var subscriber in handlers) {
+                (subscriber as Event<T>)?.Invoke(evnt);
+                var async = subscriber as AsyncEvent<T>;
+                if (async != null) {
+                    if (subtasks == null)
+                        subtasks = new List<ITask>();
+                    subtasks.Add(async.Invoke(evnt));
                 }
             }
             if (subtasks == null)
