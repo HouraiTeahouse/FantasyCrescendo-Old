@@ -24,6 +24,13 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         public float ShieldHealth;              // 4 bytes
 
         public byte Stocks;                     // 1 byte
+
+        public CharacterStateSummary Reset() {
+            var summary = new CharacterStateSummary();
+            summary.Position = Position;
+            summary.Stocks = Stocks;
+            return summary;
+        }
     }
 
     public interface ICharacterComponent {

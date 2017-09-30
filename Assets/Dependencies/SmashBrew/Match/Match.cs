@@ -93,10 +93,11 @@ namespace HouraiTeahouse.SmashBrew.Matches {
 
         public void Finish(MatchResult result, Player winner) {
             Status = MatchStatus.Completed;
-            _eventManager.Publish(new MatchEndEvent{
+            _eventManager.Publish(new MatchEndEvent {
                 Result = result, 
                 Winner = winner
             });
+            _log.Info("Match Completed, Result: {0}, Winner: {1}", result, winner);
         }
 
         void SpawnPlayer(Player player, MatchPlayerConfig config) {
@@ -113,12 +114,11 @@ namespace HouraiTeahouse.SmashBrew.Matches {
 
             var startPosition = SmashNetworkManager.Instance.GetStartPosition();
             var character = selection.Character;
-            bool random = character == null;
             // Analytics.CustomEvent("characterSelected", new Dictionary<string, object> {
             //     { "character", character != null ? character.name : "Random" },
             //     { "color" , selection.Pallete },
             // });
-            if (random) {
+            if (character == null) {
                 Log.Info("No character was specfied, randomly selecting character and pallete...");
                 selection.Character = DataManager.Characters.Random();
                 selection.Pallete = Mathf.FloorToInt(Random.value * selection.Character.PalleteCount);

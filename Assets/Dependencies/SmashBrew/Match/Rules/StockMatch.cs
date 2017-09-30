@@ -32,22 +32,22 @@ namespace HouraiTeahouse.SmashBrew.Matches {
             _context.Subscribe<PlayerSpawnEvent>(args => {
                 if (!IsActive)
                     return;
-                var character = args.Player.PlayerObject;
-                Assert.IsNotNull(character);
-                var state = character.State;
-                state.Stocks = (byte)startStocks;
-                character.State = state;
+                args.Player.PlayerObject.State.Stocks = (byte)startStocks;
             });
             _context.Subscribe<PlayerDieEvent>(args => {
-                var stocks = GetStock(args.Player);
-                if (args.Revived || stocks == null || stocks.Value - 1 < 0)
+                if (!IsActive)
                     return;
-                args.Player.PlayerObject.State.Stocks--;
+                var stocks = GetStock(args.Player);
+                if (args.Revived || stocks <= 0)
+                    return;
+                var character = args.Player.PlayerObject;
+                Assert.IsNotNull(character);
+                character.State.Stocks--;
                 _eventManager.Publish(new PlayerStockChanged {
                     Player = args.Player,
-                    Stocks = stocks.Value - 1
+                    Stocks = character.State.Stocks
                 });
-                if (stocks.Value > 0)
+                if (character.State.Stocks > 0)
                     _eventManager.Publish(new PlayerRespawnEvent {Player = args.Player});
                 args.Revived = true;
                 MatchFinishCheck();
@@ -60,16 +60,15 @@ namespace HouraiTeahouse.SmashBrew.Matches {
 
         internal override void OnMatchTick() => MatchFinishCheck();
 
-        int? GetStock(Player player) => player?.PlayerObject?.State.Stocks;
+        int GetStock(Player player) => player?.PlayerObject?.State.Stocks ?? -1;
 
         void MatchFinishCheck() {
             var players = Match.Players;
             Player winner = null;
             MatchResult? result = MatchResult.Tie;
-            Log.Debug(Match.Players.Count);
             foreach (var player in Match.Players) {
                 var stockCount = GetStock(player);
-                if (stockCount == null || stockCount.Value <= 0)
+                if (stockCount <= 0)
                     continue;
                 if (winner == null) {
                     winner = player;
@@ -80,8 +79,10 @@ namespace HouraiTeahouse.SmashBrew.Matches {
                     break;
                 }
             }
-            if (result != null)
+            if (result != null) {
+                Log.Debug(string.Join(" ", Match.Players.Select(GetStock).ToArray()));
                 Match.Finish(result.Value, winner);
+            }
         }
 
     }
