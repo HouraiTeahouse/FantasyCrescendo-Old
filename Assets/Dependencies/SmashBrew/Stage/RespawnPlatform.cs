@@ -9,6 +9,7 @@ namespace HouraiTeahouse.SmashBrew.Stage {
     public class RespawnPlatform : NetworkBehaviour {
 
         Character _character;
+        Invincibility _invincibility;
 
         [SerializeField]
         bool _facing;
@@ -16,15 +17,13 @@ namespace HouraiTeahouse.SmashBrew.Stage {
         [SerializeField]
         float _invicibilityTimer;
 
-        Invincibility _invincibility;
-
         [SerializeField]
         float _platformTimer;
 
-        [SyncVar, SerializeField, ReadOnly]
+        [SyncVar]
         float _timer;
 
-        [SyncVar(hook = "OccupationChanged"), SerializeField, ReadOnly]
+        [SyncVar(hook = "OccupationChanged")]
         bool _isOccupied;
 
         public bool Occupied {
@@ -36,15 +35,8 @@ namespace HouraiTeahouse.SmashBrew.Stage {
         /// Awake is called when the script instance is being loaded.
         /// </summary>
         void Awake() {
-            Mediator.Global.Subscribe<PlayerRespawnEvent>(OnEvent);
-        }
-
-        /// <summary>
-        /// Called on the client when the connection was lost or you disconnected from the server.
-        /// </summary>
-        /// <param name="info">NetworkDisconnection data associated with this disconnect.</param>
-        void OnDestroy() {
-            Mediator.Global.Unsubscribe<PlayerRespawnEvent>(OnEvent);
+            var context = Mediator.Global.CreateUnityContext(this);
+            context.Subscribe<PlayerRespawnEvent>(OnEvent);
         }
 
         public override void OnStartServer() {
@@ -66,17 +58,19 @@ namespace HouraiTeahouse.SmashBrew.Stage {
                 return;
             eventArgs.Consumed = true;
             //TODO(james7132): Fix this
-            _character = eventArgs.Player.PlayerObject.GetComponentInChildren<Character>();
+            _character = eventArgs.Player.PlayerObject;
             _character.State.Position = transform.position;
             _character.ResetCharacter();
             _invincibility = Status.Apply<Invincibility>(_character, _invicibilityTimer + _platformTimer);
             _timer = 0f;
-            eventArgs.Player.PlayerObject.gameObject.SetActive(true);
+            _character.gameObject.SetActive(true);
             Occupied = true;
             _isOccupied = true;
         }
 
-        /// <summary> Unity callback. Called once per frame. </summary>
+        /// <summary>
+        /// Update is called every frame, if the MonoBehaviour is enabled.
+        /// </summary>
         void Update() {
             if (!isServer || _character == null)
                 return;

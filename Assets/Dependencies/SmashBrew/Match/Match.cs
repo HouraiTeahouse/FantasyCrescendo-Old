@@ -88,7 +88,14 @@ namespace HouraiTeahouse.SmashBrew.Matches {
                 rule.OnMatchTick();
         }
 
-        public void Finish(MatchResult result, Player winner) {
+        /// <summary>
+        /// Finishes and resolves a match.
+        /// </summary>
+        /// <param name="result"> what is the result of the match </param>
+        /// <param name="winner"> the winner of the match </param>
+        public void Finish(MatchResult result, Player winner = null) {
+            if (Status != MatchStatus.Running)
+                throw new InvalidOperationException("Cannot finish a match not currently running.");
             Status = MatchStatus.Completed;
             _eventManager.PublishAsync(new MatchCompleted {
                 Match = this,
@@ -96,11 +103,16 @@ namespace HouraiTeahouse.SmashBrew.Matches {
                 Winner = winner
             }).Then(() => {
                 _log.Info("Match Completed, Result: {0}, Winner: {1}", result, winner);
-                _eventManager.Publish(new MatchResolved { Match = this });
+                _eventManager.Publish(new MatchResolved { 
+                    Match = this,
+                    Result = result, 
+                    Winner = winner
+                });
             });
         }
 
         void SpawnPlayer(Player player, MatchPlayerConfig config) {
+            // TODO(james7132): Split this large function into smaller parts.
             Assert.IsNotNull(player);
             var playerControllerId = config.PlayerControllerId;
             var conn = config.Connection;

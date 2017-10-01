@@ -25,7 +25,6 @@ namespace HouraiTeahouse.SmashBrew.Matches {
         void Start() {
             MatchConfig config = MatchConfig;
             var client = SmashNetworkManager.Instance.StartHost();
-            NetworkServer.SpawnObjects();
             NetworkServer.dontListen = true;
             if (config == null) {
 #if UNITY_EDITOR
