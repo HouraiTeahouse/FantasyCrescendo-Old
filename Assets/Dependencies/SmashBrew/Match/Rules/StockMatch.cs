@@ -22,21 +22,20 @@ namespace HouraiTeahouse.SmashBrew.Matches {
     [AddComponentMenu("Smash Brew/Matches/Stock Match")]
     public sealed class StockMatch : MatchRule {
 
-        Mediator _eventManager;
-        MediatorContext _context;
         int startStocks;
 
-        public override void OnStartServer() {
-            _eventManager = Mediator.Global;
-            _context = _eventManager.CreateUnityContext(this);
-            _context.Subscribe<PlayerSpawnEvent>(args => {
-                if (!IsActive)
-                    return;
+        protected override bool CheckActive(MatchConfig config) => config.Stocks > 0;
+
+        protected override void OnInitialize(MatchConfig config) {
+            startStocks = config.Stocks;
+            var _eventManager = Mediator.Global;
+            var context = _eventManager.CreateUnityContext(this);
+            context.Subscribe<PlayerSpawnEvent>(args => {
+                Assert.IsTrue(IsActive);
                 args.Player.PlayerObject.State.Stocks = (byte)startStocks;
             });
-            _context.Subscribe<PlayerDieEvent>(args => {
-                if (!IsActive)
-                    return;
+            context.Subscribe<PlayerDieEvent>(args => {
+                Assert.IsTrue(IsActive);
                 var stocks = GetStock(args.Player);
                 if (args.Revived || stocks <= 0)
                     return;
@@ -53,10 +52,6 @@ namespace HouraiTeahouse.SmashBrew.Matches {
                 MatchFinishCheck();
             });
         }
-
-        protected override bool CheckActive(MatchConfig config) => config.Stocks > 0;
-
-        protected override void OnInitialize(MatchConfig config) => startStocks = config.Stocks;
 
         internal override void OnMatchTick() => MatchFinishCheck();
 
