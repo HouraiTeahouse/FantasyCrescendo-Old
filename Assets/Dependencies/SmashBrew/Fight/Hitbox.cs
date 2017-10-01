@@ -332,7 +332,7 @@ namespace HouraiTeahouse.SmashBrew {
         /// </summary>
         /// <param name="other">The other Collider involved in this collision.</param>
         void OnTriggerEnter(Collider other) { 
-            if (!other.CompareTag(Config.Tags.HitboxTag))
+            if (!enabled || !other.CompareTag(Config.Tags.HitboxTag))
                 return;
             var otherHitbox = other.GetComponent<Hitbox>();
             if (otherHitbox == null || !ReactionMatrix.ContainsKey(CurrentType, otherHitbox.CurrentType))
