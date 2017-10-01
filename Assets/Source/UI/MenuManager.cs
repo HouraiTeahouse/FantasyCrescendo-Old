@@ -85,7 +85,8 @@ namespace HouraiTeahouse {
         /// </summary>
         /// <param name="menu"></param>
         public void ChangeMenu(Menu menu) {
-            _menuBreadcrumnbs.Push(_currentMenu.Name);
+            if (_currentMenu != null)
+                _menuBreadcrumnbs.Push(_currentMenu.Name);
             ChangeMenuInternal(menu);
         }
 
