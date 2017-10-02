@@ -1280,7 +1280,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isActive: 1
-  _isHitbox: 0
+  _isHitbox: 1
   _isIntangible: 0
   _isInvincible: 0
   _absorbing: 0
@@ -1655,7 +1655,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isActive: 1
-  _isHitbox: 0
+  _isHitbox: 1
   _isIntangible: 0
   _isInvincible: 0
   _absorbing: 0

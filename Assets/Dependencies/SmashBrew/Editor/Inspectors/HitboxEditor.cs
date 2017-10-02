@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using UnityEditor;
 
 namespace HouraiTeahouse.SmashBrew {
@@ -22,18 +23,20 @@ namespace HouraiTeahouse.SmashBrew {
                 serializedObject.FindProperty("_reflector").boolValue  = hitboxType == Hitbox.Type.Reflective;
             }
             var isHitbox = serializedObject.FindProperty("_isHitbox");
-            if (!isHitbox.boolValue)
-                return;
-            EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("_priority"));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("_damage"));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("_baseKnockback"));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("_knockbackScaling"));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("_angle"));
-            using (new EditorGUILayout.HorizontalScope()) {
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("_reflectable"));
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("_absorbable"));
+            if (isHitbox.boolValue) {
+                EditorGUILayout.Space();
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("_priority"));
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("_damage"));
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("_baseKnockback"));
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("_knockbackScaling"));
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("_angle"));
+                using (new EditorGUILayout.HorizontalScope()) {
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("_reflectable"));
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("_absorbable"));
+                }
             }
+            if (GUI.changed)   
+                serializedObject.ApplyModifiedProperties();
         }
     }
 
