@@ -134,8 +134,7 @@ namespace HouraiTeahouse {
                 if (value > Max) {
                     _min = _max;
                     _max = value;
-                }
-                else {
+                } else {
                     _min = value;
                 }
             }
@@ -148,8 +147,7 @@ namespace HouraiTeahouse {
                 if (value < Min) {
                     _max = _min;
                     _min = value;
-                }
-                else {
+                } else {
                     _min = value;
                 }
             }
@@ -208,8 +206,10 @@ namespace HouraiTeahouse {
         /// <param name="val"> </param>
         /// <returns> </returns>
         public float Lerp(float val) {
-            return Mathf.Lerp(_min, _max, val);
+            return Mathf.Lerp(Min, Max, val);
         }
+
+        public override string ToString() => "<{0}:{1}>".With(Min, Max);
 
         public static implicit operator Range(float f) => new Range(f);
         public static implicit operator Range(int f) => new Range(f);

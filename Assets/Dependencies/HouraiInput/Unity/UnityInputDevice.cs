@@ -55,8 +55,7 @@ namespace HouraiTeahouse.HouraiInput {
                     && Mathf.Abs(analogValue) < Mathf.Epsilon) {
                     targetControl.RawValue = null;
                     targetControl.PreValue = null;
-                }
-                else {
+                } else {
                     float mappedValue = analogMapping.MapValue(analogValue);
 
                     // TODO: This can surely be done in a more elegant fashion.

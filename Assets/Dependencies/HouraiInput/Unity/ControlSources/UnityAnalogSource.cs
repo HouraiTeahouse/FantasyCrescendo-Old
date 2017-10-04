@@ -11,7 +11,7 @@ namespace HouraiTeahouse.HouraiInput {
 
             for (var joystickId = 1; joystickId <= UnityInputDevice.MaxDevices; joystickId++)
                 for (var analogId = 0; analogId < UnityInputDevice.MaxAnalogs; analogId++)
-                    _analogQueries[joystickId - 1, analogId] = "joystick " + joystickId + " analog " + analogId;
+                    _analogQueries[joystickId - 1, analogId] = $"joystick {joystickId} analog {analogId}";
         }
 
         readonly int _analogId;

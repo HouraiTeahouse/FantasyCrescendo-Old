@@ -7,14 +7,11 @@ namespace HouraiTeahouse.HouraiInput {
 
         public static readonly InputControl Null = new InputControl("NullInputControl");
 
-        InputState lastState;
         internal float? PreValue;
 
         // This is for internal use only and is not always set.
         internal float? RawValue;
         InputState tempState;
-
-        InputState thisState;
 
         ulong zeroTick;
 
@@ -52,10 +49,10 @@ namespace HouraiTeahouse.HouraiInput {
         public InputState State { get; private set; }
         public InputState LastState { get; private set; }
 
-        public bool HasChanged => thisState != lastState;
-        public bool IsPressed => thisState.State;
-        public bool WasPressed => thisState && !lastState;
-        public bool WasReleased => !thisState && lastState;
+        public bool HasChanged => State != LastState;
+        public bool IsPressed => State.State;
+        public bool WasPressed => State && !LastState;
+        public bool WasReleased => !State && LastState;
         public bool IsNull => this == Null;
         public bool IsNotNull => this != Null;
 
@@ -77,13 +74,11 @@ namespace HouraiTeahouse.HouraiInput {
         }
 
         public void UpdateWithState(bool state, ulong updateTick) {
-            if (IsNull) {
+            if (IsNull)
                 throw new InvalidOperationException("A null control cannot be updated.");
-            }
 
-            if (UpdateTick > updateTick) {
+            if (UpdateTick > updateTick)
                 throw new InvalidOperationException("A control cannot be updated with an earlier tick.");
-            }
 
             tempState.Set(state || tempState.State);
         }
@@ -103,13 +98,13 @@ namespace HouraiTeahouse.HouraiInput {
             RawValue = null;
             PreValue = null;
 
-            lastState = thisState;
+            LastState = State;
             tempState.Reset();
         }
 
         internal void PostUpdate(ulong updateTick) {
-            thisState = tempState;
-            if (thisState != lastState)
+            State = tempState;
+            if (State != LastState)
                 UpdateTick = updateTick;
         }
 

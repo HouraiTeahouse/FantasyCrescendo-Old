@@ -11,7 +11,7 @@ namespace HouraiTeahouse.SmashBrew {
         }
 
         public static IEnumerable<InputControl> GetControls(this InputDevice device, IEnumerable<InputTarget> targets) {
-            return targets.Select<InputTarget, InputControl>(device.GetControl);
+            return targets.Select(device.GetControl);
         }
 
         public static IEnumerable<InputControl> GetControls(this IEnumerable<InputDevice> devices,

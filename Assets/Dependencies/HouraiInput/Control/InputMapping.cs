@@ -44,11 +44,6 @@ namespace HouraiTeahouse.HouraiInput {
                 // Scale value and clamp to a legal range.
                 value = Mathf.Clamp(value * Scale, -1.0f, 1.0f);
 
-                // Values outside of source range are invalid and return zero.
-                if (value < SourceRange.Min || value > SourceRange.Max) {
-                    return 0.0f;
-                }
-
                 // Remap from source range to target range.
                 float sourceValue = SourceRange.InverseLerp(value);
                 targetValue = TargetRange.Lerp(sourceValue);

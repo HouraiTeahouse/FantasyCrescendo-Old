@@ -45,6 +45,7 @@ namespace HouraiTeahouse.HouraiInput {
             return !Mathf.Approximately(a.Value, b.Value); 
         }
 
+        public override string ToString() => $"[InputState:{State},{Value}]";
     }
 
 }
