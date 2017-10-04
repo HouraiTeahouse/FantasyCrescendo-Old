@@ -87,7 +87,7 @@ namespace HouraiTeahouse {
 #endif
                 {
                     throw new InvalidOperationException(
-                        "Cannot synchronously load assets from AssetBundles. Path: {0}".With(_path));
+                        $"Cannot synchronously load assets from AssetBundles. Path: {_path}");
                 }
             } else {
                 loadedObject = Resources.Load<T>(_path);

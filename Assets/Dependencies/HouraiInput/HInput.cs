@@ -43,7 +43,7 @@ namespace HouraiTeahouse.HouraiInput {
             if (_isSetup)
                 return;
 
-            Platform = "{0} {1}".With(SystemInfo.operatingSystem, SystemInfo.deviceModel).ToUpper();
+            Platform = $"{SystemInfo.operatingSystem} {SystemInfo.deviceModel}".ToUpper();
 
             _initialTime = 0.0f;
             _currentTime = 0.0f;

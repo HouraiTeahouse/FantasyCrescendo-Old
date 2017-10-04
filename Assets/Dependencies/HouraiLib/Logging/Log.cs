@@ -109,7 +109,7 @@ namespace HouraiTeahouse {
             }
 
             void ILog.Log(LogLevel logType, string format, params object[] objs) {
-                WriteLog(logType, "[{0}] ".With(Prefix) + format, objs);
+                WriteLog(logType, $"[{Prefix}] {format}", objs);
             }
 
         }
@@ -137,13 +137,13 @@ namespace HouraiTeahouse {
             var date = DateTime.Now.ToString(_settings.TimeFormat);
             var type = log.ToString().Substring(0, 1);
 #if UNITY_EDITOR
-            string prefix = "<color={2}>{1}</color> {0}: ".With(date, type, _colors[log]);
+            string prefix = $"<color={_colors[log]}>{type}</color> {date}: ";
 #else
-            string prefix = "{1} {0}:".With(date, type);
+            string prefix = $"{date} {type}:";
 #endif
             var output = source as string;
             if (output != null)
-                output = output.With(objs);
+                output = string.Format(output, objs);
             else
                 output = source == null ? "Null" : source.ToString();
 #if UNITY_EDITOR

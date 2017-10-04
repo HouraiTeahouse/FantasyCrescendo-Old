@@ -68,7 +68,7 @@ namespace HouraiTeahouse.SmashBrew {
         public override string ToString() {
             if (Character == null)
                 return "None";
-            return "{0}:{1}".With(Character.name, Pallete);
+            return $"<Selection: {Character.name}:{Pallete}>";
         }
 
         public static bool operator ==(PlayerSelection s1, PlayerSelection s2) {

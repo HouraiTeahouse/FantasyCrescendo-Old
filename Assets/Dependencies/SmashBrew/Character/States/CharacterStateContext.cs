@@ -124,7 +124,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         public InputContext Input;
 
         public override string ToString() {
-            return "t:{0} d:{5} g:{1} l:{2} h:{3} s:{4} i:{6}".With(
+            return string.Format("t:{} d:{5} g:{1} l:{2} h:{3} s:{4} i:{6}",
                 NormalizedAnimationTime, IsGrounded, IsGrabbingLedge,
                 IsHit, ShieldHP, Direction, Input
             );

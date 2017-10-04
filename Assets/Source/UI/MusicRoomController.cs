@@ -67,7 +67,7 @@ namespace HouraiTeahouse.FantasyCrescendo {
             if (_textSource == null)
                 return;
             var bgm = CurrentSelectedBGM;
-            var text = "{0}\nby {1}".With(bgm.Name, bgm.Artist);
+            var text = $"{bgm.Name}\nby {bgm.Artist}";
             if (!string.IsNullOrEmpty(bgm.OriginalName))
                 text += "\nOriginal: " + bgm.OriginalName;
             _textSource.SetUIText(text);

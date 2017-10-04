@@ -11,7 +11,7 @@ namespace HouraiTeahouse.Options.UI {
         public ResolutionDropdown() {
             Options = Screen.resolutions.OrderBy(res => res.width)
                                     .ThenBy(res => res.height)
-                                    .Select(res => "{0}x{1}".With(res.width, res.height))
+                                    .Select(res => $"{res.width}x{res.height}")
                                     .Distinct().ToList();
         }
 

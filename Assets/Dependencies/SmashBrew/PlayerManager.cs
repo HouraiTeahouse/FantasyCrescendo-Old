@@ -22,7 +22,6 @@ namespace HouraiTeahouse.SmashBrew {
         Dictionary<PlayerConnection, Player> PlayerMap;
 
         short localPlayerCount;
-        int playerCount = 0;
 
         /// <summary>
         /// Awake is called when the script instance is being loaded.

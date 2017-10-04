@@ -43,7 +43,7 @@ namespace HouraiTeahouse {
                 paths.Add(path);
             }
             foreach (string scenePath in _scenes) {
-                if (!_ignoreLoadedScenes && paths.Contains("Assets/{0}.unity".With(scenePath)))
+                if (!_ignoreLoadedScenes && paths.Contains($"Assets/{scenePath}.unity"))
                     continue;
                 isLoading = true;
                 SceneLoader.LoadScene(scenePath, _mode).Then(() => {

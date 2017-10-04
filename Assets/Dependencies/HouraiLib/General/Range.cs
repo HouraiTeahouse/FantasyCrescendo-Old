@@ -209,7 +209,7 @@ namespace HouraiTeahouse {
             return Mathf.Lerp(Min, Max, val);
         }
 
-        public override string ToString() => "<{0}:{1}>".With(Min, Max);
+        public override string ToString() => $"<{Min}:{Max}>";
 
         public static implicit operator Range(float f) => new Range(f);
         public static implicit operator Range(int f) => new Range(f);

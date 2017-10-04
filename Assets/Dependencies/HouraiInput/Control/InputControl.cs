@@ -110,7 +110,7 @@ namespace HouraiTeahouse.HouraiInput {
 
         internal void SetZeroTick() { zeroTick = UpdateTick; }
 
-        public override string ToString() { return "[InputControl: Handle={0}, Value={1}]".With(Handle, State.Value); }
+        public override string ToString() => $"[InputControl: Handle={Handle}, Value={State.Value}]";
 
         public static implicit operator bool(InputControl control) => control.State;
         public static implicit operator float(InputControl control) => control.State;

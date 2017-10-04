@@ -35,7 +35,7 @@ namespace HouraiTeahouse.UI {
             if (string.IsNullOrEmpty(_displayFormat))
                 _text.SetUIText(Application.version);
             else
-                _text.SetUIText(_displayFormat.With(Application.version));
+                _text.SetUIText(string.Format(_displayFormat, Application.version));
             Destroy(this);
         }
 

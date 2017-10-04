@@ -7,7 +7,7 @@ namespace HouraiTeahouse.SmashBrew.UI {
         [SerializeField]
         string _format;
 
-        protected override void PlayerChange() { name = _format.With(Player.ID + 1); }
+        protected override void PlayerChange() { name = string.Format(_format, Player.ID + 1); }
 
     }
 

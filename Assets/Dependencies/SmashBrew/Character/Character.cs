@@ -68,7 +68,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             _stateMap = StateController.States.ToDictionary(s => s.AnimatorHash);
             if (Debug.isDebugBuild)
                 StateController.OnStateChange += (b, a) => 
-                    Log.Debug("{0} changed states: {1} => {2}".With(name, b.Name, a.Name));
+                    Log.Debug($"{name} changed states: {b.Name} => {a.Name}");
         }
 
         void InitializedComponents() {
@@ -258,7 +258,8 @@ namespace HouraiTeahouse.SmashBrew.Characters {
 
         void IDataComponent<Player>.SetData(Player data) {
             Player = data;
-            gameObject.name = "Player {0} ({1},{2})".With(data.ID, data.Selection.Character.name, data.Selection.Pallete);
+            var selection = data.Selection;
+            gameObject.name = $"Player {data.ID} ({selection.Character.name},{selection.Pallete})";
             if (isServer)
                 RpcSetPlayerId((byte)data.ID);
         }
@@ -273,7 +274,6 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         public void ResetCharacter() {
             StateController.ResetState();
             _hitHistory.Clear();
-            var oldState = State;
             State = ResetState(State.Reset());
             _lastServerState = State;
             foreach (IResettable resetable in GetComponentsInChildren<IResettable>())

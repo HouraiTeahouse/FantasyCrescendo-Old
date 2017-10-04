@@ -26,7 +26,7 @@ namespace HouraiTeahouse.Editor {
 
             public Data(SerializedProperty property, GUIContent content) {
                 _path = property.stringValue;
-                string path = "Assets/{0}.unity".With(_path);
+                string path = $"Assets/{_path}.unity";
                 if (Assets.IsBundlePath(_path)) {
                     string[] parts = _path.Split(Resource.BundleSeperator);
                     var paths = AssetDatabase.GetAssetPathsFromAssetBundleAndAssetName(parts[0], parts[1]);
@@ -59,12 +59,12 @@ namespace HouraiTeahouse.Editor {
                     message = "Not in Build Settings or Asset Bundle. Will not be saved.";
                 } else if (_path.IndexOf(Resource.BundleSeperator) >= 0) {
                     string[] splits = _path.Split(Resource.BundleSeperator);
-                    message = "Asset Bundle: {0}\nPath:{1}".With(splits[0], splits[1]);
+                    message = $"Asset Bundle: {splits[0]}\nPath:{splits[1]}";
                 } else {
-                    message = "Path: {0}".With(_path);
+                    message = $"Path: {_path}";
                 }
 
-                Content.tooltip = label.tooltip.IsNullOrEmpty() ? message : "{0}\n{1}".With(label.tooltip, message);
+                Content.tooltip = label.tooltip.IsNullOrEmpty() ? message : $"{label.tooltip}\n{message}";
             }
 
             void Update(SceneAsset obj) {

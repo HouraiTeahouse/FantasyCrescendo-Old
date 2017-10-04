@@ -90,14 +90,14 @@ namespace HouraiTeahouse.AssetBundles.Editor {
                         .ToArray());
 			switch(target) {
                 case BuildTarget.Android :
-			        return "/{0}.apk".With(baseName);
+			        return $"/{baseName}.apk";
                 case BuildTarget.StandaloneWindows:
                 case BuildTarget.StandaloneWindows64:
-			        return "/{0}.exe".With(baseName);
+			        return $"/{baseName}.exe";
                 case BuildTarget.StandaloneOSXIntel:
                 case BuildTarget.StandaloneOSXIntel64:
                 case BuildTarget.StandaloneOSXUniversal:
-			        return "/{0}.app".With(baseName);
+			        return $"/{baseName}.app";
                 case BuildTarget.WebGL:
                     return "";
                     // Add more build targets for your own.

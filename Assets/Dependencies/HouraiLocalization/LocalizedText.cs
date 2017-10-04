@@ -42,7 +42,7 @@ namespace HouraiTeahouse.Localization {
         ///     <see cref="AbstractLocalizedText" />
         /// </summary>
         protected override string Process(string val) { 
-            val = _format.IsNullOrEmpty() ? val : _format.With(val); 
+            val = _format.IsNullOrEmpty() ? val : string.Format(_format, val); 
             switch(_caseSetting) {
                 case CaseSetting.Uppercase:
                     val = val.ToUpper();

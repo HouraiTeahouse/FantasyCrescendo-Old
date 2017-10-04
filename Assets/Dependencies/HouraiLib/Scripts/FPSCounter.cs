@@ -48,9 +48,9 @@ namespace HouraiTeahouse {
             ITextAcceptor textAcceptor = null;
             while (true) {
                 yield return new WaitForSeconds(0.5f);
-                var text = "{0:0.}FPS".With(fps);
+                var text = $"{fps:0.}FPS";
                 if (_networkManager != null && _networkManager.client != null)
-                    text += "/{0:0.} RTT".With(_networkManager.client.GetRTT());
+                    text += $"/{_networkManager.client.GetRTT():0.} RTT";
                 if (textAcceptor == null) {
                     textAcceptor = _text.SetUIText(text);
                     if (textAcceptor == null) {

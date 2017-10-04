@@ -35,7 +35,7 @@ namespace HouraiTeahouse.SmashBrew.States {
             if (state == null)
                 throw new ArgumentNullException("state");
             if (_states.Contains(state))
-                throw new ArgumentException("States cannot be added multiple times: {0}".With(state));
+                throw new ArgumentException($"States cannot be added multiple times: {state}");
             _states.Add(state);
             return this;
         }

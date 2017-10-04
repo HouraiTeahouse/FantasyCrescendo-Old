@@ -177,7 +177,7 @@ namespace HouraiTeahouse.Localization {
             Argument.NotNull(identifier);
             identifier = identifier.ToLower();
             if (!_languages.Contains(identifier))
-                throw new InvalidOperationException("Language with identifier of {0} is not supported.".With(identifier));
+                throw new InvalidOperationException($"Language with identifier of {identifier} is not supported.");
             var languageValues = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(GetLanguagePath(identifier)));
             SetLanguage(identifier, languageValues);
             return CurrentLanguage;

@@ -26,7 +26,7 @@ namespace HouraiTeahouse.SmashBrew.UI {
                 indicator.GetComponentsInChildren<IDataComponent<Player>>().SetData(player);
                 indicator.gameObject.SetActive(player.Type.IsActive);
                 #if UNITY_EDITOR
-                indicator.gameObject.name = indicator.gameObject.name.Replace("(Clone)", " {0}".With(player.ID + 1));
+                indicator.gameObject.name = indicator.gameObject.name.Replace("(Clone)", $" {player.ID + 1}");
                 #endif
                 if (_container != null)
                     indicator.transform.SetParent(_container.transform, true);

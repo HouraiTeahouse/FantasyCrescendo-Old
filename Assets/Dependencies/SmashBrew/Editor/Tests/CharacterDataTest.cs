@@ -24,33 +24,6 @@ namespace HouraiTeahouse.SmashBrew {
                 data = Assets.LoadAll<T>().Where(d => d != null && d.IsSelectable && d.IsVisible);
         }
 
-        public static IEnumerable<object[]> TestData() {
-            LoadData();
-            foreach (var datum in data)
-                yield return new object[] {datum};
-        }
-
-        protected void Check(AssetFunc func) {
-            LoadData();
-            foreach (T datum in data) {
-                object result = func(datum);
-                if (result == null)
-                    Log.Error("{0} is invalid!".With(datum));
-                Assert.NotNull(result);
-            }
-        }
-
-        protected void CheckMany(AssetManyFunc func) {
-            LoadData();
-            foreach (T datum in data) {
-                foreach (object obj in func(datum)) {
-                    if (obj == null)
-                        Log.Error("{0} is invalid!".With(data));
-                    Assert.NotNull(obj);
-                }
-            }
-        }
-
     }
 
     /// <summary> 

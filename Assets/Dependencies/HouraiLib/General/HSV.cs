@@ -104,7 +104,7 @@ namespace HouraiTeahouse {
         // implicit converter between HSV and color
         public static implicit operator HSV(Color color) => new HSV(color);
 
-        public override string ToString() => "(H:{0}, S:{1}, V:{2}, A:{3})".With(h, s, v, a);
+        public override string ToString() => $"(H:{h}, S:{s}, V:{v}, A:{a})";
 
     }
 

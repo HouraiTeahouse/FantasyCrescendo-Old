@@ -24,10 +24,10 @@ namespace HouraiTeahouse {
         void Update() {
             if (!Input.GetKeyDown(_key))
                 return;
-            string filename = _format.With(DateTime.UtcNow.ToString(_dateTimeFormat)) + ".png";
+            string filename = string.Format(_format, DateTime.UtcNow.ToString(_dateTimeFormat)) + ".png";
             string path = Path.Combine(Application.dataPath, filename);
 
-            Log.GetLogger(this).Info("Screenshot taken. Saved to {0}", path);
+            Log.GetLogger(this).Info($"Screenshot taken. Saved to {path}");
 
             if (File.Exists(path))
                 File.Delete(path);

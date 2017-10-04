@@ -146,7 +146,7 @@ namespace HouraiTeahouse.SmashBrew.Matches {
                     }
                 }
                 if (!success) {
-                    Log.Error("Two players made the same selection, and no remaining palletes remain. {0} doesn't have enough colors".With(selection.Character));
+                    Log.Error($"Two players made the same selection, and no remaining palletes remain. {selection.Character} doesn't have enough colors");
                     ClientScene.RemovePlayer(playerControllerId);
                     return;
                 }
@@ -154,14 +154,12 @@ namespace HouraiTeahouse.SmashBrew.Matches {
 
             selection.Character.Prefab.LoadAsync().Then(prefab => {
                 if (prefab == null) {
-                    Log.Error("The character {0} does not have a prefab. Please add a prefab object to it.", selection.Character);
+                    Log.Error($"The character {selection.Character} does not have a prefab. Please add a prefab object to it.");
                     return;
                 }
 
                 if (prefab.GetComponent<NetworkIdentity>() == null) {
-                    Log.Error(
-                        "The character prefab for {0} does not have a NetworkIdentity. Please add a NetworkIdentity to it's prefab.",
-                        selection.Character);
+                    Log.Error($"The character prefab for {selection.Character} does not have a NetworkIdentity. Please add a NetworkIdentity to it's prefab.");
                     return;
                 }
 
@@ -180,10 +178,6 @@ namespace HouraiTeahouse.SmashBrew.Matches {
                 });
                 NetworkServer.AddPlayerForConnection(conn, playerObj, playerControllerId);
                 NetworkServer.SendToAll(SmashNetworkMessages.UpdatePlayer, UpdatePlayerMessage.FromPlayer(player));
-                var playerConnection = new PlayerConnection {
-                    ConnectionID = conn.connectionId,
-                    PlayerControllerID = playerControllerId
-                };
                 // PlayerMap[playerConnection] = player;
                 playerObj.GetComponentsInChildren<IDataComponent<Player>>().SetData(player);
             }).Done();

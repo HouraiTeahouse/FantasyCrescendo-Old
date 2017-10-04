@@ -100,11 +100,11 @@ namespace HouraiTeahouse.SmashBrew {
                 foreach (var entry in file.Split('\n')) {
                     if (entry.StartsWith("-")) {
                         blacklist.Add(entry.Substring(1).Trim());
-                        log.Info("Registered bundle blacklist: {0}".With(entry.Substring(1).Trim()));
+                        log.Info($"Registered bundle blacklist: {entry.Substring(1).Trim()}");
                     }
                     else {
                         whitelist.Add(entry.Trim());
-                        log.Info("Registered bundle whitelist: {0}".With(entry.Trim()));
+                        log.Info($"Registered bundle whitelist: {entry.Trim()}");
                     }
                 }
 
@@ -158,7 +158,7 @@ namespace HouraiTeahouse.SmashBrew {
 
 #if UNITY_EDITOR
         static void LoadFromEditor<T>(Action<T> loadFunc) where T : Object {
-            var guids = AssetDatabase.FindAssets("t:{0}".With(typeof(T).Name));
+            var guids = AssetDatabase.FindAssets($"t:{typeof(T).Name}");
             foreach (string guid in guids) {
                 var path = AssetDatabase.GUIDToAssetPath(guid);
                 var asset = AssetDatabase.LoadAssetAtPath<T>(path);

@@ -18,17 +18,6 @@ namespace HouraiTeahouse {
             return (T) Enum.Parse(typeof(T), Argument.NotNull(str), ignoreCase);
         }
 
-        /// <summary> 
-        /// Shorthand for string.Format. 
-        /// </summary>
-        /// <param name="str"> string to format </param>
-        /// <param name="objs"> the objects to format it with </param>
-        /// <returns> the formatted string </returns>
-        /// <exception cref="ArgumentNullException"> <paramref name="str" /> or <paramref name="objs" /> is null </exception>
-        public static string With(this string str, params object[] objs) {
-            return string.Format(Argument.NotNull(str), objs);
-        }
-
         /// <summary>
         /// Replaces an null string with an empty one.
         /// </summary>
