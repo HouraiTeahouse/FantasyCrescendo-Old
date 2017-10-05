@@ -20,20 +20,12 @@ namespace HouraiTeahouse.FantasyCrescendo {
         /// any of the Update methods is called the first time.
         /// </summary>
         void Start() {
-            SmashTimeManager.OnPause += OnPause;
-            OnPause();
+            var context = Mediator.Global.CreateUnityContext(this);
+            context.Subscribe<PausedStateChange>(args => OnPause(args.IsPaused));
+            OnPause(TimeManager.Paused);
         }
 
-        /// <summary>
-        /// This function is called when the MonoBehaviour will be destroyed.
-        /// </summary>
-        void OnDestroy() {
-            SmashTimeManager.OnPause -= OnPause;
-        }
-
-        void OnPause() {
-            gameObject.SetActive(!_show ^ SmashTimeManager.Paused);
-        }
+        void OnPause(bool isPaused) => gameObject.SetActive(!_show ^ isPaused);
 
     }
 

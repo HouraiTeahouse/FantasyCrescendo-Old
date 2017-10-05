@@ -1,5 +1,6 @@
-using System.Linq;
 using HouraiTeahouse.HouraiInput;
+using HouraiTeahouse.SmashBrew.Matches;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Networking;
@@ -20,12 +21,12 @@ namespace HouraiTeahouse.SmashBrew {
         /// </summary>
         void Update() {
             // Assure that all players are local before allowing 
-            var playerManager = PlayerManager.Instance;
-            if (playerManager == null)
+            var match = Match.Current;
+            if (match == null)
                 return;
-            var allLocal = playerManager.Players
-                                .Where(p => p.Type.IsActive && p.NetworkIdentity != null)
-                                .All(p => p.NetworkIdentity.isLocalPlayer);
+            var allLocal = match.Players
+                            .Where(p => p.Type.IsActive && p.NetworkIdentity != null)
+                            .All(p => p.NetworkIdentity.isLocalPlayer);
             if (!allLocal) {
                 TimeManager.Paused = false;
                 return;
@@ -34,24 +35,23 @@ namespace HouraiTeahouse.SmashBrew {
                 Assert.IsNotNull(SmashTimeManager.PausedPlayer);
                 Player player = SmashTimeManager.PausedPlayer;
                 var unpause = player != null && player.Controller.GetControl(_pauseButton).WasPressed;
-                unpause |= Input.GetKeyDown(KeyCode.Return) && player == playerManager.Players.Where(p => p.Type.IsActive).First();
+                unpause |= Input.GetKeyDown(KeyCode.Return) && player == match.Players.Where(p => p.Type.IsActive).First();
                 if (!unpause)
                     return;
                 SmashTimeManager.PausedPlayer = null;
-                Log.Info("Game unpaused by {0}.", player);
-            }
-            else {
-                foreach (Player player in playerManager.Players.Where(p => p.Type.IsActive)) {
+                Log.Debug("Game unpaused by {0}.", player);
+            } else {
+                foreach (Player player in match.Players.Where(p => p.Type.IsActive)) {
                     if (player.Controller == null || !player.Controller.GetControl(_pauseButton).WasPressed)
                         continue;
                     SmashTimeManager.PausedPlayer = player;
-                    Log.Info("Game paused by {0}.", player);
+                    Log.Debug("Game paused by {0}.", player);
                     break;
                 }
                 if (Input.GetKeyDown(KeyCode.Return)) {
-                    var player = playerManager.Players.Where(p => p.Type.IsActive).First();
+                    var player = match.Players.Where(p => p.Type.IsActive).First();
                     SmashTimeManager.PausedPlayer = player;
-                    Log.Info("Game paused by {0}.", player);
+                    Log.Debug("Game paused by {0}.", player);
                 }
             }
         }

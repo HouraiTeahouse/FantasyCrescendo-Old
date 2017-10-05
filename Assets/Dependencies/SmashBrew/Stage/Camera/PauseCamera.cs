@@ -37,18 +37,12 @@ namespace HouraiTeahouse.SmashBrew.Stage {
             }
             _defaultRotation = transform.localRotation;
             _defaultDistance = _pauseCameraTarget.transform.localPosition.z;
-            SmashTimeManager.OnPause  += OnPause;
             enabled = SmashTimeManager.Paused;
+            var context = Mediator.Global.CreateUnityContext(this);
+            context.Subscribe<GamePaused>(OnPause);
         } 
 
-        /// <summary>
-        /// This function is called when the MonoBehaviour will be destroyed.
-        /// </summary>
-        void OnDestroy() {
-            SmashTimeManager.OnPause -= OnPause;
-        }
-
-        void OnPause() {
+        void OnPause(GamePaused args) {
             var timeManager = SmashTimeManager.Instance;
             if (timeManager == null)
                 return;

@@ -25,8 +25,10 @@ namespace HouraiTeahouse {
                     return;
                 _paused = value;
                 Time.timeScale = _paused ? 0f : TimeScale;
-                if (OnPause != null)
-                    OnPause();
+                if (value)
+                    Mediator.Global.Publish(new GamePaused());
+                else
+                    Mediator.Global.Publish(new GameUnpaused());
             }
         }
 
@@ -43,19 +45,11 @@ namespace HouraiTeahouse {
                 _timeScale = value;
                 if (!Paused)
                     Time.timeScale = value;
-                OnTimeScaleChange?.Invoke();
+                Mediator.Global.Publish(new TimeScaleChange{
+                    TimeScale = value
+                });
             }
         }
-
-        /// <summary> 
-        /// Events. Called every time the game is paused or unpaused. 
-        /// </summary>
-        public static event Action OnPause;
-
-        /// <summary> 
-        /// Events. Called every time the global timescale is changed. 
-        /// </summary>
-        public static event Action OnTimeScaleChange;
 
         /// <summary>
         /// Awake is called when the script instance is being loaded.
@@ -65,6 +59,22 @@ namespace HouraiTeahouse {
             _timeScale = Time.timeScale;
         }
 
+    }
+
+    public abstract class PausedStateChange {
+        public abstract bool IsPaused { get; }
+    }
+
+    public class GamePaused : PausedStateChange {
+        public override bool IsPaused => true;
+    }
+
+    public class GameUnpaused : PausedStateChange {
+        public override bool IsPaused => false;
+    }
+
+    public struct TimeScaleChange {
+        public float TimeScale;
     }
 
 }

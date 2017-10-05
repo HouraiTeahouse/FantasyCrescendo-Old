@@ -23,27 +23,18 @@ namespace HouraiTeahouse.FantasyCrescendo {
         /// Awake is called when the script instance is being loaded.
         /// </summary>
         void Awake() {
-            SmashTimeManager.OnPause += PlayPauseEffect;
-            if (_source == null)
-                _source = GetComponentInChildren<AudioSource>();
-        }
-
-        /// <summary>
-        /// This function is called when the MonoBehaviour will be destroyed.
-        /// </summary>
-        void OnDestroy() {
-            SmashTimeManager.OnPause -= PlayPauseEffect;
+            var context = Mediator.Global.CreateUnityContext(this);
+            context.Subscribe<GamePaused>(PlayPauseEffect);
+            _source = this.CachedGetComponent(_source, () => GetComponentInChildren<AudioSource>());
         }
 
         /// <summary>
         /// Reset is called when the user hits the Reset button in the Inspector's
         /// context menu or when adding the component the first time.
         /// </summary>
-        void Reset() {
-            _source = GetComponentInChildren<AudioSource>();
-        }
+        void Reset() => _source = GetComponentInChildren<AudioSource>();
 
-        void PlayPauseEffect() {
+        void PlayPauseEffect(GamePaused args) {
             if (_source == null)
                 return;
             _source.clip = SmashTimeManager.Paused ? _pauseSFX : _unpauseSFX;
