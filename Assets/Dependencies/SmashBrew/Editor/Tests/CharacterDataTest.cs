@@ -19,9 +19,11 @@ namespace HouraiTeahouse.SmashBrew {
 
         protected static IEnumerable<T> data;
 
-        protected static void LoadData() {
+        public static IEnumerable<object[]> TestData() {
             if (data == null)
                 data = Assets.LoadAll<T>().Where(d => d != null && d.IsSelectable && d.IsVisible);
+            foreach (var datum in data)
+                yield return new object[] {datum};
         }
 
     }
