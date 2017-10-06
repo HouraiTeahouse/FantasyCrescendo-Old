@@ -21,7 +21,18 @@ namespace HouraiTeahouse {
         public virtual void Subscribe<T>(Mediator.AsyncEvent<T> callback) 
             =>  SubscribeImpl(typeof(T), callback);
 
+        public void Subscribe<T>(Action callback) {
+            Argument.NotNull(callback);
+            Subscribe<T>(args => callback());
+        }
+
+        public void Subscribe<T>(Func<ITask> callback) {
+            Argument.NotNull(callback);
+            Subscribe<T>(args => callback());
+        }
+
         protected void SubscribeImpl(Type type, Delegate callback) {
+            Argument.NotNull(callback);
             List<Delegate> typeSubs;
             if (!_subscriptions.TryGetValue(type, out typeSubs)) {
                 typeSubs = new List<Delegate>();
