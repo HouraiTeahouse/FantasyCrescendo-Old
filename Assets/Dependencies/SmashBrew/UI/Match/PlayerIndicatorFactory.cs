@@ -21,6 +21,7 @@ namespace HouraiTeahouse.SmashBrew.UI {
         /// any of the Update methods is called the first time.
         /// </summary>
         void Start() {
+            var context = Mediator.Global.CreateUnityContext(this);
             foreach (Player player in Match.Current.Players) {
                 PlayerIndicator indicator = Instantiate(_prefab);
                 indicator.GetComponentsInChildren<IDataComponent<Player>>().SetData(player);
@@ -30,7 +31,10 @@ namespace HouraiTeahouse.SmashBrew.UI {
                 #endif
                 if (_container != null)
                     indicator.transform.SetParent(_container.transform, true);
-                player.Changed += () => indicator.gameObject.SetActive(player.Type.IsActive);
+                context.Subscribe<PlayerChanged>(args => {
+                    if (args.Player == player)
+                        indicator.gameObject.SetActive(player.Type.IsActive);
+                });
             }
         }
 

@@ -6,6 +6,14 @@ using UnityEngine.Networking;
 
 namespace HouraiTeahouse.SmashBrew {
 
+    public class PlayerChanged {
+        public Player Player;
+    }
+    
+    public class PlayerSelectionChanged : PlayerChanged {
+        public PlayerSelection Selection;
+    }
+
     public class Player {
 
         PlayerType _type;
@@ -17,7 +25,11 @@ namespace HouraiTeahouse.SmashBrew {
             ID = number;
             Type = PlayerType.Types[0];
             _selection = new PlayerSelection();
-            Selection.Changed += () => Changed?.Invoke();
+            Selection.Changed += () => 
+                Mediator.Global.Publish(new PlayerSelectionChanged{
+                    Player = this,
+                    Selection = Selection
+                });
         }
 
         public int ID { get; private set; }
@@ -28,7 +40,7 @@ namespace HouraiTeahouse.SmashBrew {
                 bool changed = _type != value;
                 _type = Argument.NotNull(value);
                 if (changed)
-                    Changed?.Invoke();
+                    PublishChangedEvent();
             }
         }
 
@@ -48,7 +60,7 @@ namespace HouraiTeahouse.SmashBrew {
                 if (changed) {
                     if (_playerObject != null)
                         _networkIdentity = _playerObject.GetComponent<NetworkIdentity>();
-                    Changed?.Invoke();
+                    PublishChangedEvent();
                 }
             }
         }
@@ -61,18 +73,16 @@ namespace HouraiTeahouse.SmashBrew {
         // The represnetative color of this player. Used in UI.
         public Color Color => Type.Color ?? Config.Player.GetColor(ID);
 
-        public event Action Changed;
-
         public void CycleType() {
             Type = Type.Next;
-            Changed?.Invoke();
+            PublishChangedEvent();
         }
 
         public string GetName(bool shortName = false) {
             return string.Format(shortName ? Type.ShortName : Type.Name, ID + 1);
         }
 
-        public override string ToString() { return GetName(); }
+        public override string ToString() => GetName();
 
         public override bool Equals(object obj) {
             var player = obj as Player;
@@ -81,7 +91,7 @@ namespace HouraiTeahouse.SmashBrew {
             return false;
         }
 
-        public override int GetHashCode() { return ID; }
+        public override int GetHashCode() => ID;
 
         public static bool operator ==(Player p1, Player p2) {
             bool n1 = ReferenceEquals(p1, null);
@@ -89,7 +99,13 @@ namespace HouraiTeahouse.SmashBrew {
             return (n1 && n2) || (n1 == n2 && p1.ID == p2.ID);
         }
 
-        public static bool operator !=(Player p1, Player p2) { return !(p1 == p2); }
+        public static bool operator !=(Player p1, Player p2) => !(p1 == p2);
+
+        void PublishChangedEvent() {
+            Mediator.Global.Publish(new PlayerChanged{
+                Player = this
+            });
+        }
 
     }
 

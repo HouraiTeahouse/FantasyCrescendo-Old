@@ -15,7 +15,9 @@ namespace HouraiTeahouse.SmashBrew {
         [SerializeField]
         int _cpuLevel = 0;
 
-        /// <summary> The Player's selected Character. If null, a random Character will be spawned when the match starts. </summary>
+        /// <summary> 
+        /// The Player's selected Character. If null, a random Character will be spawned when the match starts. 
+        /// </summary>
         public CharacterData Character {
             get { return _character; }
             set {
@@ -26,7 +28,9 @@ namespace HouraiTeahouse.SmashBrew {
             }
         }
 
-        /// <summary> The Player's selected </summary>
+        /// <summary> 
+        /// The Player's selected color choice.
+        /// </summary>
         public int Pallete {
             get { return _pallete; }
             set {
@@ -36,8 +40,7 @@ namespace HouraiTeahouse.SmashBrew {
                     int count = _character.PalleteCount;
                     if (count > 0)
                         _pallete = value - count * Mathf.FloorToInt(value / (float) count);
-                }
-                else {
+                } else {
                     _pallete = value;
                 }
                 Changed?.Invoke();
@@ -54,7 +57,7 @@ namespace HouraiTeahouse.SmashBrew {
             }
         }
 
-        public event Action Changed;
+        internal event Action Changed;
 
         public bool Copy(PlayerSelection selection) {
             if (this == selection)
@@ -77,9 +80,9 @@ namespace HouraiTeahouse.SmashBrew {
             return (n1 && n2) || (n1 == n2 && s1.Character == s2.Character && s1.Pallete == s2.Pallete);
         }
 
-        public static bool operator !=(PlayerSelection s1, PlayerSelection s2) { return !(s1 == s2); }
+        public static bool operator !=(PlayerSelection s1, PlayerSelection s2) => !(s1 == s2);
 
-        public override bool Equals(object obj) { return this == obj as PlayerSelection; }
+        public override bool Equals(object obj) => this == (obj as PlayerSelection);
 
         public override int GetHashCode() {
             unchecked {

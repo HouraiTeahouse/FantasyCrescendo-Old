@@ -44,11 +44,7 @@ namespace HouraiTeahouse.SmashBrew.UI {
         ///     <see cref="IDataComponent{Player}.SetData" />
         /// </summary>
         public void SetData(Player data) {
-            if (_player != null)
-                _player.Changed -= PlayerChange;
             _player = data;
-            if (_player != null)
-                _player.Changed += PlayerChange;
             PlayerChange();
         }
 
@@ -56,15 +52,24 @@ namespace HouraiTeahouse.SmashBrew.UI {
             base.Awake();
             SetData(_character);
             SetData(_scene);
+            Mediator.Global.CreateUnityContext(this)
+                    .Subscribe<PlayerChanged>(args => {
+                        if (args.Player == _player)
+                            PlayerChange();
+                    });
         }
 
         /// <summary>
         ///     <see cref="AbstractLocalizedText.Process" />
         /// </summary>
-        protected override string Process(string val) { return !_capitalize ? val : val.ToUpperInvariant(); }
+        protected override string Process(string val) => !_capitalize ? val : val.ToUpperInvariant();
 
-        /// <summary> Events callback. Called whenever the Player changes. </summary>
-        void PlayerChange() { SetData(_player == null ? null : _player.Selection.Character); }
+        /// <summary> 
+        /// Events callback. Called whenever the Player changes. 
+        /// </summary>
+        void PlayerChange() { 
+           SetData(_player == null ? null : _player.Selection.Character); 
+        }
 
     }
 

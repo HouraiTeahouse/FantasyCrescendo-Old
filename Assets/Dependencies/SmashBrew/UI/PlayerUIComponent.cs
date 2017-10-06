@@ -3,12 +3,16 @@ using UnityEngine.EventSystems;
 
 namespace HouraiTeahouse.SmashBrew.UI {
 
-    /// <summary> A UI Component that depends on data assigned from a Player object </summary>
+    /// <summary> 
+    /// A UI Component that depends on data assigned from a Player object.
+    /// </summary>
     public abstract class PlayerUIComponent : UIBehaviour, IDataComponent<Player> {
 
         Player _player;
 
-        /// <summary> The target Player the behaviour represents </summary>
+        /// <summary> 
+        /// The target Player the behaviour represents.
+        /// </summary>
         public Player Player {
             get { return _player; }
             set { SetData(value); }
@@ -19,35 +23,42 @@ namespace HouraiTeahouse.SmashBrew.UI {
         /// </summary>
         /// <param name="data"> the data to set </param>
         public virtual void SetData(Player data) {
-            if (_player != null)
-                _player.Changed -= PlayerChange;
             _player = data;
-            if (_player != null)
-                _player.Changed += PlayerChange;
             PlayerChange();
         }
 
-        /// <summary> Unity callback. Called on object destruction. </summary>
-        protected override void OnDestroy() {
-            base.OnDestroy();
-            if (_player != null)
-                _player.Changed -= PlayerChange;
+        /// <summary>
+        /// Awake is called when the script instance is being loaded.
+        /// </summary>
+        protected override void Awake() {
+            base.Awake();
+            Mediator.Global.CreateUnityContext(this)
+                    .Subscribe<PlayerChanged>(args =>{
+                        if (args.Player == Player)
+                            PlayerChange();
+                    });
         }
 
-        /// <summary> Events callback. Called whenever <see cref="Player" />'s state changes </summary>
+        /// <summary> 
+        /// Events callback. Called whenever <see cref="Player" />'s state changes.
+        /// </summary>
         protected virtual void PlayerChange() {
         }
 
     }
 
-    /// <summary> An abstract UI behaviour class for handling a Scene's data </summary>
+    /// <summary> 
+    /// An abstract UI behaviour class for handling a Scene's data.
+    /// </summary>
     public abstract class SceneUIComponent : PlayerUIComponent, IDataComponent<SceneData> {
 
         [SerializeField]
         [Tooltip("The character whose data is to be displayed")]
         SceneData _scene;
 
-        /// <summary> The target Character currently represented by the behaviour </summary>
+        /// <summary> 
+        /// The target Character currently represented by the behaviour.
+        /// </summary>
         public SceneData Scene {
             get { return _scene; }
             set { SetData(value); }
@@ -60,7 +71,9 @@ namespace HouraiTeahouse.SmashBrew.UI {
             _scene = data;
         }
 
-        /// <summary> Unity Callback. Called on object instantiation. </summary>
+        /// <summary>
+        /// Awake is called when the script instance is being loaded.
+        /// </summary>
         protected override void Awake() {
             base.Awake();
             SetData(_scene);
@@ -68,7 +81,9 @@ namespace HouraiTeahouse.SmashBrew.UI {
 
     }
 
-    /// <summary> An abstract UI behaviour class for handling a Scene's data </summary>
+    /// <summary> 
+    /// An abstract UI behaviour class for handling a Scene's data 
+    /// </summary>
     /// <typeparam name="T"> the type of component the CharacterUIComponent manipulates </typeparam>
     public abstract class SceneUIComponent<T> : PlayerUIComponent<T>, IDataComponent<SceneData> where T : Component {
 
@@ -76,7 +91,9 @@ namespace HouraiTeahouse.SmashBrew.UI {
         [Tooltip("The map whose data is to be displayed")]
         SceneData _scene;
 
-        /// <summary> The target map currently represented by the behaviour </summary>
+        /// <summary> 
+        /// The target scene currently represented by the behaviour 
+        /// </summary>
         public SceneData Scene {
             get { return _scene; }
             set { SetData(value); }
@@ -97,14 +114,18 @@ namespace HouraiTeahouse.SmashBrew.UI {
 
     }
 
-    /// <summary> An abstract UI behaviour class for handling a Character's data </summary>
+    /// <summary> 
+    /// An abstract UI behaviour class for handling a Character's data 
+    /// </summary>
     public abstract class CharacterUIComponent : PlayerUIComponent, IDataComponent<CharacterData> {
 
         [SerializeField]
         [Tooltip("The character whose data is to be displayed")]
         CharacterData _character;
 
-        /// <summary> The target Character currently represented by the behaviour </summary>
+        /// <summary> 
+        /// The target Character currently represented by the behaviour 
+        /// </summary>
         public CharacterData Character {
             get { return _character; }
             set { SetData(value); }
@@ -117,7 +138,9 @@ namespace HouraiTeahouse.SmashBrew.UI {
             _character = data;
         }
 
-        /// <summary> Unity Callback. Called on object instantiation. </summary>
+        /// <summary>
+        /// Awake is called when the script instance is being loaded.
+        /// </summary>
         protected override void Awake() {
             base.Awake();
             SetData(_character);
@@ -132,20 +155,26 @@ namespace HouraiTeahouse.SmashBrew.UI {
 
     }
 
-    /// <summary> An abstract UI behaviour class for handling a Player's current state </summary>
+    /// <summary> 
+    /// An abstract UI behaviour class for handling a Player's current state 
+    /// </summary>
     /// <typeparam name="T"> the type of component the PlayerUIComponent manipulates </typeparam>
     public abstract class PlayerUIComponent<T> : PlayerUIComponent where T : Component {
 
         [SerializeField]
         T _component;
 
-        /// <summary> The component the behaviour manipulates </summary>
+        /// <summary> 
+        /// The component the behaviour manipulates 
+        /// </summary>
         public T Component {
             get { return _component; }
             protected set { _component = value; }
         }
 
-        /// <summary> Unity callback. Called on object instantiation. </summary>
+        /// <summary>
+        /// Awake is called when the script instance is being loaded.
+        /// </summary>
         protected override void Awake() {
             base.Awake();
             if (!_component)
@@ -154,7 +183,9 @@ namespace HouraiTeahouse.SmashBrew.UI {
 
     }
 
-    /// <summary> An abstract UI behaviour class for handling a Character's data </summary>
+    /// <summary> 
+    /// An abstract UI behaviour class for handling a Character's data 
+    /// </summary>
     /// <typeparam name="T"> the type of component the CharacterUIComponent manipulates </typeparam>
     public abstract class CharacterUIComponent<T> : PlayerUIComponent<T>, IDataComponent<CharacterData>
         where T : Component {
@@ -163,7 +194,9 @@ namespace HouraiTeahouse.SmashBrew.UI {
         [Tooltip("The character whose data is to be displayed")]
         CharacterData _character;
 
-        /// <summary> The target Character currently represented by the behaviour </summary>
+        /// <summary> 
+        /// The target Character currently represented by the behaviour.
+        /// </summary>
         public CharacterData Character {
             get { return _character; }
             set { SetData(value); }
@@ -176,7 +209,9 @@ namespace HouraiTeahouse.SmashBrew.UI {
             _character = data;
         }
 
-        /// <summary> Unity Callback. Called on object instantiation. </summary>
+        /// <summary>
+        /// Awake is called when the script instance is being loaded.
+        /// </summary>
         protected override void Awake() {
             base.Awake();
             SetData(_character);

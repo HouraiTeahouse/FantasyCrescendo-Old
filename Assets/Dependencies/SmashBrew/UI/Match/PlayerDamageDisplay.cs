@@ -14,14 +14,21 @@ namespace HouraiTeahouse.SmashBrew.UI {
         int suffixSize = 25;
 
         /// <summary>
+        /// Awake is called when the script instance is being loaded.
+        /// </summary>
+        void Awake() {
+            Mediator.Global.CreateUnityContext(this)
+                    .Subscribe<PlayerChanged>(args =>{
+                        if (args.Player == _player)
+                            PlayerChange();
+                    });
+        }
+
+        /// <summary>
         ///     <see cref="IDataComponent{T}.SetData" />
         /// </summary>
         public void SetData(Player data) {
-            if (_player != null)
-                _player.Changed -= PlayerChange;
             _player = data;
-            if (_player != null)
-                _player.Changed += PlayerChange;
             PlayerChange();
         }
 
@@ -34,7 +41,9 @@ namespace HouraiTeahouse.SmashBrew.UI {
             }
         }
 
-        /// <summary> Unity callback. Called once per frame. </summary>
+        /// <summary>
+        /// Update is called every frame, if the MonoBehaviour is enabled.
+        /// </summary>
         protected override void Update() {
             base.Update();
             if (!Text || !_damage)
