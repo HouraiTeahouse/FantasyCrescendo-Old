@@ -108,6 +108,10 @@ namespace HouraiTeahouse.HouraiInput {
                 UpdateTick = updateTick;
         }
 
+        internal float ApplyDeadZone(float value) {
+            return Mathf.InverseLerp(LowerDeadZone, UpperDeadZone, Mathf.Abs(value)) * Mathf.Sign(value);
+        }
+
         internal void SetZeroTick() { zeroTick = UpdateTick; }
 
         public override string ToString() => $"[InputControl: Handle={Handle}, Value={State.Value}]";

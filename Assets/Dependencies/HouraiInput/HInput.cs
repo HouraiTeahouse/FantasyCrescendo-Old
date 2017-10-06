@@ -163,8 +163,8 @@ namespace HouraiTeahouse.HouraiInput {
         }
 
         static void PreUpdateDevices(float deltaTime) {
-            foreach (var device in devices)
-                device.PreUpdate(_currentTick, deltaTime);
+            foreach (var control in devices.SelectMany(d => d.Controls).IgnoreNulls())
+                control.PreUpdate(_currentTick);
         }
 
         static void UpdateDevices(float deltaTime) {

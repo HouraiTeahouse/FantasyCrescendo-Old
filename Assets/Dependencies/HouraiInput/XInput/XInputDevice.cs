@@ -47,7 +47,7 @@ namespace HouraiTeahouse.HouraiInput {
 
         public bool IsConnected => state.IsConnected;
 
-        public override void Update(ulong updateTick, float deltaTime) {
+        internal override void Update(ulong updateTick, float deltaTime) {
             QueryState();
 
             UpdateWithValue(InputTarget.LeftStickX, state.ThumbSticks.Left.x, updateTick);

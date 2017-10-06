@@ -38,11 +38,11 @@ namespace HouraiTeahouse.HouraiInput {
             JoystickId = joystickId;
             if (joystickId != 0) {
                 SortOrder = 100 + joystickId;
-                Meta += " [id: " + joystickId + "]";
+                Meta += $" [id: {joystickId}]";
             }
         }
 
-        public override void Update(ulong updateTick, float deltaTime) {
+        internal override void Update(ulong updateTick, float deltaTime) {
             if (Profile == null) {
                 return;
             }

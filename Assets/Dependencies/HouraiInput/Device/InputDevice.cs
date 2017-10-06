@@ -73,36 +73,25 @@ namespace HouraiTeahouse.HouraiInput {
             return Controls[(int) inputTarget] ?? InputControl.Null;
         }
 
-        // Warning: this is not efficient. Don't use it unless you have to, m'kay?
-        public static InputTarget GetTarget(string inputControlName) { return inputControlName.ToEnum<InputTarget>(); }
-
-        // Warning: this is not efficient. Don't use it unless you have to, m'kay?
-        public InputControl GetControl(string inputControlName) { return GetControl(GetTarget(inputControlName)); }
-
         public InputControl AddControl(InputTarget inputTarget, string handle) {
             var inputControl = new InputControl(handle, inputTarget);
             Controls[(int) inputTarget] = inputControl;
             return inputControl;
         }
 
-        public void UpdateWithState(InputTarget inputTarget, bool state, ulong updateTick) {
+        protected void UpdateWithState(InputTarget inputTarget, bool state, ulong updateTick) {
             GetControl(inputTarget).UpdateWithState(state, updateTick);
         }
 
-        public void UpdateWithValue(InputTarget inputTarget, float value, ulong updateTick) {
+        protected void UpdateWithValue(InputTarget inputTarget, float value, ulong updateTick) {
             GetControl(inputTarget).UpdateWithValue(value, updateTick);
         }
 
-        public void PreUpdate(ulong updateTick, float deltaTime) {
-            foreach (InputControl control in Controls.IgnoreNulls())
-                control.PreUpdate(updateTick);
-        }
-
-        public virtual void Update(ulong updateTick, float deltaTime) {
+        internal virtual void Update(ulong updateTick, float deltaTime) {
             // Implemented by subclasses.
         }
 
-        public void PostUpdate(ulong updateTick, float deltaTime) {
+        internal void PostUpdate(ulong updateTick, float deltaTime) {
             // Apply post-processing to controls.
             foreach (InputControl control in Controls.IgnoreNulls()) {
                 if (control.RawValue != null)
@@ -136,17 +125,13 @@ namespace HouraiTeahouse.HouraiInput {
                         control.LowerDeadZone,
                         control.UpperDeadZone);
                 } else {
-                    analogValue = ApplyDeadZone(analogValue, control.LowerDeadZone, control.UpperDeadZone);
+                    analogValue = control.ApplyDeadZone(analogValue);
                 }
             } else {
-                analogValue = ApplyDeadZone(analogValue, control.LowerDeadZone, control.UpperDeadZone);
+                analogValue = control.ApplyDeadZone(analogValue);
             }
 
             return ApplySmoothing(analogValue, control.LastState, deltaTime, control.Sensitivity);
-        }
-
-        static float ApplyDeadZone(float value, float lowerDeadZone, float upperDeadZone) {
-            return Mathf.InverseLerp(lowerDeadZone, upperDeadZone, Mathf.Abs(value)) * Mathf.Sign(value);
         }
 
         static float ApplyCircularDeadZone(float axisValue1, float axisValue2, float lowerDeadZone, float upperDeadZone) {
@@ -174,16 +159,11 @@ namespace HouraiTeahouse.HouraiInput {
             return LastChangeTick > otherDevice.LastChangeTick; 
         }
 
-        public virtual void Vibrate(float leftMotor, float rightMotor) { 
-        }
+        public virtual void Vibrate(float leftMotor, float rightMotor) {}
 
-        public void Vibrate(float intensity) { 
-            Vibrate(intensity, intensity); 
-        }
+        public void Vibrate(float intensity) => Vibrate(intensity, intensity); 
 
-        public override string ToString() {
-            return string.Format("InputDevice ({0}, {1})", Name, Meta);
-        }
+        public override string ToString() => $"[InputDevice ({Name}, {Meta})]";
 
     }
 

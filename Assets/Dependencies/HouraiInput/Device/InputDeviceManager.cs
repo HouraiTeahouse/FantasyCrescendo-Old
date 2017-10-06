@@ -2,11 +2,15 @@ using System.Collections.Generic;
 
 namespace HouraiTeahouse.HouraiInput {
 
-    public class InputDeviceManager {
+    /// <summary>
+    /// The abstract base class for all supported DeviceManagers.
+    /// Each DeviceManager controls and updates a set of potential input devices.
+    /// </summary>
+    public abstract class InputDeviceManager {
 
         protected List<InputDevice> devices = new List<InputDevice>();
 
-        public virtual void Update(ulong updateTick, float deltaTime) { }
+        public abstract void Update(ulong updateTick, float deltaTime); 
 
     }
 
