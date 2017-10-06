@@ -33,7 +33,7 @@ namespace HouraiTeahouse.FantasyCrescendo {
 #if UNITY_CLOUD_BUILD
         public static void Prebuild(UnityEngine.CloudBuild.BuildManifestObject manifest) {
             Log.Info("Starting pre-export changes and cleanup...");
-            PlayerSettings.bundleVersion += " {0} Build #{1}".With(
+            PlayerSettings.bundleVersion += string.Format(" {0} Build #{1}",
                 manifest.GetValue<string>("cloudBuildTargetName"), 
                 manifest.GetValue<string>("buildNumber"));
             Log.Info("Changed version to {0}", PlayerSettings.bundleVersion);
