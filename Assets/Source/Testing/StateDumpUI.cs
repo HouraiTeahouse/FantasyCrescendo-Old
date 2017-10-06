@@ -41,10 +41,10 @@ namespace HouraiTeahouse.FantasyCrescendo {
                 if (player.PlayerObject != null) {
                     var character = player.PlayerObject.GetComponentInChildren<Character>();
                     if (character != null) {
-                        builder.AppendLine($"P{player.ID + 1}: {character.StateController.CurrentState.Name}");
+                        builder.AppendLine(string.Format("P{0}: {1}", player.ID + 1, character.StateController.CurrentState.Name));
                     }
                 } else {
-                    builder.AppendLine($"P{player.ID + 1}: NONE");
+                    builder.AppendLine(string.Format("P{}: NONE", player.ID + 1));
                 }
             }
             _text.text = builder.ToString();

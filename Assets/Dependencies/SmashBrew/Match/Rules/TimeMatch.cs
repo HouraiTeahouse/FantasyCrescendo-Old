@@ -21,7 +21,9 @@ namespace HouraiTeahouse.SmashBrew.Matches {
             }
         }
 
-        protected override bool CheckActive(MatchConfig config) => config.Time > 0;
+        protected override bool CheckActive(MatchConfig config) {
+            return config.Time > 0;
+        }
 
         protected override void OnInitialize(MatchConfig config)  {
             CurrentTime = config.Time;

@@ -27,7 +27,7 @@ namespace HouraiTeahouse.Editor {
             if (asset == null)
                 asset = ScriptableObject.CreateInstance<T>();
             if (name.IsNullOrEmpty())
-                name = $"New {typeof(T).Name}.asset";
+                name = string.Format("New {0}.asset", typeof(T).Name);
             ProjectWindowUtil.CreateAsset(asset, name);
             return asset;
         }
@@ -88,10 +88,13 @@ namespace HouraiTeahouse.Editor {
             return !string.IsNullOrEmpty(AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(asset)).assetBundleName);
         }
 
-        public static bool IsBundlePath(string path) => path.IndexOf(Resource.BundleSeperator) >= 0; 
+        public static bool IsBundlePath(string path) {
+            return path.IndexOf(Resource.BundleSeperator) >= 0; 
+        }
 
-        public static T LoadBundledAsset<T>(string assetPath) where T : Object =>
-            LoadBundledAsset(assetPath, typeof(T)) as T;
+        public static T LoadBundledAsset<T>(string assetPath) where T : Object{
+            return LoadBundledAsset(assetPath, typeof(T)) as T;
+        }
 
         public static Object LoadBundledAsset(string assetPath, Type type) {
             if (!IsBundlePath(assetPath))

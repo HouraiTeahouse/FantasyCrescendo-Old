@@ -17,7 +17,9 @@ namespace HouraiTeahouse {
         /// The name of the Menu. Must be globally unique.
         /// </summary>
         /// <returns></returns>
-        public string Name => _name;
+        public string Name {
+            get { return _name; }
+        }
 
         /// <summary>
         /// Awake is called when the script instance is being loaded.
@@ -45,7 +47,9 @@ namespace HouraiTeahouse {
         /// Reset is called when the user hits the Reset button in the Inspector's
         /// context menu or when adding the component the first time.
         /// </summary>
-        void Reset() => _name = name; 
+        void Reset() {
+            _name = name; 
+        }
 
     }
 

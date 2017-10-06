@@ -25,7 +25,9 @@ namespace HouraiTeahouse.FantasyCrescendo {
             OnPause(TimeManager.Paused);
         }
 
-        void OnPause(bool isPaused) => gameObject.SetActive(!_show ^ isPaused);
+        void OnPause(bool isPaused) {
+            gameObject.SetActive(!_show ^ isPaused);
+        }
 
     }
 

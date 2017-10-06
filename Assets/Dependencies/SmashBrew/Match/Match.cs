@@ -146,7 +146,7 @@ namespace HouraiTeahouse.SmashBrew.Matches {
                     }
                 }
                 if (!success) {
-                    Log.Error($"Two players made the same selection, and no remaining palletes remain. {selection.Character} doesn't have enough colors");
+                    Log.Error("Two players made the same selection, and no remaining palletes remain. {0} doesn't have enough colors", selection.Character);
                     ClientScene.RemovePlayer(playerControllerId);
                     return;
                 }
@@ -154,12 +154,12 @@ namespace HouraiTeahouse.SmashBrew.Matches {
 
             selection.Character.Prefab.LoadAsync().Then(prefab => {
                 if (prefab == null) {
-                    Log.Error($"The character {selection.Character} does not have a prefab. Please add a prefab object to it.");
+                    Log.Error("The character {0} does not have a prefab. Please add a prefab object to it.", selection.Character);
                     return;
                 }
 
                 if (prefab.GetComponent<NetworkIdentity>() == null) {
-                    Log.Error($"The character prefab for {selection.Character} does not have a NetworkIdentity. Please add a NetworkIdentity to it's prefab.");
+                    Log.Error("The character prefab for {1} does not have a NetworkIdentity. Please add a NetworkIdentity to it's prefab.", selection.Character);
                     return;
                 }
 

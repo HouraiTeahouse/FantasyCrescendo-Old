@@ -50,7 +50,7 @@ namespace HouraiTeahouse.SmashBrew.UI {
                 display.transform.SetParent(_container.transform, false);
                 LayoutRebuilder.MarkLayoutForRebuild(display);
                 display.GetComponentsInChildren<IDataComponent<Player>>().SetData(player);
-                display.name = $"Player {player.ID + 1} Display";
+                display.name = string.Format("Player {} Display", player.ID + 1);
                 display.gameObject.SetActive(player.Type.IsActive);
                 context.Subscribe<PlayerChanged>(args => {
                     if (args.Player == player)

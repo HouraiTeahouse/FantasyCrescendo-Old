@@ -66,11 +66,15 @@ namespace HouraiTeahouse {
     }
 
     public class GamePaused : PausedStateChange {
-        public override bool IsPaused => true;
+        public override bool IsPaused {
+            get { return  true; }
+        }
     }
 
     public class GameUnpaused : PausedStateChange {
-        public override bool IsPaused => false;
+        public override bool IsPaused {
+            get { return false; }
+        }
     }
 
     public struct TimeScaleChange {

@@ -9,16 +9,16 @@ namespace HouraiTeahouse {
     [Serializable]
     public struct HSV {
 
-        public static HSV White => new HSV(Color.white);
-        public static HSV Black => new HSV(Color.black);
-        public static HSV Clear => new HSV(Color.clear);
-        public static HSV Red => new HSV(Color.red);
-        public static HSV Green => new HSV(Color.green);
-        public static HSV Blue => new HSV(Color.blue);
-        public static HSV Cyan => new HSV(Color.cyan);
-        public static HSV Magenta => new HSV(Color.magenta);
-        public static HSV Yellow => new HSV(Color.yellow);
-        public static HSV Grey => new HSV(Color.grey);
+        public static HSV White { get { return new HSV(Color.white);} }
+        public static HSV Black { get { return new HSV(Color.black);} }
+        public static HSV Clear { get { return new HSV(Color.clear);} }
+        public static HSV Red { get { return new HSV(Color.red);} }
+        public static HSV Green { get { return new HSV(Color.green);} }
+        public static HSV Blue { get { return new HSV(Color.blue);} }
+        public static HSV Cyan { get { return new HSV(Color.cyan);} }
+        public static HSV Magenta { get { return new HSV(Color.magenta);} }
+        public static HSV Yellow { get { return new HSV(Color.yellow);} }
+        public static HSV Grey { get { return new HSV(Color.grey);} }
 
         /// <summary> 
         /// The hue of the color. Range: [0, 360) 
@@ -99,12 +99,18 @@ namespace HouraiTeahouse {
         }
 
         // implicit converter between color and HSV
-        public static implicit operator Color(HSV hsv) => hsv.ToColor();
+        public static implicit operator Color(HSV hsv) {
+            return hsv.ToColor();
+        }
 
         // implicit converter between HSV and color
-        public static implicit operator HSV(Color color) => new HSV(color);
+        public static implicit operator HSV(Color color) {
+            return new HSV(color);
+        }
 
-        public override string ToString() => $"(H:{h}, S:{s}, V:{v}, A:{a})";
+        public override string ToString() {
+            return string.Format("(H:{0}, S:{1}, V:{2}, A:{3})", h, s, v, a);
+        }
 
     }
 

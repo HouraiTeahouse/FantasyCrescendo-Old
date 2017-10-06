@@ -25,7 +25,9 @@ namespace HouraiTeahouse.HouraiInput {
         public static string Platform { get; private set; }
         public static bool InvertYAxis { get; set; }
 
-        static InputDevice DefaultActiveDevice => devices.Count > 0 ? devices[0] : InputDevice.Null;
+        static InputDevice DefaultActiveDevice {
+            get { return devices.Count > 0 ? devices[0] : InputDevice.Null; }
+        }
 
         public static InputDevice ActiveDevice {
             get { return _activeDevice ?? InputDevice.Null; }
@@ -43,7 +45,7 @@ namespace HouraiTeahouse.HouraiInput {
             if (_isSetup)
                 return;
 
-            Platform = $"{SystemInfo.operatingSystem} {SystemInfo.deviceModel}".ToUpper();
+            Platform = string.Format("{0} {1}", SystemInfo.operatingSystem, SystemInfo.deviceModel).ToUpper();
 
             _initialTime = 0.0f;
             _currentTime = 0.0f;
@@ -130,7 +132,8 @@ namespace HouraiTeahouse.HouraiInput {
 
             if (lastActiveDevice == ActiveDevice)
                 return;
-            OnActiveDeviceChanged?.Invoke(ActiveDevice);
+            if (OnActiveDeviceChanged != null)
+                OnActiveDeviceChanged(ActiveDevice);
         }
 
         public static void AddDeviceManager(InputDeviceManager inputDeviceManager) {
@@ -170,7 +173,8 @@ namespace HouraiTeahouse.HouraiInput {
         static void UpdateDevices(float deltaTime) {
             foreach (var device in devices)
                 device.Update(_currentTick, deltaTime);
-            OnUpdate?.Invoke(_currentTick, deltaTime);
+            if (OnUpdate != null)
+                OnUpdate(_currentTick, deltaTime);
         }
 
         static void PostUpdateDevices(float deltaTime) {
@@ -187,7 +191,8 @@ namespace HouraiTeahouse.HouraiInput {
             devices.Add(inputDevice);
             devices.Sort((d1, d2) => d1.SortOrder.CompareTo(d2.SortOrder));
 
-            OnDeviceAttached?.Invoke(inputDevice);
+            if (OnDeviceAttached != null)
+                OnDeviceAttached(inputDevice);
 
             if (ActiveDevice == InputDevice.Null)
                 ActiveDevice = inputDevice;
@@ -201,7 +206,8 @@ namespace HouraiTeahouse.HouraiInput {
 
             if (ActiveDevice == inputDevice)
                 ActiveDevice = InputDevice.Null;
-            OnDeviceDetached?.Invoke(inputDevice);
+            if (OnDeviceAttached != null)
+                OnDeviceDetached(inputDevice);
         }
 
         public static void HideDevicesWithProfile(Type type) {

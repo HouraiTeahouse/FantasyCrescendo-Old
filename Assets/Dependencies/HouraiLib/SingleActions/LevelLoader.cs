@@ -31,7 +31,7 @@ namespace HouraiTeahouse {
         /// <summary>
         ///     <see cref="SingleActionBehaviour.Action" />
         /// </summary>
-        public override void Action() => Load();
+        public override void Action() { Load(); }
 
         /// <summary> Loads the scenes </summary>
         public void Load() {
@@ -43,7 +43,7 @@ namespace HouraiTeahouse {
                 paths.Add(path);
             }
             foreach (string scenePath in _scenes) {
-                if (!_ignoreLoadedScenes && paths.Contains($"Assets/{scenePath}.unity"))
+                if (!_ignoreLoadedScenes && paths.Contains(string.Format("Assets/{0}.unity", scenePath)))
                     continue;
                 isLoading = true;
                 SceneLoader.LoadScene(scenePath, _mode).Then(() => {

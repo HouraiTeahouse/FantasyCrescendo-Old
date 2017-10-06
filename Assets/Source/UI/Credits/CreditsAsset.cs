@@ -29,8 +29,9 @@ namespace HouraiTeahouse {
         /// <summary>
         /// Gets aread-only list of categories.
         /// </summary>
-        public ReadOnlyCollection<Category> Categories 
-            => new ReadOnlyCollection<Category>(_categories);
+        public ReadOnlyCollection<Category> Categories {
+            get { return new ReadOnlyCollection<Category>(_categories); }
+        }
 
         [SerializeField]
         Category[] _categories;

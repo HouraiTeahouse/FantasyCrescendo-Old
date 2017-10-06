@@ -10,7 +10,7 @@ namespace HouraiTeahouse.HouraiInput {
 
             for (var joystickId = 1; joystickId <= UnityInputDevice.MaxDevices; joystickId++)
                 for (var buttonId = 0; buttonId < UnityInputDevice.MaxButtons; buttonId++)
-                    _buttonQueries[joystickId - 1, buttonId] = $"joystick {joystickId} button {buttonId}";
+                    _buttonQueries[joystickId - 1, buttonId] = string.Format("joystick {0} button {1}", joystickId, buttonId);
         }
 
         readonly int _buttonId;

@@ -59,7 +59,8 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             multiplier *= hitbox.Scaling;
             multiplier += baseKnockback;
             Character.State.Velocity = Modifiers.In.Modifiy(source, multiplier * unit);
-            OnHit?.Invoke(source, Character.State.Velocity);
+            if (OnHit != null)
+                OnHit(source, Character.State.Velocity);
         }
 
     }

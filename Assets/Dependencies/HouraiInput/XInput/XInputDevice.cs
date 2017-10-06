@@ -44,8 +44,7 @@ namespace HouraiTeahouse.HouraiInput {
         }
 
         public int DeviceIndex { get; private set; }
-
-        public bool IsConnected => state.IsConnected;
+        public bool IsConnected { get { return state.IsConnected; } }
 
         internal override void Update(ulong updateTick, float deltaTime) {
             QueryState();

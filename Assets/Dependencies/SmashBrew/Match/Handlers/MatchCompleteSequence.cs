@@ -41,7 +41,9 @@ namespace HouraiTeahouse.SmashBrew.Matches {
         /// Reset is called when the user hits the Reset button in the Inspector's
         /// context menu or when adding the component the first time.
         /// </summary>
-        void Reset() => _display = GetComponent<Text>();
+        void Reset() {
+            _display = GetComponent<Text>();
+        }
 
     }
 

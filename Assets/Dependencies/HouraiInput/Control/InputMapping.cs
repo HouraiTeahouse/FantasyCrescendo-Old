@@ -33,7 +33,9 @@ namespace HouraiTeahouse.HouraiInput {
             set { _handle = value; }
         }
 
-        bool IsYAxis => Target == InputTarget.LeftStickY || Target == InputTarget.RightStickY;
+        bool IsYAxis {
+            get { return  Target == InputTarget.LeftStickY || Target == InputTarget.RightStickY; }
+        }
 
         public float MapValue(float value) {
             float targetValue;

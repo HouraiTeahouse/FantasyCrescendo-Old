@@ -81,57 +81,81 @@ namespace HouraiTeahouse.SmashBrew {
         string[] _extraPrefabs;
 
         /// <summary> The short name of the character. Usually just their first name. </summary>
-        public string ShortName => _shortName;
+        public string ShortName {
+            get { return   _shortName;}
+        }
 
         /// <summary> The full name of the character. </summary>
-        public string FullName => _fullName;
+        public string FullName {
+            get { return   _fullName;}
+        }
 
         /// <summary> Gets how many palletes </summary>
-        public int PalleteCount => _portraits == null ? 0 : _portraits.Length;
+        public int PalleteCount {
+            get { return   _portraits == null ? 0 : _portraits.Length;}
+        }
 
         /// <summary> 
         /// Gets the resource for the character's icon 
         /// </summary>
-        public Resource<Sprite> Icon => Resource.Get<Sprite>(_icon);
+        public Resource<Sprite> Icon {
+            get { return   Resource.Get<Sprite>(_icon);}
+        }
 
         /// <summaryw> 
         /// Get the resource for the character's home stage 
         /// </summary>
-        public Resource<SceneData> HomeStage  => Resource.Get<SceneData>(_homeStage);
+        public Resource<SceneData> HomeStage  {
+            get { return   Resource.Get<SceneData>(_homeStage);}
+        }
 
         /// <summary> 
         /// Gets the resource for the character's prefab 
         /// </summary>
-        public Resource<GameObject> Prefab => Resource.Get<GameObject>(_prefab);
+        public Resource<GameObject> Prefab {
+            get { return   Resource.Get<GameObject>(_prefab);}
+        }
 
         /// <summary> 
         /// Gets the resource for the character's announcer clip 
         /// </summary>
-        public Resource<AudioClip> Announcer => Resource.Get<AudioClip>(_announcerClip);
+        public Resource<AudioClip> Announcer {
+            get { return   Resource.Get<AudioClip>(_announcerClip);}
+        }
 
         /// <summary> 
         /// Gets the resource for the character's victory theme clip 
         /// </summary>
-        public Resource<AudioClip> VictoryTheme => Resource.Get<AudioClip>(_victoryTheme);
+        public Resource<AudioClip> VictoryTheme {
+            get { return   Resource.Get<AudioClip>(_victoryTheme);}
+        }
 
         public ReadOnlyCollection<Resource<GameObject>> ExtraPrefabs { get; private set; }
 
         /// <summary> 
         /// The color used in the character's select image 
         /// </summary>
-        public Color BackgroundColor => _backgroundColor;
+        public Color BackgroundColor {
+            get { return   _backgroundColor;}
+        }
 
         /// <summary> 
         /// Is the Character selectable from the character select screen? 
         /// </summary>
-        public bool IsSelectable => _isSelectable && _isVisible;
+        public bool IsSelectable {
+            get { return   _isSelectable && _isVisible;}
+        }
 
         /// <summary> 
         /// Is the Character viewable in the character select screen? 
         /// </summary>
-        public bool IsVisible => _isVisible;
+        public bool IsVisible {
+            get { return   _isVisible;}
+        }
 
-        public uint Id => _id;
+        public uint Id {
+            get { return   _id;}
+        }
 
         public void Unload() {
             Icon.Unload();
@@ -177,13 +201,17 @@ namespace HouraiTeahouse.SmashBrew {
         /// <summary>
         /// This function is called when the behaviour becomes disabled or inactive.
         /// </summary>
-        void OnDisable() => Unload();
+        void OnDisable() {
+            Unload();
+        }
 
         /// <summary>
         /// Reset is called when the user hits the Reset button in the Inspector's
         /// context menu or when adding the component the first time.
         /// </summary>
-        void Reset() => RegenerateID();
+        void Reset() {
+            RegenerateID();
+        }
 
         [ContextMenu("Regenerate ID")]
         void RegenerateID() { 

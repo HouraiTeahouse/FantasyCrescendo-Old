@@ -47,8 +47,8 @@ namespace HouraiTeahouse {
         /// <typeparam name="T"> the type of event to listen for </typeparam>
         /// <param name="callback"> the handler to call when an event of type <typeparamref name="T" /> is published. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="callback" /> is null </exception>
-        public void Subscribe<T>(Event<T> callback) => Subscribe(typeof(T), Argument.NotNull(callback));
-        public void Subscribe<T>(AsyncEvent<T> callback) => Subscribe(typeof(T), Argument.NotNull(callback));
+        public void Subscribe<T>(Event<T> callback) { Subscribe(typeof(T), Argument.NotNull(callback)); }
+        public void Subscribe<T>(AsyncEvent<T> callback) { Subscribe(typeof(T), Argument.NotNull(callback)); }
         internal void Subscribe(Type type, Delegate callback) {
             Assert.IsNotNull(type);
             Assert.IsNotNull(callback);
@@ -70,8 +70,8 @@ namespace HouraiTeahouse {
         /// <typeparam name="T"> the type of event to remove the handler from </typeparam>
         /// <param name="callback"> the handler to remove </param>
         /// <exception cref="ArgumentNullException"> <paramref name="callback" /> is null </exception>
-        public void Unsubscribe<T>(Event<T> callback) => Unsubscribe(typeof(T), Argument.NotNull(callback));
-        public void Unsubscribe<T>(AsyncEvent<T> callback) => Unsubscribe(typeof(T), Argument.NotNull(callback));
+        public void Unsubscribe<T>(Event<T> callback) { Unsubscribe(typeof(T), Argument.NotNull(callback)); }
+        public void Unsubscribe<T>(AsyncEvent<T> callback) { Unsubscribe(typeof(T), Argument.NotNull(callback)); }
         internal void Unsubscribe(Type type, Delegate callback) {
             List<Delegate> typeSubscribers;
             if (!_subscribers.TryGetValue(type, out typeSubscribers))
@@ -101,8 +101,12 @@ namespace HouraiTeahouse {
                     .SelectMany(t => _subscribers[t])
                     .ToArray();
             foreach (var subscriber in handlers) {
-                (subscriber as Event<T>)?.Invoke(evnt);
-                (subscriber as AsyncEvent<T>)?.Invoke(evnt);
+                var evt = subscriber as Event<T>;
+                if (evt != null)
+                    evt(evnt);
+                var aEvt = subscriber as AsyncEvent<T>;
+                if (aEvt != null)
+                    aEvt(evnt);
             }
         }
 
@@ -129,7 +133,9 @@ namespace HouraiTeahouse {
                     .SelectMany(t => _subscribers[t])
                     .ToArray();
             foreach (var subscriber in handlers) {
-                (subscriber as Event<T>)?.Invoke(evnt);
+                var evt = subscriber as Event<T>;
+                if (evt != null)
+                    evt(evnt);
                 var async = subscriber as AsyncEvent<T>;
                 if (async != null) {
                     if (subtasks == null)
@@ -147,7 +153,9 @@ namespace HouraiTeahouse {
         /// </summary>
         /// <typeparam name="T"> the type of event to check for. </typeparam>
         /// <returns> how many subscribers said event has. </returns>
-        public int GetCount<T>() => GetCount(typeof(T)); 
+        public int GetCount<T>() {
+            return GetCount(typeof(T)); 
+        }
 
         /// <summary> 
         /// Gets the count of subscribers to certain type of event. 
@@ -167,7 +175,9 @@ namespace HouraiTeahouse {
         /// </summary>
         /// <typeparam name="T"> the type of event to remove </typeparam>
         /// <returns> whether it was removed or not </returns>
-        public bool Reset<T>() => Reset(typeof(T)); 
+        public bool Reset<T>() {
+            return Reset(typeof(T)); 
+        }
 
         /// <summary> 
         /// Removes all subscribers from a single event.
@@ -175,7 +185,9 @@ namespace HouraiTeahouse {
         /// <param name="type"> the type of event to remove </param>
         /// <returns> whether it was removed or not </returns>
         /// <exception cref="ArgumentNullException"> <paramref name="type" /> is null </exception>
-        public bool Reset(Type type) => _subscribers.Remove(Argument.NotNull(type)); 
+        public bool Reset(Type type) {
+            return _subscribers.Remove(Argument.NotNull(type)); 
+        }
 
         /// <summary> 
         /// Removes all subscribers from all events. 

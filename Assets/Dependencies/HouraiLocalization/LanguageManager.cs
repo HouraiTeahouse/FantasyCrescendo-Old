@@ -38,7 +38,8 @@ namespace HouraiTeahouse.Localization {
         public void SetStoredLanguageId(string language) {
             if (Prefs.Exists(_playerPrefKey) || Prefs.GetString(_playerPrefKey) != language) {
                 Prefs.SetString(_playerPrefKey, language);
-                OnChangeLangauge?.Invoke(language);
+                if (OnChangeLangauge != null)
+                    OnChangeLangauge(language);
             }
         }
 
@@ -98,12 +99,16 @@ namespace HouraiTeahouse.Localization {
         /// <summary> 
         /// All available languages currently supported by the system. 
         /// </summary>
-        public IEnumerable<string> AvailableLanguages => _languages.EmptyIfNull();
+        public IEnumerable<string> AvailableLanguages {
+            get { return _languages.EmptyIfNull();}
+        }
 
         /// <summary> 
         /// Gets an enumeration of all of the localizable keys. 
         /// </summary>
-        public IEnumerable<string> Keys => CurrentLanguage.Keys;
+        public IEnumerable<string> Keys {
+            get { return CurrentLanguage.Keys;}
+        }
 
         void SetLanguage(string langName, IDictionary<string, string> values) {
             if (CurrentLanguage.Name == langName)
@@ -117,8 +122,9 @@ namespace HouraiTeahouse.Localization {
             _log.Info("Set language to {0}", Language.GetName(langName));
         }
 
-        string GetLanguagePath(string identifier) => 
-            Path.Combine(_storageDirectory, identifier + FileExtension);
+        string GetLanguagePath(string identifier) {
+            return Path.Combine(_storageDirectory, identifier + FileExtension);
+        }
 
         /// <summary>
         /// Awake is called when the script instance is being loaded.
@@ -153,17 +159,23 @@ namespace HouraiTeahouse.Localization {
         /// <summary>
         /// This function is called when the MonoBehaviour will be destroyed.
         /// </summary>
-        void OnDestroy() => Save();
+        void OnDestroy() {
+            Save();
+        }
 
         /// <summary>
         /// Callback sent to all game objects before the application is quit.
         /// </summary>
-        void OnApplicationQuit() => Save();
+        void OnApplicationQuit() {
+            Save();
+        }
 
         /// <summary> 
         /// Saves the current language preferences to PlayerPrefs to keep it persistent. 
         /// </summary>
-        void Save() => Storage.SetStoredLanguageId(CurrentLanguage.Name);
+        void Save() {
+            Storage.SetStoredLanguageId(CurrentLanguage.Name);
+        }
 
         /// <summary> 
         /// Loads a new language given the Microsoft language identifier. 
@@ -177,7 +189,7 @@ namespace HouraiTeahouse.Localization {
             Argument.NotNull(identifier);
             identifier = identifier.ToLower();
             if (!_languages.Contains(identifier))
-                throw new InvalidOperationException($"Language with identifier of {identifier} is not supported.");
+                throw new InvalidOperationException(string.Format("Language with identifier of {0} is not supported.", identifier));
             var languageValues = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(GetLanguagePath(identifier)));
             SetLanguage(identifier, languageValues);
             return CurrentLanguage;

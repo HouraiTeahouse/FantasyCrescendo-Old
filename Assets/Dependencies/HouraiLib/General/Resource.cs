@@ -49,17 +49,23 @@ namespace HouraiTeahouse {
         /// <summary> 
         /// The Resources path that the asset is stored at. 
         /// </summary>
-        public string Path => _path;
+        public string Path {
+            get { return _path;}
+        }
 
         /// <summary> 
         /// Checks whether the asset was bundled in an AssetBundle or not.
         /// </summary>
-        public bool IsBundled => _path.IndexOf(BundleSeperator) >= 0;
+        public bool IsBundled {
+            get { return _path.IndexOf(BundleSeperator) >= 0;}
+        }
 
         /// <summary> 
         /// Whether the asset has been loaded in or not. 
         /// </summary>
-        public bool IsLoaded => Asset != null;
+        public bool IsLoaded {
+            get { return Asset != null;}
+        }
 
         /// <summary> 
         /// The asset handled by the Resource. Will be null if it has not been loaded yet. 
@@ -87,7 +93,7 @@ namespace HouraiTeahouse {
 #endif
                 {
                     throw new InvalidOperationException(
-                        $"Cannot synchronously load assets from AssetBundles. Path: {_path}");
+                        string.Format("Cannot synchronously load assets from AssetBundles. Path: {0}", _path));
                 }
             } else {
                 loadedObject = Resources.Load<T>(_path);

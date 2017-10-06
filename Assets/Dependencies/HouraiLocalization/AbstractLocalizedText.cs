@@ -17,7 +17,9 @@ namespace HouraiTeahouse.Localization {
 
         string _nativeText;
 
-        public int Priority => 100;
+        public int Priority {
+            get { return 100; }
+        }
 
         /// <summary> 
         /// The UI Text object to display the localized string onto 
@@ -51,7 +53,9 @@ namespace HouraiTeahouse.Localization {
             }
         }
 
-        protected bool HasComponent() => _text || _textMesh;
+        protected bool HasComponent() {
+            return _text || _textMesh;
+        }
 
         /// <summary>
         /// Awake is called when the script instance is being loaded.
@@ -95,7 +99,9 @@ namespace HouraiTeahouse.Localization {
             return text;
         }
 
-        protected virtual void Reset() => ResetComponents();
+        protected virtual void Reset() {
+            ResetComponents();
+        }
 
         /// <summary> Unity Callback. Called on the first frame before Update is called. </summary>
         protected virtual void Start() {
@@ -117,7 +123,9 @@ namespace HouraiTeahouse.Localization {
         /// </summary>
         /// <param name="val"> the pre-processed localized string </param>
         /// <returns> the post-processed localized string </returns>
-        protected virtual string Process(string val) => val;
+        protected virtual string Process(string val) {
+            return val;
+        }
 
         void ITextAcceptor.SetText(string text) {
             NativeText = text;

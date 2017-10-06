@@ -19,8 +19,12 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         [Tooltip("How fast a charactter reaches their max fall speed, in seconds.")]
         float _gravity = 1.5f;
 
-        public float Weight => _weight;
-        public float Gravity => _gravity;
+        public float Weight {
+            get { return _weight;}
+        }
+        public float Gravity {
+            get { return _gravity;}
+        }
 
         public CharacterController CharacterController { get; private set; }
 

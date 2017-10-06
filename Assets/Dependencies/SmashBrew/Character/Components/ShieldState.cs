@@ -39,11 +39,21 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         [SerializeField]
         Material _shieldMaterial;
 
-        public float MaxShieldHealth => _maxShieldHealth;
-        public float DepletionRate => _depletionRate;
-        public float RegenRate => _regenRate;
-        public float ResetHealth => _resetHealth;
-        public float RecoveryCooldown => _recoveryCooldown;
+        public float MaxShieldHealth {
+            get { return _maxShieldHealth; }
+        }
+        public float DepletionRate {
+            get { return _depletionRate; }
+        }
+        public float RegenRate {
+            get { return _regenRate; }
+        }
+        public float ResetHealth {
+            get { return _resetHealth; }
+        }
+        public float RecoveryCooldown {
+            get { return _recoveryCooldown; }
+        }
 
         GameObject _shieldObj;
         Transform _shieldTransform;

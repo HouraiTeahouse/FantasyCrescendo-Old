@@ -32,7 +32,9 @@ namespace HouraiTeahouse.FantasyCrescendo {
         /// Reset is called when the user hits the Reset button in the Inspector's
         /// context menu or when adding the component the first time.
         /// </summary>
-        void Reset() => _source = GetComponentInChildren<AudioSource>();
+        void Reset() {
+            _source = GetComponentInChildren<AudioSource>();
+        }
 
         void PlayPauseEffect(GamePaused args) {
             if (_source == null)

@@ -39,9 +39,9 @@ namespace HouraiTeahouse {
         /// Gets the number of elements stored in this enum map. Is always equal to the number of possible values the
         /// enum can be. 
         /// </summary>
-        public int Count => _map.Count;
+        public int Count { get { return _map.Count; } }
 
-        public IEnumerator<TValue> GetEnumerator() => _map.Values.GetEnumerator();
+        public IEnumerator<TValue> GetEnumerator() { return _map.Values.GetEnumerator(); }
         IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
 
     }

@@ -28,13 +28,13 @@ namespace HouraiTeahouse.SmashBrew {
                 var scenes = DataManager.Scenes.OrderByDescending(s => s.Type).ThenByDescending(s => s.LoadPriority);
                 var logStr = "Scene Considerations: ";
                 foreach (var scene in scenes)
-                    logStr += $"\n   {scene.name}: {scene.Type} {scene.LoadPriority}, Loadable: {scene.IsSelectable}";
+                    logStr += string.Format("\n   {0}: {1} {2}, Loadable: {3}", scene.name, scene.Type, scene.LoadPriority, scene.IsSelectable);
                 log.Info(logStr);
                 var startScene = scenes.FirstOrDefault(s => s.IsSelectable);
                 if (startScene == null)
                     log.Error("No usable loadable scene found.");
                 else {
-                    log.Info($"Loading {startScene.name} as the initial scene...");
+                    log.Info("Loading {0} as the initial scene...", startScene.name);
                     startScene.Load();
                 }
             });

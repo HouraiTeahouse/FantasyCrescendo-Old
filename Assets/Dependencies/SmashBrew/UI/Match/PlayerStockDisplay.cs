@@ -19,7 +19,7 @@ namespace HouraiTeahouse.SmashBrew.UI {
         /// Update is called every frame, if the MonoBehaviour is enabled.
         /// </summary>
         void Update() {
-            var character = Player?.PlayerObject;
+            var character = Player != null ? Player.PlayerObject : null;
             if (character == null) {
                 ExcessDisplay.gameObject.SetActive(false);
                 foreach (GameObject standardIndicator in standardIndicators)

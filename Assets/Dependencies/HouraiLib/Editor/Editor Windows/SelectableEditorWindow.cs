@@ -31,7 +31,9 @@ namespace HouraiTeahouse {
         /// <summary> 
         /// Gets a SelectionMode filter on the selection's objects. 
         /// </summary>
-        protected SelectionMode SelectionMode => SelectionMode.Unfiltered;
+        protected SelectionMode SelectionMode {
+            get { return SelectionMode.Unfiltered; }
+        }
 
         /// <summary> 
         /// Unity event: invoked when the editor selection has changed. 

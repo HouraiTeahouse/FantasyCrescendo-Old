@@ -478,7 +478,9 @@ namespace HouraiTeahouse.Localization {
         /// <summary> 
         /// Gets an enumeration of all of the localization keys supported by the Language 
         /// </summary>
-        public IEnumerable<string> Keys => _map.Keys;
+        public IEnumerable<string> Keys {
+            get { return _map.Keys;}
+        }
 
         /// <summary> 
         /// Gets a localized string for a specific localization key. 
@@ -510,7 +512,9 @@ namespace HouraiTeahouse.Localization {
         /// </summary>
         /// <param name="key"> the localizaiton key to check for </param>
         /// <returns> True if the Langauge can localize the key, false otherwise. </returns>
-        public bool ContainsKey(string key) => _map.ContainsKey(key);
+        public bool ContainsKey(string key) {
+            return _map.ContainsKey(key);
+        }
 
     }
 

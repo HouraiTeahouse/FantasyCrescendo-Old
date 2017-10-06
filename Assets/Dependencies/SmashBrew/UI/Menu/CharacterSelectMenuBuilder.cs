@@ -43,7 +43,7 @@ namespace HouraiTeahouse.SmashBrew.UI {
                 RectTransform display = Instantiate(_playerDisplay);
                 Attach(display, _playerContainer);
 
-                display.name = $"Player {player.ID + 1}";
+                display.name = string.Format("Player {0}", player.ID + 1);
 
                 // Use the IDataComponent interfce to set the player data on all of the components that use it
                 display.GetComponentsInChildren<IDataComponent<Player>>().SetData(player);

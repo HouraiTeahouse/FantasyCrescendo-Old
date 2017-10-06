@@ -182,7 +182,8 @@ namespace HouraiTeahouse {
             if (_option.GetPropertyValue<string>() != language) {
                 _option.SetPropertyValue(language);
                 _option.Save();
-                OnChangeLangauge?.Invoke(language);
+                if (OnChangeLangauge != null)
+                    OnChangeLangauge(language);
             }
         }
         

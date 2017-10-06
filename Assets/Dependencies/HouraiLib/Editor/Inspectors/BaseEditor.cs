@@ -8,7 +8,9 @@ namespace HouraiTeahouse.Editor {
     /// </summary>
     public abstract class BaseEditor<T> : ScriptlessEditor where T : Object {
 
-        protected T Target => target as T;
+        protected T Target {
+            get { return target as T; }
+        }
 
     }
 

@@ -66,7 +66,7 @@ namespace HouraiTeahouse {
             }
         }
 
-        public int Count => _queue.Count;
+        public int Count { get { return  _queue.Count; } }
 
         /// <summary> 
         /// Adds an object to the end of the FixedQueue{T}. Will remove elements if this puts over the specfied limit. 
@@ -82,19 +82,25 @@ namespace HouraiTeahouse {
         /// </summary>
         /// <returns> The object that is removed from the beginning of the FixedQueue{T} </returns>
         /// <exception cref="InvalidOperationException"> the FixedQueue{T} is empty </exception>
-        public T Dequeue() => _queue.Dequeue();
+        public T Dequeue() {
+            return _queue.Dequeue();
+        }
 
         /// <summary> 
         /// Returns the object at the beginning of the FixedQueue{T} without removing it. 
         /// </summary
         /// <returns> the object at the beginning of the FixedQueue{T} </returns>
         /// <exception cref="InvalidOperationException"> the FixedQueue{T} is empty </exception>
-        public T Peek() => _queue.Peek();
+        public T Peek() {
+            return _queue.Peek();
+        }
 
         /// <summary> 
         /// Removes all objects from the FixedQueue{T}. 
         /// </summary>
-        public void Clear() => _queue.Clear();
+        public void Clear() {
+            _queue.Clear();
+        }
 
         // Helper funciton to check whether the FixedQueue{T} is over capacity or not.
         void CapactityCheck() {
@@ -107,8 +113,12 @@ namespace HouraiTeahouse {
             }
         }
 
-        public IEnumerator<T> GetEnumerator() => _queue.GetEnumerator();
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        public IEnumerator<T> GetEnumerator() {
+            return _queue.GetEnumerator();
+        }
+        IEnumerator IEnumerable.GetEnumerator() {
+            return GetEnumerator();
+        }
 
     }
 

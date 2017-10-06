@@ -49,7 +49,7 @@ namespace HouraiTeahouse.SmashBrew.UI {
             currentDisplayedTime = remainingTime;
             int seconds = remainingTime % 60;
             int minutes = remainingTime / 60;
-            SetText($"{minutes.ToString(format)}:{seconds.ToString(format)}");
+            SetText(string.Format("{0}:{1}", minutes.ToString(format), seconds.ToString(format)));
         }
 
     }

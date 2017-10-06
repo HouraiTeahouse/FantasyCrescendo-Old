@@ -18,7 +18,9 @@ namespace HouraiTeahouse {
         [Tooltip("The audio source to play the music out of")]
         AudioSource _musicSource;
 
-        public BGMData CurrentBGM => _currentBGM;
+        public BGMData CurrentBGM {
+            get { return _currentBGM; }
+        }
 
         /// <summary>
         /// Awake is called when the script instance is being loaded.

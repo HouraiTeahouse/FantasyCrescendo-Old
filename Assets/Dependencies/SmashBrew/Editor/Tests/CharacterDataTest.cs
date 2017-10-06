@@ -45,12 +45,14 @@ namespace HouraiTeahouse.SmashBrew {
         }
 
         [Test, TestCaseSource("TestData")]
-        public void has_a_prefab(CharacterData character) => 
+        public void has_a_prefab(CharacterData character) {
             Assert.NotNull(character.Prefab.Load());
+        }
 
         [Test, TestCaseSource("TestData")]
-        public void has_character_component(CharacterData character) =>
+        public void has_character_component(CharacterData character) {
             Assert.NotNull(character.Prefab.Load().GetComponent<Character>());
+        }
 
         [Test, TestCaseSource("TestData")]
         public void has_equal_pallete_and_portrait_counts(CharacterData character) {
@@ -67,16 +69,19 @@ namespace HouraiTeahouse.SmashBrew {
         }
 
         [Test, TestCaseSource("TestData")]
-        public void has_valid_icons(CharacterData character) => 
+        public void has_valid_icons(CharacterData character) {
             Assert.NotNull(character.Icon.Load());
+        }
 
         [Test, TestCaseSource("TestData")]
-        public void has_valid_home_stage(CharacterData character) => 
+        public void has_valid_home_stage(CharacterData character) {
             Assert.NotNull(character.HomeStage.Load());
+        }
 
         [Test, TestCaseSource("TestData")]
-        public void has_valid_victory_theme(CharacterData character) => 
+        public void has_valid_victory_theme(CharacterData character) {
             Assert.NotNull(character.VictoryTheme.Load());
+        }
 
     }
 

@@ -36,7 +36,9 @@ namespace HouraiTeahouse.HouraiInput {
         public TwoAxisInputControl RightStick { get; protected set; }
         public TwoAxisInputControl DPad { get; protected set; }
 
-        public InputControl this[InputTarget target] => GetControl(target);
+        public InputControl this[InputTarget target] {
+            get { return GetControl(target); }
+         }
 
         Vector2 DPadVector {
             get {
@@ -47,9 +49,13 @@ namespace HouraiTeahouse.HouraiInput {
             }
         }
 
-        public virtual bool IsSupportedOnThisPlatform => true;
+        public virtual bool IsSupportedOnThisPlatform {
+            get { return true; }
+        }
 
-        public virtual bool IsKnown => true;
+        public virtual bool IsKnown {
+            get { return true; }
+        }
 
         public bool MenuWasPressed {
             get {
@@ -161,9 +167,13 @@ namespace HouraiTeahouse.HouraiInput {
 
         public virtual void Vibrate(float leftMotor, float rightMotor) {}
 
-        public void Vibrate(float intensity) => Vibrate(intensity, intensity); 
+        public void Vibrate(float intensity) {
+            Vibrate(intensity, intensity); 
+        }
 
-        public override string ToString() => $"[InputDevice ({Name}, {Meta})]";
+        public override string ToString() {
+            return string.Format("[InputDevice ({0}, {1})]", Name, Meta);
+        }
 
     }
 

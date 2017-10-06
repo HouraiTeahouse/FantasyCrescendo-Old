@@ -44,8 +44,8 @@ namespace HouraiTeahouse.Editor {
                 bool changed = _selected != value;
                 T oldValue = Selected;
                 _selected = value;
-                if (changed)
-                    OnSelectionChanged?.Invoke(oldValue, value);
+                if (changed && OnSelectionChanged != null)
+                    OnSelectionChanged(oldValue, value);
             }
         }
 
@@ -92,13 +92,17 @@ namespace HouraiTeahouse.Editor {
         /// Checks if the current state of the selector is valid. Will return true if there are valid selections to use
         /// and false otherwise. 
         /// </summary>
-        public bool IsValid => Selections != null;
+        public bool IsValid {
+            get { return Selections != null;}
+        }
 
         /// <summary> 
         /// Gets the GUIContent used for the currently selected. If nothing is currently selected or the selector is not
         /// currently valid, will return null. 
         /// </summary>
-        public GUIContent SelectedContent => _contentFunc(Selected);
+        public GUIContent SelectedContent {
+            get { return _contentFunc(Selected);}
+        }
 
         /// <summary> 
         /// Fired every time the selected object changes to a new value. First argument is old value, new argument is new

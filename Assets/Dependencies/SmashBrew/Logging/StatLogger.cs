@@ -6,14 +6,18 @@ namespace HouraiTeahouse.SmashBrew {
 
         float _count;
 
-        public float Count => _count;
+        public float Count {
+            get { return _count;}
+        }
 
         public Counter Increment(float value = 1f) {
             _count += value;
             return this;
         }
 
-        public static Counter operator ++(Counter counter) { return Argument.NotNull(counter).Increment(); }
+        public static Counter operator ++(Counter counter) { 
+            return Argument.NotNull(counter).Increment(); 
+        }
 
         public static Counter operator +(Counter counter, float value) {
             return Argument.NotNull(counter).Increment(value);
@@ -27,7 +31,9 @@ namespace HouraiTeahouse.SmashBrew {
 
         public StatLogger() { _counters = new Dictionary<string, Counter>(); }
 
-        public Counter this[string counterName] => GetCounter(counterName);
+        public Counter this[string counterName] {
+            get { return GetCounter(counterName); }
+        }
 
         public Counter GetCounter(string counterName) {
             Counter counter;

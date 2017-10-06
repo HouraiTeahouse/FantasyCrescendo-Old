@@ -45,14 +45,20 @@ namespace HouraiTeahouse.Console {
 
         static GameConsole() { Init(); }
 
-        /// <summary> How long of a history will the GameConsole maintain. </summary>
+        /// <summary> 
+        /// How long of a history will the GameConsole maintain. 
+        /// </summary>
         public static int HistorySize {
             get { return _history.Limit; }
             set { _history.Limit = value; }
         }
 
-        /// <summary> The log history of all logged messages on the GameConsole </summary>
-        public static IEnumerable<string> History => _history;
+        /// <summary> 
+        /// The log history of all logged messages on the GameConsole.
+        /// </summary>
+        public static IEnumerable<string> History {
+            get { return _history; }
+        }
 
         /// <summary> Called every time the Console is updated. </summary>
         public static event Action OnConsoleUpdate;

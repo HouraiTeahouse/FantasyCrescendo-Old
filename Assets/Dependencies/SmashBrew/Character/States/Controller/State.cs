@@ -15,7 +15,9 @@ namespace HouraiTeahouse.SmashBrew.States {
 
         readonly List<Func<T, State<T>>> _transitions;
         readonly ReadOnlyCollection<Func<T, State<T>>> _transitionCollection;
-        public ReadOnlyCollection<Func<T, State<T>>> Transitions => _transitionCollection;
+        public ReadOnlyCollection<Func<T, State<T>>> Transitions {
+            get { return _transitionCollection; }
+        }
 
         protected State() {
             _transitions = new List<Func<T, State<T>>>();

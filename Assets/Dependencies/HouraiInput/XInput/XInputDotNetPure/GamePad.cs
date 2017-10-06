@@ -154,12 +154,12 @@ namespace XInputDotNetPure {
                         : ButtonState.Released;
         }
 
-        public uint PacketNumber => packetNumber;
-        public bool IsConnected => isConnected;
-        public GamePadButtons Buttons => buttons;
-        public GamePadDPad DPad => dPad;
-        public GamePadTriggers Triggers => triggers;
-        public GamePadThumbSticks ThumbSticks => thumbSticks;
+        public uint PacketNumber { get { return packetNumber; } }
+        public bool IsConnected { get { return isConnected; } }
+        public GamePadButtons Buttons { get { return buttons; } }
+        public GamePadDPad DPad { get { return dPad; } }
+        public GamePadTriggers Triggers { get { return triggers; } }
+        public GamePadThumbSticks ThumbSticks { get { return thumbSticks; } }
 
     }
 

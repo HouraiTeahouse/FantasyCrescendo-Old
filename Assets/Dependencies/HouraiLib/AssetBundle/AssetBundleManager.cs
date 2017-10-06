@@ -17,8 +17,8 @@ namespace HouraiTeahouse.AssetBundles {
         readonly Dictionary<string, BundleMetadata> _validIdentifiers;
         public AssetBundleManifest Manifest { get; private set; }
 
-        public BundleMetadata this[string name] => _validIdentifiers[name];
-        public IEnumerable<string> BundleNames => _validIdentifiers.Keys;
+        public BundleMetadata this[string name] { get { return _validIdentifiers[name]; } }
+        public IEnumerable<string> BundleNames { get { return _validIdentifiers.Keys; } }
 
         public BundleManfiestMap(AssetBundleManifest manifest) {
             Manifest = Argument.NotNull(manifest);
@@ -300,15 +300,18 @@ namespace HouraiTeahouse.AssetBundles {
                         if (File.Exists(fullPath))
                             return fullPath;
                     }
-                    throw new FileNotFoundException($"No valid path for asset bundle {name} could be found.");
+                    var message = string.Format("No valid path for asset bundle {0} could be found.", name);
+                    throw new FileNotFoundException(message);
                 });
             // For manifest assetbundle, always download it as we don't have hash for it.
             var task = pathTask.Then(path => {
                 var operation = AssetBundle.LoadFromFileAsync(path);
                 return operation.ToTask().Then(request => {
                     var assetBundle = request.assetBundle;
-                    if (assetBundle == null)
-                        throw new Exception($"{name} is not a valid asset bundle.");
+                    if (assetBundle == null) {
+                        var message = string.Format("{0} is not a valid asset bundle.", name);
+                        throw new Exception(message);
+                    }
                     LoadedAssetBundle loadedBundle;
                     if (isManifest)
                          loadedBundle = new LoadedAssetBundle(
@@ -377,7 +380,7 @@ namespace HouraiTeahouse.AssetBundles {
         public static ITask<T> LoadAssetAsync<T>(string assetPath) where T : Object {
             if (assetPath.IndexOf(Resource.BundleSeperator) < 0)
                 return Task.FromError<T>(new ArgumentException(
-                    $"assetPath must contain the bundle seperator ({Resource.BundleSeperator}) to load from asset bundles"
+                    string.Format("assetPath must contain the bundle seperator ({0}) to load from asset bundles", Resource.BundleSeperator)
                     ));
             string[] parts = assetPath.Split(Resource.BundleSeperator);
             return LoadAssetAsync<T>(parts[0], parts[1]);
@@ -392,7 +395,7 @@ namespace HouraiTeahouse.AssetBundles {
 				string[] assetPaths = AssetDatabase.GetAssetPathsFromAssetBundleAndAssetName(assetBundleName, assetName);
 			    if (assetPaths.Length != 0)
 			        return Task.FromResult(AssetDatabase.LoadAssetAtPath<T>(assetPaths[0]));
-			    var message = $"There is no asset with name \"{assetName}\" in {assetBundleName}";
+			    var message = string.Format("There is no asset with name \"{}\" in {}", assetName, assetBundleName);
 			    log.Error(message);
 			    return Task.FromError<T>(new Exception(message));
 			}
@@ -412,7 +415,7 @@ namespace HouraiTeahouse.AssetBundles {
                                            LoadSceneMode loadMode = LoadSceneMode.Single) {
             if (assetPath.IndexOf(Resource.BundleSeperator) < 0)
                 return Task.FromError(new ArgumentException(
-                    $"assetPath must contain the bundle seperator ({Resource.BundleSeperator}) to load from asset bundles"
+                    string.Format("assetPath must contain the bundle seperator ({0}) to load from asset bundles", Resource.BundleSeperator)
                     ));
             string[] parts = assetPath.Split(Resource.BundleSeperator);
             return LoadLevelAsync(parts[0], parts[1], loadMode);

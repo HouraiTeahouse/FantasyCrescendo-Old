@@ -39,7 +39,9 @@ namespace HouraiTeahouse.SmashBrew.Characters {
 
         public Vector2 Movement {
             get { 
-                var move = _controlMapping.Stick(Player?.Controller);
+                Vector2 move = Vector2.zero;
+                if (Player != null)
+                    move = _controlMapping.Stick(Player.Controller);
                 //TODO(james7132): Turn this into an input device
                 move.x += ButtonAxis(GetKeys(KeyCode.A, KeyCode.LeftArrow),
                                      GetKeys(KeyCode.D, KeyCode.RightArrow));
@@ -52,8 +54,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         public Vector2 Smash {
             get { 
                 // TODO(james7132): Do proper smash input detection
-                var smash = _tapHistory.Aggregate((lhs, rhs) => 
-                    new Vector2(AbsMax(lhs.x, rhs.x), AbsMax(lhs.y, rhs.y)));
+                var smash = _tapHistory.Aggregate((lhs, rhs) => new Vector2(AbsMax(lhs.x, rhs.x), AbsMax(lhs.y, rhs.y)));
                 smash.x += ButtonAxis(GetKeys(KeyCode.A), GetKeys(KeyCode.D));
                 smash.y += ButtonAxis(GetKeys(KeyCode.S), GetKeys(KeyCode.W));
                 smash = VectorUtil.Snap(Movement, smash);
@@ -69,8 +70,12 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             }
         }
 
-        bool IsValid => Player?.Controller != null;
-        float AbsMax(float a, float b) => Mathf.Abs(a) > Mathf.Abs(b) ? a : b;
+        bool IsValid {
+            get { return Player != null && Player.Controller != null;}
+        }
+        float AbsMax(float a, float b) {
+            return Mathf.Abs(a) > Mathf.Abs(b) ? a : b;
+        }
 
         public InputSlice GetInput() {
             var valid = IsValid;
@@ -85,16 +90,25 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             return test;
         }
 
-        void IDataComponent<Player>.SetData(Player data) => Player = data;
-        Vector2 DirectionClamp(Vector2 dir) => new Vector2(Mathf.Clamp(dir.x, -1, 1), Mathf.Clamp(dir.y, -1, 1));
-        bool GetKeys(params KeyCode[] keys) => Player?.ID == 0 && keys.Any(Input.GetKey);
-        float ButtonAxis(bool neg, bool pos) => (neg ? -1 : 0f) + (pos ? 1f : 0f);
+        void IDataComponent<Player>.SetData(Player data) {
+            Player = data;
+        }
+        Vector2 DirectionClamp(Vector2 dir) {
+            return  new Vector2(Mathf.Clamp(dir.x, -1, 1), Mathf.Clamp(dir.y, -1, 1));
+        }
+        bool GetKeys(params KeyCode[] keys) {
+            return Player != null && Player.ID == 0 && keys.Any(Input.GetKey);
+        }
+        float ButtonAxis(bool neg, bool pos) {
+            return  (neg ? -1 : 0f) + (pos ? 1f : 0f);
+        }
 
         /// <summary>
         /// This function is called every fixed framerate frame, if the MonoBehaviour is enabled.
         /// </summary>
         void FixedUpdate() {
-            _tapHistory[_tapIndex] = _tapDetector.Process(_controlMapping.Stick(Player?.Controller), Time.fixedDeltaTime);
+            if (Player != null)
+                _tapHistory[_tapIndex] = _tapDetector.Process(_controlMapping.Stick(Player.Controller), Time.fixedDeltaTime);
             _tapIndex++;
             if (_tapIndex >= _tapHistory.Length)
                 _tapIndex = 0;

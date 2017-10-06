@@ -10,7 +10,9 @@ namespace HouraiTeahouse {
 
         bool destroyOnFinish;
 
-        public AudioSource Audio => _audio;
+        public AudioSource Audio {
+            get { return _audio;}
+        }
 
         public float Pitch { get; set; }
 

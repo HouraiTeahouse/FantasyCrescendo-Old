@@ -10,8 +10,12 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         public bool LastFrame;
         public bool Current;
 
-        public bool WasPressed => !LastFrame && Current;
-        public bool WasReleased => LastFrame && !Current;
+        public bool WasPressed {
+            get { return !LastFrame && Current; }
+        }
+        public bool WasReleased {
+            get { return LastFrame && !Current; }
+        }
 
         public void Update(bool value) {
             LastFrame = Current;

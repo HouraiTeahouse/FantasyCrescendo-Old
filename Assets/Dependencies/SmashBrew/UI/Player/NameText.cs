@@ -62,7 +62,9 @@ namespace HouraiTeahouse.SmashBrew.UI {
         /// <summary>
         ///     <see cref="AbstractLocalizedText.Process" />
         /// </summary>
-        protected override string Process(string val) => !_capitalize ? val : val.ToUpperInvariant();
+        protected override string Process(string val) {
+            return !_capitalize ? val : val.ToUpperInvariant();
+        }
 
         /// <summary> 
         /// Events callback. Called whenever the Player changes. 

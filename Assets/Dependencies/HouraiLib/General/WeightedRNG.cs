@@ -86,7 +86,9 @@ namespace HouraiTeahouse {
         }
 
 
-        public void CopyTo(T[] array, int arrayIndex) => _weights.Keys.CopyTo(array, arrayIndex);
+        public void CopyTo(T[] array, int arrayIndex) {
+            _weights.Keys.CopyTo(array, arrayIndex);
+        }
 
         public bool Remove(T obj) {
             if (!_weights.ContainsKey(obj))
@@ -97,18 +99,18 @@ namespace HouraiTeahouse {
             return success;
         }
 
-        public int Count => _weights.Count;
-        public bool IsReadOnly => false;
-        public void Add(T item) => this[item] = 1;
+        public int Count { get { return _weights.Count;} }
+        public bool IsReadOnly { get { return false;} }
+        public void Add(T item) { this[item] = 1; }
 
         public void Clear() {
             _weights.Clear();
             _weightSum = 0;
         }
 
-        public bool Contains(T obj) => _weights.ContainsKey(obj);
-        public IEnumerator<T> GetEnumerator() => _weights.Keys.GetEnumerator();
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        public bool Contains(T obj) { return _weights.ContainsKey(obj); }
+        public IEnumerator<T> GetEnumerator() { return _weights.Keys.GetEnumerator(); }
+        IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
 
     }
 

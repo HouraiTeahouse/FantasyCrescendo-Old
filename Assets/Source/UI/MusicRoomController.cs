@@ -29,7 +29,9 @@ namespace HouraiTeahouse.FantasyCrescendo {
         /// Gets the currently selected BGMData.
         /// </summary>
         /// <returns> the currently selected BGM </returns>
-        public BGMData CurrentSelectedBGM => _bgmData[_currentIndex];
+        public BGMData CurrentSelectedBGM {
+            get { return _bgmData[_currentIndex]; }
+        }
 
         /// <summary>
         /// Awake is called when the script instance is being loaded.
@@ -52,7 +54,8 @@ namespace HouraiTeahouse.FantasyCrescendo {
             _currentIndex = (_currentIndex + distance) % _bgmData.Length;
             while(_currentIndex < 0)
                 _currentIndex += _bgmData.Length;
-            OnBGMChange?.Invoke(CurrentSelectedBGM);
+            if (OnBGMChange != null)
+                OnBGMChange(CurrentSelectedBGM);
             SetViewText();
         }
 
@@ -67,7 +70,7 @@ namespace HouraiTeahouse.FantasyCrescendo {
             if (_textSource == null)
                 return;
             var bgm = CurrentSelectedBGM;
-            var text = $"{bgm.Name}\nby {bgm.Artist}";
+            var text = string.Format("{0}\nby {1}", bgm.Name, bgm.Artist);
             if (!string.IsNullOrEmpty(bgm.OriginalName))
                 text += "\nOriginal: " + bgm.OriginalName;
             _textSource.SetUIText(text);

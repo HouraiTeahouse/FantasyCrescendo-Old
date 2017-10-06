@@ -70,26 +70,40 @@ namespace HouraiTeahouse.SmashBrew {
         [Tooltip("The internal name of the scene. Must be in build settings.")]
         string _scene;
 
-        public uint Id => _id;
+        public uint Id {
+            get { return   _id;}
+        }
 
         /// <summary> 
         /// The image shown on menus to represent the scene. 
         /// </summary>
-        public Resource<Sprite> PreviewImage => Resource.Get<Sprite>(_previewImage);
+        public Resource<Sprite> PreviewImage {
+            get { return Resource.Get<Sprite>(_previewImage);}
+        }
 
         /// <summary> 
         /// The icon used on menus to represent the scene. 
         /// </summary>
-        public Resource<Sprite> Icon => Resource.Get<Sprite>(_icon);
+        public Resource<Sprite> Icon {
+            get { return Resource.Get<Sprite>(_icon);}
+        }
 
         /// <summary> 
         /// Is the scene described by this SceneData a stage? 
         /// </summary>
-        public SceneType Type => _type;
+        public SceneType Type {
+            get { return _type;}
+        }
 
-        public int LoadPriority => _loadPriority;
-        public bool IsSelectable => _isSelectable && IsVisible;
-        public bool IsVisible => _isVisible && (Debug.isDebugBuild || !_isDebug);
+        public int LoadPriority {
+            get { return _loadPriority;}
+        }
+        public bool IsSelectable {
+            get { return _isSelectable && IsVisible;}
+        }
+        public bool IsVisible {
+            get { return _isVisible && (Debug.isDebugBuild || !_isDebug);}
+        }
 
         public void Unload() {
             if(PreviewImage != null)

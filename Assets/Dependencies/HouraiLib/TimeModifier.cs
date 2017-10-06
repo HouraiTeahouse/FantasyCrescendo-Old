@@ -15,9 +15,15 @@ namespace HouraiTeahouse {
         Animator[] _animators;
         float _localTimeScale = 1f;
 
-        public float EffectiveTimeScale => Time.timeScale * _localTimeScale;
-        public float DeltaTime => Time.deltaTime * _localTimeScale;
-        public float FixedDeltaTime => Time.fixedDeltaTime * _localTimeScale;
+        public float EffectiveTimeScale {
+            get { return Time.timeScale * _localTimeScale; }
+        }
+        public float DeltaTime {
+            get { return Time.deltaTime * _localTimeScale; }
+        }
+        public float FixedDeltaTime {
+            get { return Time.fixedDeltaTime * _localTimeScale; }
+        }
 
         //TODO: Figure out how to get this working with particle system
         //ParticleSystem[] particles;

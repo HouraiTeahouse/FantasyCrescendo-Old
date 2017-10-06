@@ -48,8 +48,8 @@ namespace HouraiTeahouse.SmashBrew.States {
         public void ChangeState(T state) {
             var oldState = CurrentState;
             SetState(state);
-            if (oldState != CurrentState)
-                OnStateChange?.Invoke(oldState, CurrentState);
+            if (oldState != CurrentState && OnStateChange != null)
+                OnStateChange(oldState, CurrentState);
         }
 
         /// <summary>

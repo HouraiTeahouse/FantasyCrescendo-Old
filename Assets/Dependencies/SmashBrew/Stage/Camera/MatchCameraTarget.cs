@@ -22,7 +22,9 @@ namespace HouraiTeahouse.SmashBrew.Stage {
         CameraTarget CameraTarget { get; set; }
 
         List<Transform> _targets;
-        ICollection<Transform> Targets => _targets ?? (_targets = new List<Transform>());
+        ICollection<Transform> Targets {
+            get { return  _targets ?? (_targets = new List<Transform>());}
+        }
 
         public Vector2 Padding {
             get { return _padding; }

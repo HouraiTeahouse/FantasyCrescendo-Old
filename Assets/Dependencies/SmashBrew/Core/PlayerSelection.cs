@@ -24,7 +24,8 @@ namespace HouraiTeahouse.SmashBrew {
                 if (_character == value)
                     return;
                 _character = value;
-                Changed?.Invoke();
+                if (Changed != null)
+                    Changed();
             }
         }
 
@@ -43,7 +44,8 @@ namespace HouraiTeahouse.SmashBrew {
                 } else {
                     _pallete = value;
                 }
-                Changed?.Invoke();
+                if (Changed != null)
+                    Changed();
             }
         }
 
@@ -53,7 +55,8 @@ namespace HouraiTeahouse.SmashBrew {
                 if (_cpuLevel == value)
                     return;
                 _cpuLevel = value;
-                Changed?.Invoke();
+                if (Changed != null)
+                    Changed();
             }
         }
 
@@ -71,7 +74,7 @@ namespace HouraiTeahouse.SmashBrew {
         public override string ToString() {
             if (Character == null)
                 return "None";
-            return $"<Selection: {Character.name}:{Pallete}>";
+            return string.Format("<Selection: {0}:{1}>", Character.name, Pallete);
         }
 
         public static bool operator ==(PlayerSelection s1, PlayerSelection s2) {
@@ -80,9 +83,13 @@ namespace HouraiTeahouse.SmashBrew {
             return (n1 && n2) || (n1 == n2 && s1.Character == s2.Character && s1.Pallete == s2.Pallete);
         }
 
-        public static bool operator !=(PlayerSelection s1, PlayerSelection s2) => !(s1 == s2);
+        public static bool operator !=(PlayerSelection s1, PlayerSelection s2) {
+            return !(s1 == s2);
+        }
 
-        public override bool Equals(object obj) => this == (obj as PlayerSelection);
+        public override bool Equals(object obj) {
+            return this == (obj as PlayerSelection);
+        }
 
         public override int GetHashCode() {
             unchecked {

@@ -6,7 +6,9 @@ namespace HouraiTeahouse.SmashBrew.Matches {
 
     public class TrainingMatch : MatchRule {
 
-        protected override bool CheckActive(MatchConfig config) => false;
+        protected override bool CheckActive(MatchConfig config) {
+            return false;
+        }
 
         protected override void OnInitialize(MatchConfig config) {
             var eventManager = Mediator.Global;

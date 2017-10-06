@@ -131,14 +131,16 @@ namespace HouraiTeahouse {
             return toRemove.Any(RemoveAllByPriority);
         }
 
-        public IEnumerator<T> GetEnumerator() => _items.SelectMany(pair => pair.Value).GetEnumerator();
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        public IEnumerator<T> GetEnumerator() { return _items.SelectMany(pair => pair.Value).GetEnumerator(); }
+        IEnumerator IEnumerable.GetEnumerator() { return  GetEnumerator(); }
 
         /// <summary> 
         /// Adds a new element to the PriorityList with priority 0. 
         /// </summary>
         /// <param name="item"> the element to add </param>
-        public void Add(T item) => Add(item, 0);
+        public void Add(T item) {
+            Add(item, 0);
+        }
 
         /// <summary> 
         /// Adds a new element to the PriorityList with specified priority. 
@@ -157,7 +159,6 @@ namespace HouraiTeahouse {
         }
 
         public bool Contains(T item) { return _priorities.ContainsKey(item); }
-
         public void CopyTo(T[] array, int arrayIndex) { throw new NotImplementedException(); }
 
         public bool Remove(T item) {
@@ -173,8 +174,8 @@ namespace HouraiTeahouse {
             return true;
         }
 
-        public int Count => _priorities.Count;
-        public bool IsReadOnly => false;
+        public int Count { get { return _priorities.Count; } }
+        public bool IsReadOnly { get { return false; } }
 
     }
 

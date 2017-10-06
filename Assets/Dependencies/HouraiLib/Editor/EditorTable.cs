@@ -21,7 +21,8 @@ namespace HouraiTeahouse {
             }
 
             internal void Draw(Rect rect, T obj)  {
-                _drawFunc?.Invoke(rect, obj);
+                if (_drawFunc != null)
+                    _drawFunc(rect, obj);
             }
 
         }
@@ -79,7 +80,8 @@ namespace HouraiTeahouse {
             var xPos = position.x;
             foreach (var column in Columns) {
                 position.width = width * column.Width;
-                colFunc?.Invoke(column, position);
+                if (colFunc != null)
+                    colFunc(column, position);
                 position.x += position.width + Padding.x;
             }
             position.x = xPos;

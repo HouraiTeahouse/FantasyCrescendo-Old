@@ -22,13 +22,16 @@ namespace HouraiTeahouse.SmashBrew {
 
         static GameMode() { _gameModes = new List<GameMode>(); }
 
-        public static IEnumerable<GameMode> All => _gameModes.Select(x => x);
+        public static IEnumerable<GameMode> All {
+            get { return _gameModes.Select(x => x); }
+        }
 
         public static void Register(GameMode mode) {
             Argument.NotNull(mode);
             if(!_gameModes.Contains(mode)) {
                 _gameModes.Add(mode);
-                OnRegister?.Invoke(mode);
+                if (OnRegister != null)
+                    OnRegister(mode);
             }
         }
 
@@ -38,8 +41,8 @@ namespace HouraiTeahouse.SmashBrew {
             set {
                 var old = _current;
                 _current = value ?? Config.GameModes.StandardVersus;
-                if (old != _current)
-                    OnChangeGameMode?.Invoke(_current);
+                if (old != _current && OnChangeGameMode != null)
+                    OnChangeGameMode(_current);
             }
         }
 
@@ -79,13 +82,21 @@ namespace HouraiTeahouse.SmashBrew {
         [SerializeField]
         int _minimumPlayers = 1;
 
-        public override int MaxPlayers => _maximumPlayers;
-        public override int MinPlayers => _minimumPlayers;
-        public override bool CPUsAllowed => _cpusAllowed;
-        public override ReadOnlyCollection<CharacterData> ExcludedCharacters 
-            => new ReadOnlyCollection<CharacterData>(_excludedCharacters);
-        public override ReadOnlyCollection<SceneData> ExcludedStages 
-            => new ReadOnlyCollection<SceneData>(_excludedStages);
+        public override int MaxPlayers {
+            get { return _maximumPlayers; }
+        }
+        public override int MinPlayers {
+            get { return _minimumPlayers; }
+        }
+        public override bool CPUsAllowed {
+            get { return _cpusAllowed; }
+        }
+        public override ReadOnlyCollection<CharacterData> ExcludedCharacters {
+            get { return new ReadOnlyCollection<CharacterData>(_excludedCharacters); }
+        }
+        public override ReadOnlyCollection<SceneData> ExcludedStages {
+            get { return new ReadOnlyCollection<SceneData>(_excludedStages); }
+        }
 
     }
 

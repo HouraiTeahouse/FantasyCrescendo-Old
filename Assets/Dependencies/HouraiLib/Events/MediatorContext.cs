@@ -15,11 +15,13 @@ namespace HouraiTeahouse {
             _subscriptions = new Dictionary<Type, List<Delegate>>();
         }
 
-        public virtual void Subscribe<T>(Mediator.Event<T> callback) 
-            =>  SubscribeImpl(typeof(T), callback);
+        public virtual void Subscribe<T>(Mediator.Event<T> callback) {
+            SubscribeImpl(typeof(T), callback);
+        }
 
-        public virtual void Subscribe<T>(Mediator.AsyncEvent<T> callback) 
-            =>  SubscribeImpl(typeof(T), callback);
+        public virtual void Subscribe<T>(Mediator.AsyncEvent<T> callback) {
+            SubscribeImpl(typeof(T), callback);
+        }
 
         public void Subscribe<T>(Action callback) {
             Argument.NotNull(callback);
@@ -43,7 +45,6 @@ namespace HouraiTeahouse {
         }
 
         public virtual void Dispose() {
-            Log.Warning("DISPOSED");
             foreach(var kv in _subscriptions) {
                 foreach (var sub in kv.Value) {
                     Mediator.Unsubscribe(kv.Key, sub);
@@ -66,8 +67,8 @@ namespace HouraiTeahouse {
             Mediator.Event<T> checkedCallback = (args) => {
                 if (isDisposed)
                     return;
-                if (unityObject != null)
-                    callback?.Invoke(args);
+                if (unityObject != null && callback != null)
+                    callback(args);
                 else
                     Dispose();
             };
@@ -78,8 +79,8 @@ namespace HouraiTeahouse {
             Mediator.AsyncEvent<T> checkedCallback = (args) => {
                 if (isDisposed)
                     return Task.Resolved;
-                if (unityObject != null) {
-                    return callback?.Invoke(args);
+                if (unityObject != null && callback != null) {
+                    return callback(args);
                 } else {
                     Dispose();
                     return Task.Resolved;
@@ -97,11 +98,13 @@ namespace HouraiTeahouse {
 
     public static class MediatorContextExtensions  {
 
-        public static MediatorContext CreateContext(this Mediator mediator) 
-            => new MediatorContext(mediator);
+        public static MediatorContext CreateContext(this Mediator mediator) {
+            return new MediatorContext(mediator);
+        }
 
-        public static MediatorContext CreateUnityContext(this Mediator mediator, UnityEngine.Object obj) 
-            => new UnityMeditatorContext(mediator, obj);
+        public static MediatorContext CreateUnityContext(this Mediator mediator, UnityEngine.Object obj) {
+            return new UnityMeditatorContext(mediator, obj);
+        }
 
     }
 

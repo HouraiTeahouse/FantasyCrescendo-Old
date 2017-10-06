@@ -25,7 +25,9 @@ namespace HouraiTeahouse.Editor {
                 UpdateContent(content);
             }
 
-            bool Valid => !_path.IsNullOrEmpty();
+            bool Valid {
+                get { return !_path.IsNullOrEmpty(); }
+            }
 
             public void Draw(Rect position, SerializedProperty property, Type type) {
                 EditorGUI.BeginChangeCheck();
@@ -47,12 +49,12 @@ namespace HouraiTeahouse.Editor {
                     message = "Not in Resources folder or Asset Bundle. Will not be saved.";
                 } else if (_path.IndexOf(Resource.BundleSeperator) >= 0) {
                     string[] splits = _path.Split(Resource.BundleSeperator);
-                    message = $"Asset Bundle: {splits[0]}\nPath:{splits[1]}";
+                    message = string.Format("Asset Bundle: {0}\nPath:{1}", splits[0], splits[1]);
                 } else {
-                    message = $"Path: {_path}";
+                    message = string.Format("Path: {0}", _path);
                 }
 
-                Content.tooltip = label.tooltip.IsNullOrEmpty() ? message : $"{label.tooltip}\n{message}";
+                Content.tooltip = label.tooltip.IsNullOrEmpty() ? message : string.Format("{0}\n{1}", label.tooltip, message);
             }
 
             void Update(Object obj) {
@@ -61,7 +63,7 @@ namespace HouraiTeahouse.Editor {
                 if (Assets.IsResource(_object))
                     _path = Assets.GetResourcePath(_object);
                 else if (!string.IsNullOrEmpty(bundleName))
-                    _path = $"{bundleName}{Resource.BundleSeperator}{_object.name}";
+                    _path = string.Format("{0}{1}{2}", bundleName, Resource.BundleSeperator, _object.name);
                 else
                     _path = string.Empty;
             }

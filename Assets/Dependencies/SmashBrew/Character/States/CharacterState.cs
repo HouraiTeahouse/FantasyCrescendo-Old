@@ -9,8 +9,12 @@ namespace HouraiTeahouse.SmashBrew.Characters {
 
         public string Name { get; private set; }
         public CharacterStateData Data { get; private set; }
-        public string AnimatorName => Name.Replace(".", "-");
-        public int AnimatorHash => Animator.StringToHash(AnimatorName);
+        public string AnimatorName {
+            get { return Name.Replace(".", "-"); }
+        }
+        public int AnimatorHash {
+            get { return Animator.StringToHash(AnimatorName); }
+        }
 
         public CharacterState(string name,
                               CharacterStateData data) {

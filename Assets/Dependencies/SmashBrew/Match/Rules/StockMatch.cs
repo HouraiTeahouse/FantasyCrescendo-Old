@@ -24,7 +24,9 @@ namespace HouraiTeahouse.SmashBrew.Matches {
 
         int startStocks;
 
-        protected override bool CheckActive(MatchConfig config) => config.Stocks > 0;
+        protected override bool CheckActive(MatchConfig config) {
+            return config.Stocks > 0;
+        }
 
         protected override void OnInitialize(MatchConfig config) {
             startStocks = config.Stocks;
@@ -53,9 +55,15 @@ namespace HouraiTeahouse.SmashBrew.Matches {
             });
         }
 
-        internal override void OnMatchTick() => MatchFinishCheck();
+        internal override void OnMatchTick() {
+            MatchFinishCheck();
+        }
 
-        int GetStock(Player player) => player?.PlayerObject?.State.Stocks ?? -1;
+        int GetStock(Player player) {
+            if (player == null || player.PlayerObject == null)
+                return -1;
+            return player.PlayerObject.State.Stocks;
+        }
 
         void MatchFinishCheck() {
             var players = Match.Players;

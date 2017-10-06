@@ -19,7 +19,9 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         public CharacterStateSummary State;
         public Player Player { get; private set; }
 
-        public CharacterControllerBuilder States => _controller;
+        public CharacterControllerBuilder States {
+            get { return _controller;}
+        }
 
         public const int kInputHistorySize = 3;
 
@@ -68,7 +70,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             _stateMap = StateController.States.ToDictionary(s => s.AnimatorHash);
             if (Debug.isDebugBuild)
                 StateController.OnStateChange += (b, a) => 
-                    Log.Debug($"{name} changed states: {b.Name} => {a.Name}");
+                    Log.Debug(string.Format("{0} changed states: {1} => {2}", name, a.Name, b.Name));
         }
 
         void InitializedComponents() {
@@ -249,17 +251,21 @@ namespace HouraiTeahouse.SmashBrew.Characters {
         /// <summary> 
         /// Gets an immutable collection of hitboxes that belong to the character.
         /// </summary>
-        public ReadOnlyCollection<Hitbox> Hitboxes => _hitboxes;
+        public ReadOnlyCollection<Hitbox> Hitboxes {
+            get { return _hitboxes; }
+        }
 
         /// <summary> 
         /// Gets an immutable collection of hurtboxes that belong to the character.
         /// </summary>
-        public ReadOnlyCollection<Hitbox> Hurtboxes => _hurtboxes;
+        public ReadOnlyCollection<Hitbox> Hurtboxes {
+            get { return _hurtboxes; }
+        }
 
         void IDataComponent<Player>.SetData(Player data) {
             Player = data;
             var selection = data.Selection;
-            gameObject.name = $"Player {data.ID} ({selection.Character.name},{selection.Pallete})";
+            gameObject.name = string.Format("Player {0} ({1},{2})", data.ID, selection.Character.name, selection.Pallete);
             if (isServer)
                 RpcSetPlayerId((byte)data.ID);
         }

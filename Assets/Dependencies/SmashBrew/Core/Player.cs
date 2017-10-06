@@ -48,7 +48,7 @@ namespace HouraiTeahouse.SmashBrew {
             get { return _selection; }
             set {
                 if(_selection.Copy(value))
-                    Log.Info($"Set Player {ID}'s selection to {_selection}");
+                    Log.Info("Set Player {0}'s selection to {1}", ID, _selection);
             }
         }
 
@@ -65,13 +65,19 @@ namespace HouraiTeahouse.SmashBrew {
             }
         }
 
-        public NetworkIdentity NetworkIdentity => _networkIdentity;
+        public NetworkIdentity NetworkIdentity {
+            get { return _networkIdentity; }
+        }
 
         // TODO(james7132): Move this somewhere else
-        public InputDevice Controller => Check.Range(ID, HInput.Devices.Count) ? HInput.Devices[ID] : null;
+        public InputDevice Controller {
+            get { return Check.Range(ID, HInput.Devices.Count) ? HInput.Devices[ID] : null; }
+        }
 
         // The represnetative color of this player. Used in UI.
-        public Color Color => Type.Color ?? Config.Player.GetColor(ID);
+        public Color Color {
+            get { return Type.Color ?? Config.Player.GetColor(ID); }
+        }
 
         public void CycleType() {
             Type = Type.Next;
@@ -82,7 +88,9 @@ namespace HouraiTeahouse.SmashBrew {
             return string.Format(shortName ? Type.ShortName : Type.Name, ID + 1);
         }
 
-        public override string ToString() => GetName();
+        public override string ToString() {
+            return GetName();
+        }
 
         public override bool Equals(object obj) {
             var player = obj as Player;
@@ -91,7 +99,9 @@ namespace HouraiTeahouse.SmashBrew {
             return false;
         }
 
-        public override int GetHashCode() => ID;
+        public override int GetHashCode() {
+            return ID;
+        }
 
         public static bool operator ==(Player p1, Player p2) {
             bool n1 = ReferenceEquals(p1, null);
@@ -99,7 +109,9 @@ namespace HouraiTeahouse.SmashBrew {
             return (n1 && n2) || (n1 == n2 && p1.ID == p2.ID);
         }
 
-        public static bool operator !=(Player p1, Player p2) => !(p1 == p2);
+        public static bool operator !=(Player p1, Player p2) {
+            return !(p1 == p2);
+        }
 
         void PublishChangedEvent() {
             Mediator.Global.Publish(new PlayerChanged{

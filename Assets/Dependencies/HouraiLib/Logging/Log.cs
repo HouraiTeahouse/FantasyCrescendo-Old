@@ -30,10 +30,10 @@ namespace HouraiTeahouse {
         [SerializeField]
         LogTypeSettings _error = new LogTypeSettings {Enabled = true, StackTrace = StackTraceLogType.ScriptOnly};
 
-        public LogTypeSettings Info => _info;
-        public LogTypeSettings Debug => _debug;
-        public LogTypeSettings Warning => _warning;
-        public LogTypeSettings Error => _error;
+        public LogTypeSettings Info { get { return _info; } }
+        public LogTypeSettings Debug { get { return _debug;} }
+        public LogTypeSettings Warning { get { return _warning;} }
+        public LogTypeSettings Error { get { return _error;} }
 
         public LogTypeSettings GetTypeSettings(LogLevel level) {
             switch (level) {
@@ -109,27 +109,28 @@ namespace HouraiTeahouse {
             }
 
             void ILog.Log(LogLevel logType, string format, params object[] objs) {
-                WriteLog(logType, $"[{Prefix}] {format}", objs);
+                WriteLog(logType, string.Format("[{0}] {1}", Prefix, format), objs);
             }
 
         }
 
-        public static ILog GetLogger(string prefix) => new Logger(prefix);
-        public static ILog GetLogger(object obj) => GetLogger(obj.GetType());
-        public static ILog GetLogger(Type type) => GetLogger(type.Name);
-        public static ILog GetLogger<T>() => GetLogger(typeof(T));
+        public static ILog GetLogger(string prefix) {
+            return new Logger(prefix);
+        }
+        public static ILog GetLogger(object obj) {
+            return GetLogger(obj.GetType());
+        }
+        public static ILog GetLogger(Type type) {
+            return GetLogger(type.Name);
+        }
+        public static ILog GetLogger<T>() {
+            return GetLogger(typeof(T));
+        }
 
-        public static void Info(object source, params object[] objs) =>
-            WriteLog(LogLevel.Info, source, objs);
-
-        public static void Debug(object source, params object[] objs) =>
-            WriteLog(LogLevel.Debug, source, objs);
-
-        public static void Warning(object source, params object[] objs) =>
-            WriteLog(LogLevel.Warning, source, objs);
-
-        public static void Error(object source, params object[] objs) =>
-            WriteLog(LogLevel.Error, source, objs);
+        public static void Info(object source, params object[] objs) { WriteLog(LogLevel.Info, source, objs); }
+        public static void Debug(object source, params object[] objs) { WriteLog(LogLevel.Debug, source, objs); }
+        public static void Warning(object source, params object[] objs) { WriteLog(LogLevel.Warning, source, objs); }
+        public static void Error(object source, params object[] objs) { WriteLog(LogLevel.Error, source, objs); }
 
         static void WriteLog(LogLevel log, object source, params object[] objs) {
             if (!Settings.GetTypeSettings(log).Enabled)
@@ -137,9 +138,9 @@ namespace HouraiTeahouse {
             var date = DateTime.Now.ToString(_settings.TimeFormat);
             var type = log.ToString().Substring(0, 1);
 #if UNITY_EDITOR
-            string prefix = $"<color={_colors[log]}>{type}</color> {date}: ";
+            string prefix = string.Format("<color={0}>{1}</color> {2}: ", _colors[log], type, date);
 #else
-            string prefix = $"{date} {type}:";
+            string prefix = string.Format("{0} {1}:", date, type);
 #endif
             var output = source as string;
             if (output != null)

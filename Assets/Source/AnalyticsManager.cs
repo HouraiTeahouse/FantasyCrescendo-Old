@@ -37,10 +37,10 @@ namespace HouraiTeahouse.FantasyCrescendo {
             });
             mediator.Subscribe<MatchStarted>(e => Analytics.CustomEvent("matchStarted"));
             mediator.Subscribe<MatchCompleted>(e => {
-                Analytics.CustomEvent("matchFinished", new Dictionary<string, object> {
-                    { "result", e.Result.ToString() },
-                    { "winningCharacter", e.Winner?.Selection?.Character.name ?? "N/A" }
-                });
+                // Analytics.CustomEvent("matchFinished", new Dictionary<string, object> {
+                //     { "result", e.Result.ToString() },
+                //     { "winningCharacter", e.Winner?.Selection?.Character.name ?? "N/A" }
+                // });
             });
         }
 

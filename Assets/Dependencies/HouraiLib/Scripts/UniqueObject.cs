@@ -24,7 +24,9 @@ namespace HouraiTeahouse {
         /// <summary> 
         /// The unique ID of the object. 
         /// </summary>
-        public int ID => _id;
+        public int ID {
+            get { return _id;}
+        }
 
         /// <summary>
         /// Awake is called when the script instance is being loaded.

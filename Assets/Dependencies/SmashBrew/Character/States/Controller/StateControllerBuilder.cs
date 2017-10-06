@@ -8,7 +8,9 @@ namespace HouraiTeahouse.SmashBrew.States {
 
         internal readonly HashSet<T> _states;
         public T DefaultState { get; set; }
-        public IEnumerable<T> States => _states.Select(x => x);
+        public IEnumerable<T> States {
+            get { return _states.Select(x => x);}
+        }
 
         public StateControllerBuilder() {
             _states = new HashSet<T>();
@@ -35,7 +37,7 @@ namespace HouraiTeahouse.SmashBrew.States {
             if (state == null)
                 throw new ArgumentNullException("state");
             if (_states.Contains(state))
-                throw new ArgumentException($"States cannot be added multiple times: {state}");
+                throw new ArgumentException(string.Format("States cannot be added multiple times: {0}", state));
             _states.Add(state);
             return this;
         }

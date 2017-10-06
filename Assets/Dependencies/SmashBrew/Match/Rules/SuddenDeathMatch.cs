@@ -6,7 +6,9 @@ namespace HouraiTeahouse.SmashBrew.Matches {
     [AddComponentMenu("Smash Brew/Matches/Sudden Death Match")]
     public sealed class SuddenDeathMatch : MatchRule {
 
-        protected override bool CheckActive(MatchConfig config) => false;
+        protected override bool CheckActive(MatchConfig config) {
+            return false;
+        }
 
     }
 

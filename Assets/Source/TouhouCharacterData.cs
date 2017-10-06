@@ -57,8 +57,12 @@ namespace HouraiTeahouse.FantasyCrescendo {
         [Tooltip("The source stage the character is from ")]
         TouhouStage _sourceStage = TouhouStage.Other;
 
-        public TouhouGame SourceGame => _sourceGame;
-        public TouhouStage SourceStage => _sourceStage;
+        public TouhouGame SourceGame {
+            get { return _sourceGame; }
+        }
+        public TouhouStage SourceStage {
+            get { return _sourceStage; }
+        }
 
     }
 

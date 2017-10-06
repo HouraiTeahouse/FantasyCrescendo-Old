@@ -55,7 +55,9 @@ namespace HouraiTeahouse.SmashBrew {
             private set { _loadTask = value; }
         }
 
-        public static bool IsReady => LoadTask != null && LoadTask.State != TaskState.Pending;
+        public static bool IsReady {
+            get { return LoadTask != null && LoadTask.State != TaskState.Pending; }
+        }
 
         [RuntimeInitializeOnLoadMethod]
         static void Initialize() {
@@ -100,11 +102,11 @@ namespace HouraiTeahouse.SmashBrew {
                 foreach (var entry in file.Split('\n')) {
                     if (entry.StartsWith("-")) {
                         blacklist.Add(entry.Substring(1).Trim());
-                        log.Info($"Registered bundle blacklist: {entry.Substring(1).Trim()}");
+                        log.Info("Registered bundle blacklist: {0}", entry.Substring(1).Trim());
                     }
                     else {
                         whitelist.Add(entry.Trim());
-                        log.Info($"Registered bundle whitelist: {entry.Trim()}");
+                        log.Info("Registered bundle whitelist: {0}", entry.Trim());
                     }
                 }
 
@@ -158,7 +160,7 @@ namespace HouraiTeahouse.SmashBrew {
 
 #if UNITY_EDITOR
         static void LoadFromEditor<T>(Action<T> loadFunc) where T : Object {
-            var guids = AssetDatabase.FindAssets($"t:{typeof(T).Name}");
+            var guids = AssetDatabase.FindAssets(string.Format("t:{0}", typeof(T).Name));
             foreach (string guid in guids) {
                 var path = AssetDatabase.GUIDToAssetPath(guid);
                 var asset = AssetDatabase.LoadAssetAtPath<T>(path);

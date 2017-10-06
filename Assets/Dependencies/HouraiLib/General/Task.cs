@@ -140,7 +140,9 @@ namespace HouraiTeahouse {
         public TaskState State { get; protected set; }
         public Exception Exception { get; private set; }
 
-        public static IEnumerable<ITaskInfo> PendingTasks => pendingTasks;
+        public static IEnumerable<ITaskInfo> PendingTasks {
+            get { return pendingTasks; }
+        }
 
         static Task() {
             EnableTracking = false;
@@ -224,7 +226,8 @@ namespace HouraiTeahouse {
             var task = new Task();
             ActionHandlers(task,
                 () => {
-                    onResolved?.Invoke();
+                    if (onResolved != null)
+                        onResolved();
                     task.Resolve();
                 });
             return task;
@@ -245,7 +248,8 @@ namespace HouraiTeahouse {
         public ITask Catch(Action<Exception> onError) {
             var task = new Task();
             ActionHandlers(task, task.Resolve, ex => {
-                onError?.Invoke(ex);
+                if (onError == null)
+                    onError(ex);
                 task.Reject(ex);
             });
             return task;
@@ -261,7 +265,8 @@ namespace HouraiTeahouse {
         void InvokeResolve(Action callback, IRejectable rejectable) {
             Argument.NotNull(rejectable);
             try {
-                callback?.Invoke();
+                if (callback != null)
+                    callback();
             } catch(Exception ex) {
                 rejectable.Reject(ex);
             }
@@ -278,7 +283,8 @@ namespace HouraiTeahouse {
         protected void InvokeReject(Action<Exception> callback, Exception exception, IRejectable rejectable) {
             Argument.NotNull(rejectable);
             try {
-                callback?.Invoke(exception);
+                if (callback != null)
+                    callback(exception);
             } catch(Exception ex) {
                 if(rejectable != this)
                     rejectable.Reject(ex);
@@ -308,7 +314,9 @@ namespace HouraiTeahouse {
             }
         }
 
-        public static ITask Resolved => new Task {State = TaskState.Success};
+        public static ITask Resolved {
+            get { return new Task {State = TaskState.Success}; }
+        }
 
         public static ITask<T> FromResult<T>(T result) {
             var task = new Task<T>();
@@ -507,7 +515,8 @@ namespace HouraiTeahouse {
         void InvokeResolve(Action<T> callback, IRejectable rejectable) {
             Argument.NotNull(rejectable);
             try {
-                callback?.Invoke(Result);
+                if (callback != null)
+                    callback(Result);
             } catch(Exception ex) {
                 rejectable.Reject(ex);
             }
@@ -538,7 +547,8 @@ namespace HouraiTeahouse {
             var task = new Task<T>();
             ActionHandlers(task, task.Resolve,
                 ex => {
-                    onError?.Invoke(ex);
+                    if (onError != null)
+                        onError(ex);
                     task.Reject(ex);
                 });
             return task;

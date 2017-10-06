@@ -10,7 +10,7 @@ namespace UnityEngine.AssetBundles.AssetBundleModel
     public class AssetTreeItem : TreeViewItem
     {
         private AssetInfo m_asset;
-        public AssetInfo asset => m_asset;
+        public AssetInfo asset { get { return m_asset; } }
         public AssetTreeItem() : base(-1, -1) { }
         public AssetTreeItem(AssetInfo a) : base(a.fullAssetName.GetHashCode(), 0, a.displayName)
         {
@@ -98,8 +98,8 @@ namespace UnityEngine.AssetBundles.AssetBundleModel
                     fileSize = 0;
             }
         }
-        public string displayName => m_DisplayName;
-        public string bundleName => m_BundleName == "" ? "auto" : m_BundleName;
+        public string displayName { get { return m_DisplayName;} }
+        public string bundleName { get { return m_BundleName == "" ? "auto" : m_BundleName;} }
         
         public Color GetColor()
         {

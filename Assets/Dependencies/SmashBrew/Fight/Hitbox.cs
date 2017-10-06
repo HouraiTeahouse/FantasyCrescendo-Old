@@ -31,7 +31,9 @@ namespace HouraiTeahouse.SmashBrew {
         static readonly Table2D<Type, Action<Hitbox, Hitbox>> ReactionMatrix;
         static readonly List<Hitbox> _hitboxes;
 
-        public static IEnumerable<Hitbox> ActiveHitboxes => _hitboxes;
+        public static IEnumerable<Hitbox> ActiveHitboxes {
+            get { return _hitboxes; }
+        }
 
         //TODO: Add triggers for on hit effects and SFX
         //ParticleSystem _effect;
@@ -79,7 +81,9 @@ namespace HouraiTeahouse.SmashBrew {
         [SerializeField]
         bool _absorbable;
         
-        public bool IsActive => CurrentType != Type.Inactive;
+        public bool IsActive {
+            get { return CurrentType != Type.Inactive; }
+        }
 
         public Type CurrentType {
             get {
@@ -145,7 +149,9 @@ namespace HouraiTeahouse.SmashBrew {
             set { _absorbable = value; }
         }
 
-        public float BaseDamage => Source == null ? _damage : Source.GetComponent<DamageState>().ModifyDamage(_damage);
+        public float BaseDamage {
+            get { return Source == null ? _damage : Source.GetComponent<DamageState>().ModifyDamage(_damage); }
+        }
 
         public bool FlipDirection {
             get {

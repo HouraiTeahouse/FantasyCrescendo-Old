@@ -18,9 +18,15 @@ namespace HouraiTeahouse.SmashBrew {
             return _players[id];
         }
 
-        public IEnumerator<Player> GetEnumerator() => _players.Cast<Player>().GetEnumerator();
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-        public int Count => _players.Length;
+        public IEnumerator<Player> GetEnumerator() {
+            return _players.Cast<Player>().GetEnumerator();
+        }
+        IEnumerator IEnumerable.GetEnumerator() {
+            return GetEnumerator();
+        }
+        public int Count {
+            get { return _players.Length; }
+        }
 
         public PlayerSet() {
             // Note: These objects are not intended to be destroyed and thus do not unresgister these event handlers
