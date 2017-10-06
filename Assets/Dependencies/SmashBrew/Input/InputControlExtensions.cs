@@ -6,17 +6,15 @@ namespace HouraiTeahouse.SmashBrew {
 
     public static class InputControlExtensions {
 
-        public static IEnumerable<InputControl> GetControl(this IEnumerable<InputDevice> devices, InputTarget target) {
-            return devices.Select(d => d[target]);
-        }
-
-        public static IEnumerable<InputControl> GetControls(this InputDevice device, IEnumerable<InputTarget> targets) {
-            return targets.Select(device.GetControl);
-        }
-
-        public static IEnumerable<InputControl> GetControls(this IEnumerable<InputDevice> devices,
+        /// <summary>
+        /// Gets all controls
+        /// </summary>
+        /// <param name="device"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
+        public static IEnumerable<InputControl> GetControls(this InputDevice device, 
                                                             IEnumerable<InputTarget> targets) {
-            return devices.SelectMany(d => d.GetControls(targets));
+            return targets.Select(device.GetControl);
         }
 
     }
