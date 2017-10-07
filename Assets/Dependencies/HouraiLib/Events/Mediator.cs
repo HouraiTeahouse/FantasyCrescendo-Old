@@ -101,12 +101,8 @@ namespace HouraiTeahouse {
                     .SelectMany(t => _subscribers[t])
                     .ToArray();
             foreach (var subscriber in handlers) {
-                var evt = subscriber as Event<T>;
-                if (evt != null)
-                    evt(evnt);
-                var aEvt = subscriber as AsyncEvent<T>;
-                if (aEvt != null)
-                    aEvt(evnt);
+                if (subscriber != null)
+                    subscriber.DynamicInvoke(evnt);
             }
         }
 
@@ -133,14 +129,13 @@ namespace HouraiTeahouse {
                     .SelectMany(t => _subscribers[t])
                     .ToArray();
             foreach (var subscriber in handlers) {
-                var evt = subscriber as Event<T>;
-                if (evt != null)
-                    evt(evnt);
-                var async = subscriber as AsyncEvent<T>;
-                if (async != null) {
+                if (subscriber == null)
+                    continue;
+                var result = subscriber.DynamicInvoke(evnt) as ITask;
+                if (result != null) {
                     if (subtasks == null)
                         subtasks = new List<ITask>();
-                    subtasks.Add(async.Invoke(evnt));
+                    subtasks.Add(result);
                 }
             }
             if (subtasks == null)

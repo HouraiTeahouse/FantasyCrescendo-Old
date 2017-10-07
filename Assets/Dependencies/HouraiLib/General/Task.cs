@@ -105,7 +105,7 @@ namespace HouraiTeahouse {
 
     public enum TaskState {
         Pending,
-        Error,
+       Error,
         Success
     }
 
@@ -248,7 +248,7 @@ namespace HouraiTeahouse {
         public ITask Catch(Action<Exception> onError) {
             var task = new Task();
             ActionHandlers(task, task.Resolve, ex => {
-                if (onError == null)
+                if (onError != null)
                     onError(ex);
                 task.Reject(ex);
             });
