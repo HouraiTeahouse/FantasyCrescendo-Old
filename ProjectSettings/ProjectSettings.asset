@@ -614,7 +614,7 @@ PlayerSettings:
   additionalIl2CppArgs: 
   scriptingRuntimeVersion: 0
   apiCompatibilityLevelPerPlatform:
-    Standalone: 3
+    Standalone: 1
   m_RenderingPath: 3
   m_MobileRenderingPath: 1
   metroPackageName: SmashEngine
@@ -705,7 +705,7 @@ PlayerSettings:
     UNet: 1
     Unity_Ads: 0
   facebookSdkVersion: 7.9.1
-  apiCompatibilityLevel: 3
+  apiCompatibilityLevel: 2
   cloudProjectId: c1a8c618-ccbc-4de1-917d-c3b4d6ad447a
   projectName: Fantasy Crescendo
   organizationId: james7132
