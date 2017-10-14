@@ -38,6 +38,8 @@ namespace HouraiTeahouse.FantasyCrescendo {
             }
             var builder = new StringBuilder();
             foreach(var player in match.Players) {
+                if (!player.Type.IsActive)
+                    continue;
                 if (player.PlayerObject != null) {
                     var character = player.PlayerObject.GetComponentInChildren<Character>();
                     if (character != null) {
