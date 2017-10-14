@@ -60,7 +60,7 @@ namespace HouraiTeahouse.SmashBrew.Matches {
             Status = MatchStatus.Initialization;
         }
 
-        public void Initialize(MatchConfig config) {
+        public ITask Initialize(MatchConfig config) {
             if (Status != MatchStatus.Initialization)
                 throw new InvalidOperationException("Cannot initialize an already initialized Match");
             Config = config;
@@ -69,13 +69,17 @@ namespace HouraiTeahouse.SmashBrew.Matches {
             _rules = _rules.Where(r => r.IsActive).ToArray();
             Status = MatchStatus.Spawning;
             Assert.IsNotNull(Config);
+            var spawnTasks = new List<ITask>();
             for (var i = 0; i < Config.PlayerSelections.Length; i++) {
                 Log.Info("Spawning player {0}...", i + 1);
-                SpawnPlayer(Players.Get(i), Config.PlayerSelections[i]);
+                var task = SpawnPlayer(Players.Get(i), Config.PlayerSelections[i]);
+                spawnTasks.Add(task);
             }
-            Status = MatchStatus.Running;
-            _log.Info("Starting match...");
-            _eventManager.Publish(new MatchStarted{ Match = this });
+            return Task.All(spawnTasks).Then(() => {
+                Status = MatchStatus.Running;
+                _log.Info("Starting match...");
+                _eventManager.Publish(new MatchStarted{ Match = this });
+            });
         }
 
         /// <summary>
@@ -111,7 +115,7 @@ namespace HouraiTeahouse.SmashBrew.Matches {
             });
         }
 
-        void SpawnPlayer(Player player, MatchPlayerConfig config) {
+        ITask SpawnPlayer(Player player, MatchPlayerConfig config) {
             // TODO(james7132): Split this large function into smaller parts.
             Assert.IsNotNull(player);
             var playerControllerId = config.PlayerControllerId;
@@ -121,7 +125,7 @@ namespace HouraiTeahouse.SmashBrew.Matches {
                 conn.playerControllers[playerControllerId].IsValid && 
                 conn.playerControllers[playerControllerId].gameObject != null) {
                 Log.Error("There is already a player at that playerControllerId for this connections.");
-                return;
+                return Task.Resolved;
             }
 
             var startPosition = SmashNetworkManager.Instance.GetStartPosition();
@@ -148,11 +152,11 @@ namespace HouraiTeahouse.SmashBrew.Matches {
                 if (!success) {
                     Log.Error("Two players made the same selection, and no remaining palletes remain. {0} doesn't have enough colors", selection.Character);
                     ClientScene.RemovePlayer(playerControllerId);
-                    return;
+                    return Task.Resolved;
                 }
             }
 
-            selection.Character.Prefab.LoadAsync().Then(prefab => {
+            return selection.Character.Prefab.LoadAsync().Then(prefab => {
                 if (prefab == null) {
                     Log.Error("The character {0} does not have a prefab. Please add a prefab object to it.", selection.Character);
                     return;
@@ -180,7 +184,7 @@ namespace HouraiTeahouse.SmashBrew.Matches {
                 NetworkServer.SendToAll(SmashNetworkMessages.UpdatePlayer, UpdatePlayerMessage.FromPlayer(player));
                 // PlayerMap[playerConnection] = player;
                 playerObj.GetComponentsInChildren<IDataComponent<Player>>().SetData(player);
-            }).Done();
+            });
         }
 
     }

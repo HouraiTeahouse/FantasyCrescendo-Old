@@ -39,10 +39,9 @@ namespace HouraiTeahouse.SmashBrew.UI {
             initialSpace.SetParent(_container.transform);
             _finalSpace.SetParent(_container.transform);
 
-            initialSpace.name = _spacePrefab.name;
-            _finalSpace.name = _spacePrefab.name;
-
-            var players = Match.Current.Players;
+            // initialSpace.name = _spacePrefab.name;
+            // Log.Error("{0} {1}", _finalSpace, _spacePrefab);
+            // _finalSpace.name = _spacePrefab.name;
 
             var context = Mediator.Global.CreateUnityContext(this);
             context.Subscribe<PlayerSpawnEvent>(playerSpawnArgs => {

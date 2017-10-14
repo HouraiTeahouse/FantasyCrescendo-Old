@@ -37,7 +37,7 @@ namespace HouraiTeahouse.FantasyCrescendo {
         }
 
         void Update() {
-            if (!hasAuthority && _myonInstance == null)
+            if (!hasAuthority || _myonInstance == null)
                 return;
             var currentPos = _myonInstance.transform.position;
             var targetPos = _targetBone.position;
