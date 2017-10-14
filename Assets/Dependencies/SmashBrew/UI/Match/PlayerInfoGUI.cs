@@ -45,19 +45,20 @@ namespace HouraiTeahouse.SmashBrew.UI {
             var players = Match.Current.Players;
 
             var context = Mediator.Global.CreateUnityContext(this);
-            foreach (var player in players) {
+            context.Subscribe<PlayerSpawnEvent>(playerSpawnArgs => {
+                var player = playerSpawnArgs.Player;
                 RectTransform display = Instantiate(_prefab);
                 display.transform.SetParent(_container.transform, false);
                 LayoutRebuilder.MarkLayoutForRebuild(display);
                 display.GetComponentsInChildren<IDataComponent<Player>>().SetData(player);
-                display.name = string.Format("Player {} Display", player.ID + 1);
+                display.name = string.Format("Player {0} Display", player.ID + 1);
                 display.gameObject.SetActive(player.Type.IsActive);
                 context.Subscribe<PlayerChanged>(args => {
                     if (args.Player == player)
                         display.gameObject.SetActive(player.Type.IsActive);
                 });
                 _finalSpace.transform.SetAsLastSibling();
-            }
+            });
         }
 
     }
