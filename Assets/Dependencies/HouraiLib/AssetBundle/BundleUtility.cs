@@ -66,7 +66,7 @@ namespace HouraiTeahouse.AssetBundles {
                     return WindowsPlatform;
                 case BuildTarget.StandaloneOSXIntel:
                 case BuildTarget.StandaloneOSXIntel64:
-                case BuildTarget.StandaloneOSXUniversal:
+                case BuildTarget.StandaloneOSX:
                     return MacOSPlatform;
                 case BuildTarget.StandaloneLinux:
                 case BuildTarget.StandaloneLinux64:

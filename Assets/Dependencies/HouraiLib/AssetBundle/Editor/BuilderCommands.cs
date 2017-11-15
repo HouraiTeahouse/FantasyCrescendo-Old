@@ -18,7 +18,7 @@ namespace HouraiTeahouse.AssetBundles.Editor {
 
         [MenuItem("Hourai Teahouse/Build/Build Asset Bundles (Mac OSX)")]
         public static void BuildAssetBundlesOSX() {
-            BuildScript.BuildAssetBundles(BuildTarget.StandaloneOSXUniversal);
+            BuildScript.BuildAssetBundles(BuildTarget.StandaloneOSX);
         }
 
         [MenuItem("Hourai Teahouse/Build/Build Asset Bundles (Linux)")]
