@@ -25,10 +25,9 @@ namespace HouraiTeahouse {
                     return;
                 _paused = value;
                 Time.timeScale = _paused ? 0f : TimeScale;
-                if (value)
-                    Mediator.Global.Publish(new GamePaused());
-                else
-                    Mediator.Global.Publish(new GameUnpaused());
+                Mediator.Global.Publish(new PausedStateChange {
+                    IsPaused = value
+                });
             }
         }
 
@@ -61,20 +60,8 @@ namespace HouraiTeahouse {
 
     }
 
-    public abstract class PausedStateChange {
-        public abstract bool IsPaused { get; }
-    }
-
-    public class GamePaused : PausedStateChange {
-        public override bool IsPaused {
-            get { return  true; }
-        }
-    }
-
-    public class GameUnpaused : PausedStateChange {
-        public override bool IsPaused {
-            get { return false; }
-        }
+    public class PausedStateChange {
+        public bool IsPaused { get; set; }
     }
 
     public struct TimeScaleChange {

@@ -51,7 +51,7 @@ namespace HouraiTeahouse.HouraiInput {
 
         public bool HasChanged { get { return  State != LastState; } }
         public bool IsPressed { get { return State; } }
-        public bool WasPressed { get { return  State && LastState; } }
+        public bool WasPressed { get { return  State && !LastState; } }
         public bool WasReleased { get { return  !State && LastState; } }
         public bool IsNull { get { return  this == Null; } }
         public bool IsNotNull { get { return  this != Null; } }

@@ -39,22 +39,22 @@ namespace HouraiTeahouse.SmashBrew.Stage {
             _defaultDistance = _pauseCameraTarget.transform.localPosition.z;
             enabled = SmashTimeManager.Paused;
             var context = Mediator.Global.CreateUnityContext(this);
-            context.Subscribe<GamePaused>(OnPause);
+            context.Subscribe<PausedStateChange>(OnPause);
         } 
 
-        void OnPause(GamePaused args) {
+        void OnPause(PausedStateChange args) {
             var timeManager = SmashTimeManager.Instance;
             if (timeManager == null)
                 return;
-            enabled = SmashTimeManager.Paused;
-            if (enabled) {
-                var player = SmashTimeManager.PausedPlayer;
-                player = Match.Current.Players.Get(player.ID);
-                if (player != null && player.PlayerObject != null) {
-                    transform.position = player.PlayerObject.transform.position + _startOffset;
-                    transform.localRotation = _defaultRotation;
-                    _pauseCameraTarget.transform.localPosition = Vector3.forward * _defaultDistance;
-                }
+            enabled = args.IsPaused;
+            if (!enabled)
+                return;
+            var player = SmashTimeManager.PausedPlayer;
+            player = Match.Current.Players.Get(player.ID);
+            if (player != null && player.PlayerObject != null) {
+                transform.position = player.PlayerObject.transform.position + _startOffset;
+                transform.localRotation = _defaultRotation;
+                _pauseCameraTarget.transform.localPosition = Vector3.forward * _defaultDistance;
             }
         }
 
@@ -95,6 +95,7 @@ namespace HouraiTeahouse.SmashBrew.Stage {
         /// This function is called when the behaviour becomes disabled or inactive.
         /// </summary>
         void OnDisable() {
+            Log.Error(_originalTarget);
             if (_originalTarget != null)
                 CameraController.Instance.Target = _originalTarget;
         }

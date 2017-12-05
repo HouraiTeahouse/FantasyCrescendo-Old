@@ -24,7 +24,7 @@ namespace HouraiTeahouse.FantasyCrescendo {
         /// </summary>
         void Awake() {
             var context = Mediator.Global.CreateUnityContext(this);
-            context.Subscribe<GamePaused>(PlayPauseEffect);
+            context.Subscribe<PausedStateChange>(PlayPauseEffect);
             _source = this.CachedGetComponent(_source, () => GetComponentInChildren<AudioSource>());
         }
 
@@ -36,8 +36,8 @@ namespace HouraiTeahouse.FantasyCrescendo {
             _source = GetComponentInChildren<AudioSource>();
         }
 
-        void PlayPauseEffect(GamePaused args) {
-            if (_source == null)
+        void PlayPauseEffect(PausedStateChange args) {
+            if (_source == null || !args.IsPaused)
                 return;
             _source.clip = SmashTimeManager.Paused ? _pauseSFX : _unpauseSFX;
             _source.Play();
