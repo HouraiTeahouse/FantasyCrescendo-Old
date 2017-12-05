@@ -25,8 +25,8 @@ MonoBehaviour:
   _type: 0
   _loadPriority: 0
   _icon: icons:reimu_icon
-  _isSelectable: 0
-  _isVisible: 0
-  _isDebug: 0
+  _isSelectable: 1
+  _isVisible: 1
+  _isDebug: 1
   _previewImage: icons:reimu_icon
-  _scene: 
+  _scene: scenes/stages/sdm/scene:Scarlet Devil Mansion

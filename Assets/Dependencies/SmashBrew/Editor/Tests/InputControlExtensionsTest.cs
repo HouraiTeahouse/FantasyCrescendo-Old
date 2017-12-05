@@ -13,7 +13,7 @@ namespace HouraiTeahouse.SmashBrew {
         public void get_controls_returns_valid_values() {
             var device = new InputDevice("test device");
             var action1 = device.AddControl(InputTarget.Action1, "test");
-            var action2 = device.AddControl(InputTarget.Action2, "test");
+            device.AddControl(InputTarget.Action2, "test");
             var action3 = device.AddControl(InputTarget.Action3, "test");
             var action4 = device.AddControl(InputTarget.Action4, "test");
 

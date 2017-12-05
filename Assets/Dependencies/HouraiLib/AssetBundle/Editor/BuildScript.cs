@@ -94,8 +94,6 @@ namespace HouraiTeahouse.AssetBundles.Editor {
                 case BuildTarget.StandaloneWindows:
                 case BuildTarget.StandaloneWindows64:
 			        return string.Format("/{0}.exe", baseName);
-                case BuildTarget.StandaloneOSXIntel:
-                case BuildTarget.StandaloneOSXIntel64:
                 case BuildTarget.StandaloneOSX:
 			        return string.Format("/{0}.app", baseName);
                 case BuildTarget.WebGL:

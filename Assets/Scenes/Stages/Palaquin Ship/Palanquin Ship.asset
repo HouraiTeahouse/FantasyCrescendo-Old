@@ -9,16 +9,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f090ca3dfef500b41b142173fba76f1f, type: 3}
-  m_Name: Test_Stage
+  m_Name: Palanquin Ship
   m_EditorClassIdentifier: 
-  _name: Debug Stage
-  backgroundMusicData: []
-  _id: 1776695040
-  _type: 1
-  _loadPriority: 100
+  _name: Palanquin Ship
+  backgroundMusicData:
+  - _name: A Tiny, Tiny Clever Commander
+    _artist: Yakikaze
+    _originalName: 
+    _originSource: 
+    _bgm: Audio/BGM/Palaquin Ship/A Tiny, Tiny Clever Commander
+    _baseWeight: 1
+    _loopStart: 153104
+    _loopEnd: 3923286
+  _id: 877978175
+  _type: 0
+  _loadPriority: 0
   _icon: icons:reimu_icon
   _isSelectable: 1
   _isVisible: 1
   _isDebug: 1
   _previewImage: icons:reimu_icon
-  _scene: scenes/stages/test/scene:Test Stage
+  _scene: scenes/stages/palaquin_ship/scene:Palaquin Ship
