@@ -48,7 +48,7 @@ namespace HouraiTeahouse.Localization {
     /// <summary> 
     /// Singleton MonoBehaviour that manages all of localization system. 
     /// </summary>
-    public sealed class LanguageManager : Singleton<LanguageManager> {
+    public sealed class LanguageManager : MonoBehaviour {
 
         internal static readonly ILog _log = Log.GetLogger("Language");
         public const string FileExtension = ".json";
@@ -56,6 +56,8 @@ namespace HouraiTeahouse.Localization {
         HashSet<string> _languages;
 
         static ILanguageStorage _storageDelegate;
+
+        public static LanguageManager Instance { get; private set; }
 
         static LanguageManager() {
             Storage = new PlayerPrefLanguageStorageDelegate("lang");
@@ -129,8 +131,8 @@ namespace HouraiTeahouse.Localization {
         /// <summary>
         /// Awake is called when the script instance is being loaded.
         /// </summary>
-        protected override void Awake() {
-            base.Awake();
+        void Awake() {
+            Instance = this;
 
             CurrentLanguage = new Language();
 #if HOURAI_EVENTS

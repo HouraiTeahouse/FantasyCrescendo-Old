@@ -8,7 +8,7 @@ namespace HouraiTeahouse {
     /// the global time scale. Inherits from MonoBehaviour. A custom Editor allows editing the pause/timescale state of the
     /// game from the Editor. 
     /// </summary>
-    public class TimeManager : Singleton<TimeManager> {
+    public class TimeManager : MonoBehaviour {
 
         static float _timeScale = 1f;
         static bool _paused;
@@ -53,8 +53,7 @@ namespace HouraiTeahouse {
         /// <summary>
         /// Awake is called when the script instance is being loaded.
         /// </summary>
-        protected override void Awake() {
-            base.Awake();
+        void Awake() {
             _timeScale = Time.timeScale;
         }
 
