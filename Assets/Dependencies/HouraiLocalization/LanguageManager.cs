@@ -50,7 +50,6 @@ namespace HouraiTeahouse.Localization {
     /// </summary>
     public sealed class LanguageManager : MonoBehaviour {
 
-        internal static readonly ILog _log = Log.GetLogger("Language");
         public const string FileExtension = ".json";
         string _storageDirectory;
         HashSet<string> _languages;
@@ -121,7 +120,7 @@ namespace HouraiTeahouse.Localization {
                 Manager = this,
                 Language = CurrentLanguage
             });
-            _log.Info("Set language to {0}", Language.GetName(langName));
+            Debug.LogFormat("Set language to {0}", Language.GetName(langName));
         }
 
         string GetLanguagePath(string identifier) {
@@ -148,7 +147,7 @@ namespace HouraiTeahouse.Localization {
             SystemLanguage systemLang = Application.systemLanguage;
             string currentLang = Storage.GetStoredLangaugeId(systemLang.ToIdentifier());
             if (!_languages.Contains(currentLang) || systemLang == SystemLanguage.Unknown) {
-                _log.Info("No language data for \"{0}\" found. Loading default language: {1}", _defaultLanguage, currentLang);
+                Debug.LogFormat("No language data for \"{0}\" found. Loading default language: {1}", _defaultLanguage, currentLang);
                 currentLang = _defaultLanguage;
             }
             LoadLanguage(currentLang);

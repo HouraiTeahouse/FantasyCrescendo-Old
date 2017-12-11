@@ -6,8 +6,6 @@ namespace HouraiTeahouse {
     [RequireComponent(typeof(AudioSource))]
     public class PlayBGM : SingleActionBehaviour {
 
-        static ILog _log = Log.GetLogger("BGM");
-
         BGMData _currentBGM;
 
         [SerializeField]
@@ -27,7 +25,7 @@ namespace HouraiTeahouse {
         /// </summary>
         protected override void Awake() {
             if (!_group) {
-                _log.Error("No BGM for {0} specified. No ", name);
+                Debug.LogErrorFormat("No BGM for {0} specified. No ", name);
                 enabled = false;
                 return;
             }

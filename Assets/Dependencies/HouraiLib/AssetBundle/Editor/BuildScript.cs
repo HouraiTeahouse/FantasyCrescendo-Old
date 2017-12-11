@@ -58,7 +58,7 @@ namespace HouraiTeahouse.AssetBundles.Editor {
 			
 			string[] levels = GetLevelsFromBuildSettings();
 			if (levels.Length == 0) {
-				Log.Info("Nothing to build.");
+				Debug.Log("Nothing to build.");
 				return;
 			}
 			
@@ -100,7 +100,7 @@ namespace HouraiTeahouse.AssetBundles.Editor {
                     return "";
                     // Add more build targets for your own.
                 default:
-                    Log.Error("Target not implemented.");
+                    Debug.LogError("Target not implemented.");
                     return null;
 			}
 		}
@@ -112,7 +112,7 @@ namespace HouraiTeahouse.AssetBundles.Editor {
 			// Setup the source folder for assetbundles.
 			var source = Path.Combine(System.Environment.CurrentDirectory, src);
 			if (!Directory.Exists(source))
-				Log.Info("No assetBundle output folder, try to build the assetBundles first.");
+				Debug.Log("No assetBundle output folder, try to build the assetBundles first.");
 	
 			// Setup the destination folder for assetbundles.
 			if (Directory.Exists(dst))

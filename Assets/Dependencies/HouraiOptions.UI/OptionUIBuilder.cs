@@ -9,8 +9,6 @@ namespace HouraiTeahouse.Options.UI {
 
     public class OptionUIBuilder : MonoBehaviour, ISerializationCallbackReceiver {
 
-        static readonly ILog _log = Log.GetLogger<OptionUIBuilder>();
-
         [Serializable]
         public class ViewMapping {
             public string Type;
@@ -101,7 +99,7 @@ namespace HouraiTeahouse.Options.UI {
                     var drawer = option.PropertyInfo.GetCustomAttributes(true).OfType<AbstractOptionViewAttribute>().FirstOrDefault();
                     var propertyInfo = option.PropertyInfo;
                     if (drawer == null && !_defaultViews.TryGetValue(propertyInfo.PropertyType, out drawer)) {
-                        _log.Error("No drawer and no default drawer can be found for {0} ({1})", 
+                        Debug.LogErrorFormat("No drawer and no default drawer can be found for {0} ({1})", 
                             propertyInfo, propertyInfo.PropertyType);
                         continue;
                     }
@@ -112,7 +110,7 @@ namespace HouraiTeahouse.Options.UI {
                         drawerType = drawerType.BaseType;
                     }
                     if (prefab == null) {
-                        _log.Error("No prefab for drawer {0} could be found.", drawerType);
+                        Debug.LogErrorFormat("No prefab for drawer {0} could be found.", drawerType);
                         continue;
                     }
                     var container = new GameObject(option.Name, typeof(RectTransform));

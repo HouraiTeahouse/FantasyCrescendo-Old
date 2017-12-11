@@ -41,7 +41,7 @@ namespace UnityEngine.PostProcessing
             float rndOffsetX;
             float rndOffsetY;
 
-#if POSTFX_DEBUG_STATIC_DITHERING
+#if POSTFXDebug_STATIC_DITHERING
             textureIndex = 0;
             rndOffsetX = 0f;
             rndOffsetY = 0f;

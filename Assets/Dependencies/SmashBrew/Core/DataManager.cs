@@ -43,8 +43,6 @@ namespace HouraiTeahouse.SmashBrew {
     /// <summary> A manager of all of the game data loaded into the game. </summary>
     public sealed class DataManager : MonoBehaviour {
 
-        static readonly ILog log = Log.GetLogger(typeof(DataManager));
-
         static List<SceneData> _scenes;
         static List<CharacterData> _characterList;
         static Dictionary<uint, CharacterData> _characters;
@@ -74,11 +72,11 @@ namespace HouraiTeahouse.SmashBrew {
             SceneManager.sceneLoaded += SceneLoad;
 
             var bundlePath = BundleUtility.StoragePath;
-            log.Info("Storage Path: {0}", bundlePath);
+            Debug.LogFormat("Storage Path: {0}", bundlePath);
 
             LoadTask.Then(() => {
-                log.Info("Character Group Hash: {0}", Characters.GroupHash64String);
-                log.Info("Scene Group Hash: {0}", Scenes.GroupHash64String);
+                Debug.LogFormat("Character Group Hash: {0}", Characters.GroupHash64String);
+                Debug.LogFormat("Scene Group Hash: {0}", Scenes.GroupHash64String);
             });
 
 #if UNITY_EDITOR
@@ -92,7 +90,7 @@ namespace HouraiTeahouse.SmashBrew {
             {
                 var dataFilePath = Path.Combine(bundlePath, "data");
                 if (!File.Exists(dataFilePath)) {
-                    log.Info("Cannot find {0} copying StreamingAssets...", dataFilePath, bundlePath);
+                    Debug.LogFormat("Cannot find {0} copying StreamingAssets...", dataFilePath, bundlePath);
                     AssetBundleManager.CopyDirectory(Application.streamingAssetsPath, bundlePath);
                 }
 
@@ -102,11 +100,11 @@ namespace HouraiTeahouse.SmashBrew {
                 foreach (var entry in file.Split('\n')) {
                     if (entry.StartsWith("-")) {
                         blacklist.Add(entry.Substring(1).Trim());
-                        log.Info("Registered bundle blacklist: {0}", entry.Substring(1).Trim());
+                        Debug.LogFormat("Registered bundle blacklist: {0}", entry.Substring(1).Trim());
                     }
                     else {
                         whitelist.Add(entry.Trim());
-                        log.Info("Registered bundle whitelist: {0}", entry.Trim());
+                        Debug.LogFormat("Registered bundle whitelist: {0}", entry.Trim());
                     }
                 }
 
@@ -146,7 +144,7 @@ namespace HouraiTeahouse.SmashBrew {
                         foreach(var prefab in prefabs.Where(p => p != null))
                             ClientScene.RegisterPrefab(prefab);
                         foreach (var pref in ClientScene.prefabs)
-                            Log.Info("Registered Network Prefab: {0} ({1})", pref.Value.name, pref.Key);
+                            Debug.LogFormat("Registered Network Prefab: {0} ({1})", pref.Value.name, pref.Key);
                     });
                 });
             });
@@ -172,25 +170,25 @@ namespace HouraiTeahouse.SmashBrew {
 
         public static void AddCharacter(CharacterData data) {
             if (_characters.ContainsKey(data.Id)) {
-                log.Warning("Attempted to load {0} while already loaded.", data);
+                Debug.LogWarning("Attempted to load {0} while already loaded.", data);
                 return;
             }
             _characters[data.Id] = data;
             _characterList.Add(data);
-            log.Info("Registered {0} ({1}) as a valid character.", data.name, data.Id);
+            Debug.LogFormat("Registered {0} ({1}) as a valid character.", data.name, data.Id);
         }
 
         public static void AddScene(SceneData data) {
             if (_scenes.Contains(data)) {
-                log.Warning("Attempted to load {0} while already loaded.", data);
+                Debug.LogWarning("Attempted to load {0} while already loaded.", data);
                 return;
             }
             _scenes.Add(data);
-            log.Info("Registered {0} as a valid scene.", data.name);
+            Debug.LogFormat("Registered {0} as a valid scene.", data.name);
         }
 
         static void SceneLoad(Scene newScene, LoadSceneMode mode) {
-            log.Info("Unloading managed data assets");
+            Debug.Log("Unloading managed data assets");
             foreach (SceneData scene in _scenes)
                 scene.Unload();
             foreach (CharacterData character in _characters.Values)

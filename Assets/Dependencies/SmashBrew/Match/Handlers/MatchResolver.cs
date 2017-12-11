@@ -18,7 +18,7 @@ namespace HouraiTeahouse.SmashBrew.Matches {
         void Awake() {
             var context = Mediator.Global.CreateUnityContext(this);
             context.Subscribe<MatchResolved>(args => {
-                Log.GetLogger(this).Info("Loading match completion scene ({0})...", _matchCompletionScene);
+                Debug.LogFormat("Loading match completion scene ({0})...", _matchCompletionScene);
                 return SceneLoader.LoadScene(_matchCompletionScene);
             });
         }

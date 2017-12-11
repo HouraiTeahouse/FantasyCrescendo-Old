@@ -95,7 +95,6 @@ namespace HouraiTeahouse.SmashBrew.Stage {
         /// This function is called when the behaviour becomes disabled or inactive.
         /// </summary>
         void OnDisable() {
-            Log.Error(_originalTarget);
             if (_originalTarget != null)
                 CameraController.Instance.Target = _originalTarget;
         }

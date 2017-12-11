@@ -9,7 +9,7 @@ namespace UnityEngine.PostProcessing
             internal static readonly int _ScaleOffsetRes       = Shader.PropertyToID("_ScaleOffsetRes");
             internal static readonly int _ExposureCompensation = Shader.PropertyToID("_ExposureCompensation");
             internal static readonly int _AutoExposure         = Shader.PropertyToID("_AutoExposure");
-            internal static readonly int _DebugWidth           = Shader.PropertyToID("_DebugWidth");
+            internal static readonly int DebugWidth           = Shader.PropertyToID("DebugWidth");
         }
 
         ComputeShader m_EyeCompute;
@@ -19,7 +19,7 @@ namespace UnityEngine.PostProcessing
         int m_AutoExposurePingPing;
         RenderTexture m_CurrentAutoExposure;
 
-        RenderTexture m_DebugHistogram;
+        RenderTexture mDebugHistogram;
 
         static uint[] s_EmptyHistogramBuffer;
 
@@ -60,10 +60,10 @@ namespace UnityEngine.PostProcessing
 
             m_HistogramBuffer = null;
 
-            if (m_DebugHistogram != null)
-                m_DebugHistogram.Release();
+            if (mDebugHistogram != null)
+                mDebugHistogram.Release();
 
-            m_DebugHistogram = null;
+            mDebugHistogram = null;
         }
 
         Vector4 GetHistogramScaleOffsetRes()
@@ -156,17 +156,17 @@ namespace UnityEngine.PostProcessing
             // Generate debug histogram
             if (context.profile.debugViews.IsModeActive(BuiltinDebugViewsModel.Mode.EyeAdaptation))
             {
-                if (m_DebugHistogram == null || !m_DebugHistogram.IsCreated())
+                if (mDebugHistogram == null || !mDebugHistogram.IsCreated())
                 {
-                    m_DebugHistogram = new RenderTexture(256, 128, 0, RenderTextureFormat.ARGB32)
+                    mDebugHistogram = new RenderTexture(256, 128, 0, RenderTextureFormat.ARGB32)
                     {
                         filterMode = FilterMode.Point,
                         wrapMode = TextureWrapMode.Clamp
                     };
                 }
 
-                material.SetFloat(Uniforms._DebugWidth, m_DebugHistogram.width);
-                Graphics.Blit(null, m_DebugHistogram, material, 2);
+                material.SetFloat(Uniforms.DebugWidth, mDebugHistogram.width);
+                Graphics.Blit(null, mDebugHistogram, material, 2);
             }
 
             m_FirstFrame = false;
@@ -175,11 +175,11 @@ namespace UnityEngine.PostProcessing
 
         public void OnGUI()
         {
-            if (m_DebugHistogram == null || !m_DebugHistogram.IsCreated())
+            if (mDebugHistogram == null || !mDebugHistogram.IsCreated())
                 return;
 
-            var rect = new Rect(context.viewport.x * Screen.width + 8f, 8f, m_DebugHistogram.width, m_DebugHistogram.height);
-            GUI.DrawTexture(rect, m_DebugHistogram);
+            var rect = new Rect(context.viewport.x * Screen.width + 8f, 8f, mDebugHistogram.width, mDebugHistogram.height);
+            GUI.DrawTexture(rect, mDebugHistogram);
         }
     }
 }

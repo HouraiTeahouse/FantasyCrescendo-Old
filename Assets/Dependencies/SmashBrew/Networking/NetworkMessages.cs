@@ -1,3 +1,4 @@
+using UnityEngine;
 using UnityEngine.Networking;
 using HouraiTeahouse.SmashBrew.Characters;
 
@@ -17,7 +18,7 @@ namespace HouraiTeahouse.SmashBrew {
             if (Check.Range(TypeID, PlayerType.Types))
                 player.Type = PlayerType.Types[TypeID];
             else
-                Log.Error("Attempted to update player {0} to player type {1}, which does not exist", player, TypeID);
+                Debug.LogErrorFormat("Attempted to update player {0} to player type {1}, which does not exist", player, TypeID);
             player.Selection = Selection.ToSelection();
             var instanceId = new NetworkInstanceId(GameObjectNetId);
             var objects = ClientScene.objects;

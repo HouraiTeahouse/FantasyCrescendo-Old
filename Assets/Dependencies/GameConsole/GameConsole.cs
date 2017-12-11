@@ -72,7 +72,6 @@ namespace HouraiTeahouse.Console {
 
             // Divert Debug LogCreation messages to the GameConsole as well.
             Application.logMessageReceived += (log, stackTrace, type) => Log(log);
-            HouraiTeahouse.Log.OnLog += log => Log(log);
 
             RegisterCommand("echo", Commands.Echo);
             RegisterCommand("clear", Commands.Clear);

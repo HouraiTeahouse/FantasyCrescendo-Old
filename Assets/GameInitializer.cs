@@ -12,7 +12,7 @@ namespace HouraiTeahouse.SmashBrew {
         /// any of the Update methods is called the first time.
         /// </summary>
         void Start() {
-            Log.Info("Initializing game systems..");
+            Debug.Log("Initializing game systems..");
             MatchConfigBuilder.Instance.Initialize();
         }
 

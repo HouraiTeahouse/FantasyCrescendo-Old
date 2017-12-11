@@ -48,7 +48,7 @@ namespace HouraiTeahouse.SmashBrew {
             get { return _selection; }
             set {
                 if(_selection.Copy(value))
-                    Log.Info("Set Player {0}'s selection to {1}", ID, _selection);
+                    Debug.LogFormat("Set Player {0}'s selection to {1}", ID, _selection);
             }
         }
 

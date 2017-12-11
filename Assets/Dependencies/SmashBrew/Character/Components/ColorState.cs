@@ -103,7 +103,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
                 return;
             foreach (Swap swap in _swaps)
                 swap.Set(color);
-            Log.Info("Set color on {0} to {1}", gameObject.name, _color);
+            Debug.LogFormat("Set color on {0} to {1}", gameObject.name, _color);
         }
 
         void IDataComponent<Player>.SetData(Player data) {

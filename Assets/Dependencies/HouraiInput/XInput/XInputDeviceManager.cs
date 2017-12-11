@@ -64,7 +64,7 @@ namespace HouraiTeahouse.HouraiInput {
             }
             else {
                 foreach (string error in errors)
-                    Log.Error(error);
+                    Debug.LogError(error);
             }
         }
 

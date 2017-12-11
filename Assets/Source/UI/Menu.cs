@@ -27,7 +27,7 @@ namespace HouraiTeahouse {
         void Awake() {
             var manager = MenuManager.Instance;
             if (manager == null) {
-                Log.Error("No MenuManager available for {0} to register itself onto.", name);
+                Debug.LogErrorFormat("No MenuManager available for {0} to register itself onto.", name);
                 return;
             }
             manager.Register(this);

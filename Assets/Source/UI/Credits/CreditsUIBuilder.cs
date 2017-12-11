@@ -9,8 +9,6 @@ namespace HouraiTeahouse.FantasyCrescendo {
 
     public class CreditsUIBuilder : MonoBehaviour {
 
-        static readonly ILog _log = Log.GetLogger<CreditsUIBuilder>();
-
         [Header("Layout")]
         [SerializeField, Range(0f, 1f)]
         float _labelSize = 0.35f;
@@ -46,7 +44,7 @@ namespace HouraiTeahouse.FantasyCrescendo {
         /// </summary>
         void Start() {
             if (_credits == null) {
-                _log.Error("CreditsUIBuilder does not have a proper CreditsAsset to build from.");
+                Debug.LogError("CreditsUIBuilder does not have a proper CreditsAsset to build from.");
                 return;
             }
             Transform viewContainer = _container;

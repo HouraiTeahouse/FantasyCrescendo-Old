@@ -27,7 +27,7 @@ namespace HouraiTeahouse.SmashBrew.UI {
         protected override IEnumerable<CharacterData> GetData() { return DataManager.Characters; }
 
         protected override void LogCreation(CharacterData data) {
-            Log.Info("Creating Character Select Box for {0}", data.name);
+            Debug.LogFormat("Creating Character Select Box for {0}", data.name);
         }
 
         /// <summary> Create the display for the character's selections and options </summary>

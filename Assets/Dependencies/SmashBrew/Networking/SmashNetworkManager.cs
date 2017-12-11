@@ -32,13 +32,13 @@ namespace HouraiTeahouse.SmashBrew {
 
         public override void OnStartClient(NetworkClient client) {
             base.OnStartClient(client);
-            Log.Info("Starting client initialization.");
+            Debug.Log("Starting client initialization.");
             _clientStartedTask = Mediator.PublishAsync(new NetworkClientStarted {
                 NetworkManager = this,
                 Client = client
             });
             _clientStartedTask.Then(() => {
-                Log.Info("Client initialized.");
+                Debug.Log("Client initialized.");
             });
         }
 
@@ -54,7 +54,7 @@ namespace HouraiTeahouse.SmashBrew {
             // Ready/AddPlayer is usually triggered by a scene load completing. 
             // If no scene was loaded, then Ready/AddPlayer it here instead.
             _clientStartedTask.Then(() => {
-                Log.Debug("Client connecting...");
+                Debug.Log("Client connecting...");
                 if (!ClientScene.ready)
                     ClientScene.Ready(conn);
                 Mediator.Publish(new NetworkClientConnected {

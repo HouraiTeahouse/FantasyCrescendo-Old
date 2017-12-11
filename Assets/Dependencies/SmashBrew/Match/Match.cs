@@ -38,8 +38,6 @@ namespace HouraiTeahouse.SmashBrew.Matches {
     [AddComponentMenu("Smash Brew/Matches/Match")]
     public class Match : NetworkBehaviour {
 
-        static ILog _log = Log.GetLogger<Match>();
-
         public static Match Current { get; private set; }
 
         public MatchConfig Config { get; private set; }
@@ -71,13 +69,13 @@ namespace HouraiTeahouse.SmashBrew.Matches {
             Assert.IsNotNull(Config);
             var spawnTasks = new List<ITask>();
             for (var i = 0; i < Config.PlayerSelections.Length; i++) {
-                Log.Info("Spawning player {0}...", i + 1);
+                Debug.LogFormat("Spawning player {0}...", i + 1);
                 var task = SpawnPlayer(Players.Get(i), Config.PlayerSelections[i]);
                 spawnTasks.Add(task);
             }
             return Task.All(spawnTasks).Then(() => {
                 Status = MatchStatus.Running;
-                _log.Info("Starting match...");
+                Debug.Log("Starting match...");
                 _eventManager.Publish(new MatchStarted{ Match = this });
             });
         }
@@ -106,7 +104,7 @@ namespace HouraiTeahouse.SmashBrew.Matches {
                 Result = result, 
                 Winner = winner
             }).Then(() => {
-                _log.Info("Match Completed, Result: {0}, Winner: {1}", result, winner);
+                Debug.LogFormat("Match Completed, Result: {0}, Winner: {1}", result, winner);
                 _eventManager.Publish(new MatchResolved { 
                     Match = this,
                     Result = result, 
@@ -124,7 +122,7 @@ namespace HouraiTeahouse.SmashBrew.Matches {
             if (playerControllerId < conn.playerControllers.Count && 
                 conn.playerControllers[playerControllerId].IsValid && 
                 conn.playerControllers[playerControllerId].gameObject != null) {
-                Log.Error("There is already a player at that playerControllerId for this connections.");
+                Debug.LogError("There is already a player at that playerControllerId for this connections.");
                 return Task.Resolved;
             }
 
@@ -135,7 +133,7 @@ namespace HouraiTeahouse.SmashBrew.Matches {
             //     { "color" , selection.Pallete },
             // });
             if (character == null) {
-                Log.Info("No character was specfied, randomly selecting character and pallete...");
+                Debug.Log("No character was specfied, randomly selecting character and pallete...");
                 selection.Character = DataManager.Characters.Random();
                 selection.Pallete = Mathf.FloorToInt(Random.value * selection.Character.PalleteCount);
             }
@@ -150,7 +148,7 @@ namespace HouraiTeahouse.SmashBrew.Matches {
                     }
                 }
                 if (!success) {
-                    Log.Error("Two players made the same selection, and no remaining palletes remain. {0} doesn't have enough colors", selection.Character);
+                    Debug.LogError("Two players made the same selection, and no remaining palletes remain. {0} doesn't have enough colors", selection.Character);
                     ClientScene.RemovePlayer(playerControllerId);
                     return Task.Resolved;
                 }
@@ -158,12 +156,12 @@ namespace HouraiTeahouse.SmashBrew.Matches {
 
             return selection.Character.Prefab.LoadAsync().Then(prefab => {
                 if (prefab == null) {
-                    Log.Error("The character {0} does not have a prefab. Please add a prefab object to it.", selection.Character);
+                    Debug.LogError("The character {0} does not have a prefab. Please add a prefab object to it.", selection.Character);
                     return;
                 }
 
                 if (prefab.GetComponent<NetworkIdentity>() == null) {
-                    Log.Error("The character prefab for {1} does not have a NetworkIdentity. Please add a NetworkIdentity to it's prefab.", selection.Character);
+                    Debug.LogError("The character prefab for {1} does not have a NetworkIdentity. Please add a NetworkIdentity to it's prefab.", selection.Character);
                     return;
                 }
 

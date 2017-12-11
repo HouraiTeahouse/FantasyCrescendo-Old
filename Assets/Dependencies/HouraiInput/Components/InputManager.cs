@@ -8,9 +8,7 @@ namespace HouraiTeahouse.HouraiInput {
     /// The singleton for HouraiInput. Hooks the rest of HouraiInput into the Unity engine.
     /// </summary>
     public class InputManager : MonoBehaviour {
-
-        static ILog _log = Log.GetLogger<InputManager>();
-
+        
         [SerializeField]
         [Tooltip("Inverts the Y Axis if true.")]
         bool _invertYAxis = false;
@@ -41,15 +39,16 @@ namespace HouraiTeahouse.HouraiInput {
             foreach (string className in _customProfiles) {
                 Type classType = Type.GetType(className);
                 if (classType == null)
-                    _log.Error("Cannot find class for custom profile: {0}", className);
+                    Debug.LogErrorFormat("Cannot find class for custom profile: {0}", className);
                 else {
                     var customProfileInstance = Activator.CreateInstance(classType) as UnityInputDeviceProfile;
                     HInput.AttachDevice(new UnityInputDevice(customProfileInstance));
                 }
             }
 
-            foreach(var device in HInput.Devices)
-                _log.Info("Found Device: {0}", device.Name);
+            foreach(var device in HInput.Devices) {
+                Debug.LogFormat("Found Device: {0}", device.Name);
+            }
 
             if (_dontDestroyOnLoad)
                 DontDestroyOnLoad(this);

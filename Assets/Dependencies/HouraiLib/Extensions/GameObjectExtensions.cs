@@ -33,7 +33,7 @@ namespace HouraiTeahouse {
         public static T SafeGetComponent<T>(this GameObject gameObject) where T : class {
             var attempt = Argument.NotNull(gameObject).GetComponent<T>();
             if (attempt == null)
-                Log.Warning("Attempted to find a component of type {0} on {1}, but did not find one.", typeof(T), gameObject.name);
+                Debug.LogWarningFormat("Attempted to find a component of type {0} on {1}, but did not find one.", typeof(T), gameObject.name);
             return attempt;
         }
 
@@ -46,7 +46,7 @@ namespace HouraiTeahouse {
         public static T SafeGetComponentInChildren<T>(this GameObject gameObject) where T : class {
             var attempt = Argument.NotNull(gameObject).GetComponentInChildren<T>();
             if (attempt == null)
-                Log.Warning("Attempted to find a component of type {0} on child of {1}, but did not find one.", typeof(T), gameObject.name);
+                Debug.LogWarningFormat("Attempted to find a component of type {0} on child of {1}, but did not find one.", typeof(T), gameObject.name);
             return attempt;
         }
 
@@ -59,7 +59,7 @@ namespace HouraiTeahouse {
         public static T SafeGetComponentInParent<T>(this GameObject gameObject) where T : class {
             var attempt = Argument.NotNull(gameObject).GetComponentInParent<T>();
             if (attempt == null)
-                Log.Warning("Attempted to find a component of type {0} on ancestor of {1}, but did not find one.", typeof(T), gameObject.name);
+                Debug.LogWarningFormat("Attempted to find a component of type {0} on ancestor of {1}, but did not find one.", typeof(T), gameObject.name);
             return attempt;
         }
 
@@ -82,7 +82,7 @@ namespace HouraiTeahouse {
                 try {
                     action(component);
                 } catch (Exception e) {
-                    Log.Error(e);
+                    Debug.LogError(e);
                 }
             }
             return components;

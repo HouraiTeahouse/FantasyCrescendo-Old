@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using UnityEngine.Assertions;
 
 namespace HouraiTeahouse {
@@ -13,8 +14,6 @@ namespace HouraiTeahouse {
 
         public delegate void Event<in T>(T arg);
         public delegate ITask AsyncEvent<in T>(T arg);
-
-        static readonly ILog log = Log.GetLogger("Events");
 
         // Global event bus
         public static readonly Mediator Global = new Mediator();
@@ -95,7 +94,7 @@ namespace HouraiTeahouse {
         /// <exception cref="ArgumentNullException"> <paramref name="evnt" /> is null </exception>
         public void Publish<T>(T evnt) {
             Type eventType = Argument.NotNull(evnt).GetType();
-            log.Debug("Published: " + eventType.Name);
+            Debug.LogFormat("Published: " + eventType.Name);
             var handlers = GetEventTypes(eventType)
                     .Where(t => _subscribers.ContainsKey(t))
                     .SelectMany(t => _subscribers[t])
@@ -122,7 +121,7 @@ namespace HouraiTeahouse {
         /// <exception cref="ArgumentNullException"> <paramref name="evnt" /> is null </exception>
         public ITask PublishAsync<T>(T evnt) {
             Type eventType = Argument.NotNull(evnt).GetType();
-            log.Debug("Published: " + eventType.Name);
+            Debug.Log("Published: " + eventType.Name);
             List<ITask> subtasks = null;
             var handlers = GetEventTypes(eventType)
                     .Where(t => _subscribers.ContainsKey(t))

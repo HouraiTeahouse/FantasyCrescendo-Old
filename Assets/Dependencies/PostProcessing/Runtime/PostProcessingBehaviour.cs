@@ -32,7 +32,7 @@ namespace UnityEngine.PostProcessing
         bool m_RenderingInSceneView = false;
 
         // Effect components
-        BuiltinDebugViewsComponent m_DebugViews;
+        BuiltinDebugViewsComponent mDebugViews;
         AmbientOcclusionComponent m_AmbientOcclusion;
         ScreenSpaceReflectionComponent m_ScreenSpaceReflection;
         FogComponent m_FogComponent;
@@ -60,7 +60,7 @@ namespace UnityEngine.PostProcessing
             m_Components = new List<PostProcessingComponentBase>();
 
             // Component list
-            m_DebugViews = AddComponent(new BuiltinDebugViewsComponent());
+            mDebugViews = AddComponent(new BuiltinDebugViewsComponent());
             m_AmbientOcclusion = AddComponent(new AmbientOcclusionComponent());
             m_ScreenSpaceReflection = AddComponent(new ScreenSpaceReflectionComponent());
             m_FogComponent = AddComponent(new FogComponent());
@@ -115,7 +115,7 @@ namespace UnityEngine.PostProcessing
             context.camera = m_Camera;
 
             // Prepare components
-            m_DebugViews.Init(context, profile.debugViews);
+            mDebugViews.Init(context, profile.debugViews);
             m_AmbientOcclusion.Init(context, profile.ambientOcclusion);
             m_ScreenSpaceReflection.Init(context, profile.screenSpaceReflection);
             m_FogComponent.Init(context, profile.fog);
@@ -163,7 +163,7 @@ namespace UnityEngine.PostProcessing
                 return;
 
             // Command buffer-based effects should be set-up here
-            TryExecuteCommandBuffer(m_DebugViews);
+            TryExecuteCommandBuffer(mDebugViews);
             TryExecuteCommandBuffer(m_AmbientOcclusion);
             TryExecuteCommandBuffer(m_ScreenSpaceReflection);
             TryExecuteCommandBuffer(m_FogComponent);

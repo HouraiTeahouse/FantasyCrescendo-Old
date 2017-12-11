@@ -34,7 +34,7 @@ namespace HouraiTeahouse.SmashBrew.Matches {
         public MatchConfig Build() {
             if (_config == null) {
 #if UNITY_EDITOR
-                Log.Warning("No prior match config found. Building default.");
+                Debug.LogWarning("No prior match config found. Building default.");
                 _config = BuildTestConfig();
 #else
                 throw new InvalidOperationException("Cannot start match without a match config.");
@@ -47,7 +47,7 @@ namespace HouraiTeahouse.SmashBrew.Matches {
             var validCharacters = DataManager.Characters.Where(c => c.IsSelectable).ToArray();
             var players = new MatchPlayerConfig[_testPlayerCount];
             for (var i = 0; i < players.Length; i++) {
-                Log.Debug("Building test player {0}...", i + 1);
+                Debug.LogFormat("Building test player {0}...", i + 1);
                 var character = validCharacters.Random();
                 players[i] = new MatchPlayerConfig{ 
                     Connection = null,

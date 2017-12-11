@@ -22,7 +22,7 @@ namespace HouraiTeahouse {
             if (ObjectType.IsAssignableFrom(type))
                 TypeRestriction = type;
             else
-                Log.Warning(
+                Debug.LogWarningFormat(
                     "Trying to get a resource type restriction on type: {0} is impossible. Use a type derived from UnityEngine.Object.",
                     type.FullName);
         }

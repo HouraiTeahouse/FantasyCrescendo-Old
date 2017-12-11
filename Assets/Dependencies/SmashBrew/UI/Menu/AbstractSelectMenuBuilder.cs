@@ -12,10 +12,7 @@ namespace HouraiTeahouse.SmashBrew.UI {
         [SerializeField]
         RectTransform _prefab;
 
-        protected ILog Log { get; private set; }
-
         protected virtual void Awake() {
-            Log = HouraiTeahouse.Log.GetLogger(this);
             DataManager.LoadTask.Then(() => CreateSelect());
         }
 

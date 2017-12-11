@@ -65,7 +65,6 @@ namespace HouraiTeahouse.AssetBundles {
 #endif
 
         static readonly Regex SeperatorRegex = new Regex(@"[\\]", RegexOptions.Compiled);
-        static readonly ILog log = Log.GetLogger(typeof(AssetBundleManager));
         public static readonly Task<BundleManfiestMap> Manifest = new Task<BundleManfiestMap>();
 		static readonly Dictionary<string, ITask<LoadedAssetBundle>> AssetBundles = new Dictionary<string, ITask<LoadedAssetBundle>> ();
         static readonly Dictionary<Type, Delegate> TypeHandlers = new Dictionary<Type, Delegate> ();
@@ -103,7 +102,7 @@ namespace HouraiTeahouse.AssetBundles {
             if (whitelist.IsNullOrEmpty())
                 return Task.Resolved;
             string basePath = BundleUtility.GetLocalBundlePath("");
-            log.Info("Loading local asset bundles from {0}....", basePath);
+            Debug.LogFormat("Loading local asset bundles from {0}....", basePath);
             var whitelistRegex = whitelist.EmptyIfNull()
                 .Select(r => new Regex(r.Replace("*", "(.*?)"), 
                 RegexOptions.Compiled)).ToArray();
@@ -116,7 +115,7 @@ namespace HouraiTeahouse.AssetBundles {
                     .Select(name => LoadAssetBundleAsync(name).Then(loadedBundle => {
                         var bundle = loadedBundle.AssetBundle;
                         if (bundle == null) {
-                            log.Error("Failed to load an AssetBundle from {0}.", loadedBundle.Metadata.Name);
+                            Debug.LogErrorFormat("Failed to load an AssetBundle from {0}.", loadedBundle.Metadata.Name);
                             return Task.Resolved;
                         }
                         var assetName = bundle.GetAllAssetNames()[0];
@@ -129,10 +128,10 @@ namespace HouraiTeahouse.AssetBundles {
                             var assetType = asset.GetType();
                             Delegate handler;
                             if (TypeHandlers.TryGetValue(assetType, out handler)) {
-                                log.Info("Loaded {0} ({1}) from \"{2}\".", asset.name, assetType.Name, loadedBundle.Metadata.Name);
+                                Debug.LogFormat("Loaded {0} ({1}) from \"{2}\".", asset.name, assetType.Name, loadedBundle.Metadata.Name);
                                 handler.DynamicInvoke(asset);
                             } else {
-                                log.Error(
+                                Debug.LogErrorFormat(
                                     "Attempted to load an asset of type {0} from asset bundle {1}, but no handler was found. Unloading...",
                                     assetType,
                                     loadedBundle.Metadata.Name);
@@ -141,7 +140,7 @@ namespace HouraiTeahouse.AssetBundles {
                     });
                 }))
             ));
-            task.Then(() => log.Info("Done loading local asset bundles"));
+            task.Then(() => Debug.Log("Done loading local asset bundles"));
             return task;
         }
 
@@ -201,7 +200,7 @@ namespace HouraiTeahouse.AssetBundles {
 			var urlFile = Resources.Load("AssetBundleServerURL") as TextAsset;
 			string url = (urlFile != null) ? urlFile.text.Trim() : null;
 			if (string.IsNullOrEmpty(url))
-				log.Error("Development Server URL could not be found.");
+				Debug.LogError("Development Server URL could not be found.");
 			else
 				SetSourceAssetBundleUrl(url);
 		}
@@ -211,7 +210,7 @@ namespace HouraiTeahouse.AssetBundles {
 		    if (_initalized)
 		        return Manifest;
 #if UNITY_EDITOR
-			log.Info("Simulation Mode: " + (SimulateAssetBundleInEditor ? "Enabled" : "Disabled"));
+			Debug.Log("Simulation Mode: " + (SimulateAssetBundleInEditor ? "Enabled" : "Disabled"));
 			// If we're in Editor simulation mode, we don't need the manifest assetBundle.
 			if (SimulateAssetBundleInEditor)
 				return Task.FromResult<BundleManfiestMap>(null);
@@ -225,7 +224,7 @@ namespace HouraiTeahouse.AssetBundles {
 		
 		// Load AssetBundle and its dependencies.
 		static ITask<LoadedAssetBundle> LoadAssetBundleAsync(string assetBundleName, bool isLoadingAssetBundleManifest = false) {
-			log.Info("Loading Asset Bundle" + (isLoadingAssetBundleManifest ? " Manifest: " : ": ") + assetBundleName);
+			Debug.Log("Loading Asset Bundle" + (isLoadingAssetBundleManifest ? " Manifest: " : ": ") + assetBundleName);
 	
 #if UNITY_EDITOR
 			// If we're in Editor simulation mode, we don't have to really load the assetBundle and its dependencies.
@@ -269,7 +268,7 @@ namespace HouraiTeahouse.AssetBundles {
 		        }
 
 		        if (bestFit == int.MaxValue - 1)
-		            log.Warning("Ambigious asset bundle variant chosen because there was no matching active variant: "
+		            Debug.LogWarning("Ambigious asset bundle variant chosen because there was no matching active variant: "
 		                + bundlesWithVariant[bestFitIndex]);
 
 		        if (bestFitIndex != -1)
@@ -322,7 +321,7 @@ namespace HouraiTeahouse.AssetBundles {
                              assetBundle);
                     else
                         loadedBundle = new LoadedAssetBundle(Manifest.Result[name], assetBundle);
-                    log.Info("Loaded bundle \"{0}\" from {1}.", name, path);
+                    Debug.LogFormat("Loaded bundle \"{0}\" from {1}.", name, path);
                     return loadedBundle;
                 });
             });
@@ -372,7 +371,7 @@ namespace HouraiTeahouse.AssetBundles {
 		            return;
 		        bundle.AssetBundle.Unload(false);
 		        AssetBundles.Remove(assetBundleName);
-		        log.Info("{0} has been unloaded successfully", assetBundleName);
+		        Debug.LogFormat("{0} has been unloaded successfully", assetBundleName);
 		    });
 		}
 
@@ -388,7 +387,7 @@ namespace HouraiTeahouse.AssetBundles {
 	
 		// Load asset from the given assetBundle.
 		public static ITask<T> LoadAssetAsync<T>(string assetBundleName, string assetName) where T : Object {
-			log.Info("Loading {0} from {1} bundle...", assetName, assetBundleName);
+			Debug.LogFormat("Loading {0} from {1} bundle...", assetName, assetBundleName);
 	
 #if UNITY_EDITOR
 			if (SimulateAssetBundleInEditor) {
@@ -396,7 +395,7 @@ namespace HouraiTeahouse.AssetBundles {
 			    if (assetPaths.Length != 0)
 			        return Task.FromResult(AssetDatabase.LoadAssetAtPath<T>(assetPaths[0]));
 			    var message = string.Format("There is no asset with name \"{}\" in {}", assetName, assetBundleName);
-			    log.Error(message);
+			    Debug.LogError(message);
 			    return Task.FromError<T>(new Exception(message));
 			}
 #endif
@@ -406,7 +405,7 @@ namespace HouraiTeahouse.AssetBundles {
             else
                 task = RemapVariantName(assetBundleName).Then(bundleName => LoadAssetBundleAsync(bundleName));
             var assetTask = task.Then(bundle => bundle.AssetBundle.LoadAssetAsync<T>(assetName).ToTask());
-            assetTask.Then(() => log.Info("Loaded {0} from {1}", assetName, assetBundleName));
+            assetTask.Then(() => Debug.LogFormat("Loaded {0} from {1}", assetName, assetBundleName));
             return assetTask.Then(request => request.asset as T);
 		}
 
@@ -423,7 +422,7 @@ namespace HouraiTeahouse.AssetBundles {
 
         // Load level from the given assetBundle.
 		public static ITask LoadLevelAsync (string assetBundleName, string levelName, LoadSceneMode loadMode = LoadSceneMode.Single) {
-			log.Info("Loading {0} from {1} bundle...", levelName, assetBundleName);
+			Debug.LogFormat("Loading {0} from {1} bundle...", levelName, assetBundleName);
 
 #if UNITY_EDITOR
 		    if (SimulateAssetBundleInEditor) {

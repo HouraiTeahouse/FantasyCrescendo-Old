@@ -136,7 +136,7 @@ namespace HouraiTeahouse.Options {
             if (val == null) {
                 val = CreateDefaultValue(propType);
             } else if (val.GetType() != propType) {
-                Log.Warning("Default value for {0} option does not match target type.", PropertyInfo);
+                Debug.LogWarningFormat("Default value for {0} option does not match target type.", PropertyInfo);
                 val = CreateDefaultValue(propType);
             }
             SetPropertyValue(val);

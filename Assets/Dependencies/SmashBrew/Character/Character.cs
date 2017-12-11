@@ -70,7 +70,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             _stateMap = StateController.States.ToDictionary(s => s.AnimatorHash);
             if (Debug.isDebugBuild)
                 StateController.OnStateChange += (b, a) => 
-                    Log.Debug(string.Format("{0} changed states: {1} => {2}", name, a.Name, b.Name));
+                    Debug.Log(string.Format("{0} changed states: {1} => {2}", name, a.Name, b.Name));
         }
 
         void InitializedComponents() {
@@ -233,7 +233,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             InputSlice previous = _input;
             foreach (var input in inputSet.Inputs) {
                 State = Advance(State, Time.fixedDeltaTime, new InputContext(previous, input));
-                Log.Warning(Convert.ToString(input.buttons, 2).PadLeft(8, '0'));
+                Debug.LogWarning(Convert.ToString(input.buttons, 2).PadLeft(8, '0'));
                 _input = input;
             }
             RpcUpdateState((uint)(inputSet.Timestamp + inputSet.Inputs.Length), State, _input);

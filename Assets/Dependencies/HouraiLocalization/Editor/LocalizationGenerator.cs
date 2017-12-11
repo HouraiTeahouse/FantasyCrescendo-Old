@@ -65,7 +65,7 @@ namespace HouraiTeahouse.Localization.Editor {
             foreach (var lang in languageMap) {
                 File.WriteAllText(Path.Combine(baseFolder, lang.Key + LanguageManager.FileExtension),
                     JsonConvert.SerializeObject(lang.Value, Formatting.Indented));
-                Log.Info("Generating language files for: {0}", lang.Key);
+                Debug.LogFormat("Generating language files for: {0}", lang.Key);
             }
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();

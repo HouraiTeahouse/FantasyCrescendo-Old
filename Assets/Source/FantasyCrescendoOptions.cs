@@ -114,7 +114,7 @@ namespace HouraiTeahouse {
             if (storedValue != null && storedValue != "null")
                 manager.LoadLanguage(storedValue);
             else {
-                Log.Debug(manager.CurrentLanguage.Name);
+                Debug.Log(manager.CurrentLanguage.Name);
                 lang.SetPropertyValue(manager.CurrentLanguage.Name);
             }
         }
@@ -153,7 +153,7 @@ namespace HouraiTeahouse {
                     index = names.Length - 1;
                 }
                 QualitySettings.SetQualityLevel(index, true);
-                Log.Info("Quality Level: {0}", QualitySettings.names[QualitySettings.GetQualityLevel()]); 
+                Debug.LogFormat("Quality Level: {0}", QualitySettings.names[QualitySettings.GetQualityLevel()]); 
             });
         }
 

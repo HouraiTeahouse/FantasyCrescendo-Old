@@ -16,8 +16,6 @@ namespace HouraiTeahouse {
     /// </summary>
     public class MenuManager : MonoBehaviour, IRegistrar<Menu> {
 
-        static ILog log = Log.GetLogger<MenuManager>();
-
         // The previous history of accessed 
         static Stack<string> _menuBreadcrumnbs;
 
@@ -46,7 +44,7 @@ namespace HouraiTeahouse {
         /// </summary>
         void Start() {
             var defaultMenu = _currentMenu;
-            Log.Error(defaultMenu);
+            Debug.LogError(defaultMenu);
             if (_menuBreadcrumnbs == null) {
                 _menuBreadcrumnbs = new Stack<string>();
             } else {
@@ -112,7 +110,7 @@ namespace HouraiTeahouse {
         /// <param name="obj"> the new menu to add. Will do nothing if null.</param>
         public void Register(Menu obj) {
             if (obj == null) {
-                log.Error("Attempted to register null menu.");
+                Debug.LogError("Attempted to register null menu.");
                 return;
             }
             if (_availableMenus == null)
@@ -120,11 +118,11 @@ namespace HouraiTeahouse {
             Menu altRegistry;
             string menuName = obj.Name;
             if (_availableMenus.TryGetValue(menuName, out altRegistry) && obj != altRegistry) {
-                log.Error("Cannot register multple menus under the name of {0}. ", obj.Name);
+                Debug.LogErrorFormat("Cannot register multple menus under the name of {0}. ", obj.Name);
                 return;
             }
             _availableMenus.Add(menuName, obj);
-            log.Info("Registered {0} as a valid menu under the name of {1}", obj, obj.Name);
+            Debug.LogFormat("Registered {0} as a valid menu under the name of {1}", obj, obj.Name);
         }
 
         /// <summary>

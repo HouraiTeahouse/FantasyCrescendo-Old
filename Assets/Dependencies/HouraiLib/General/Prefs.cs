@@ -10,8 +10,6 @@ namespace HouraiTeahouse {
     /// <summary> A static PlayerPrefs wrapper that provides additional type support. </summary>
     public static class Prefs {
 
-        internal static readonly ILog log = Log.GetLogger("PlayerPrefs");
-
         /// <summary> Saves all the changes to disk . </summary>
         public static void Save() {
             PlayerPrefs.Save();
@@ -34,7 +32,7 @@ namespace HouraiTeahouse {
 #if UNITY_EDITOR
             if (EditorApplication.isPlayingOrWillChangePlaymode)
 #endif
-                log.Info("Loaded \"{0}\" : {1} ({2})", key, value, typeof(T).Name);
+                Debug.LogFormat("Loaded \"{0}\" : {1} ({2})", key, value, typeof(T).Name);
             return value;
         }
 

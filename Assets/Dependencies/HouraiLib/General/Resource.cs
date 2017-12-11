@@ -12,7 +12,6 @@ namespace HouraiTeahouse {
 
     public class Resource {
 
-        protected static readonly ILog log = Log.GetLogger<Resource>();
         public const char BundleSeperator = ':';
 
         protected static readonly Dictionary<string, Resource> _resources;
@@ -101,7 +100,7 @@ namespace HouraiTeahouse {
 #if UNITY_EDITOR
             if (EditorApplication.isPlayingOrWillChangePlaymode)
 #endif
-                log.Info("Loaded {0} from {1}", typeof(T).Name, _path);
+                Debug.LogFormat("Loaded {0} from {1}", typeof(T).Name, _path);
             Asset = loadedObject;
             return Asset;
         }
@@ -123,7 +122,7 @@ namespace HouraiTeahouse {
 #if UNITY_EDITOR
             if (EditorApplication.isPlayingOrWillChangePlaymode)
 #endif
-                log.Info("Unloaded \"{0}\" ({1})", _path, typeof(T).Name);
+                Debug.LogFormat("Unloaded \"{0}\" ({1})", _path, typeof(T).Name);
         }
 
         /// <summary> 
@@ -142,12 +141,12 @@ namespace HouraiTeahouse {
 #if UNITY_EDITOR
             if (EditorApplication.isPlayingOrWillChangePlaymode)
 #endif
-                log.Info("Started loading \"{1}\" ({0})", typeName, _path);
+                Debug.LogFormat("Started loading \"{1}\" ({0})", typeName, _path);
             LoadTask.Then(asset => {
 #if UNITY_EDITOR
                 if (EditorApplication.isPlayingOrWillChangePlaymode)
 #endif
-                    log.Info("Loaded \"{1}\" ({0})", typeName, _path);
+                    Debug.LogFormat("Loaded \"{1}\" ({0})", typeName, _path);
                 Asset = asset;
             });
             return LoadTask;

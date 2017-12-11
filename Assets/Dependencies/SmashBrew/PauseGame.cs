@@ -39,19 +39,19 @@ namespace HouraiTeahouse.SmashBrew {
                 if (!unpause)
                     return;
                 SmashTimeManager.PausedPlayer = null;
-                Log.Debug("Game unpaused by {0}.", player);
+                Debug.LogFormat("Game unpaused by {0}.", player);
             } else {
                 foreach (Player player in match.Players.Where(p => p.Type.IsActive)) {
                     if (player.Controller == null || !player.Controller.GetControl(_pauseButton).WasPressed)
                         continue;
                     SmashTimeManager.PausedPlayer = player;
-                    Log.Debug("Game paused by {0}.", player);
+                    Debug.LogFormat("Game paused by {0}.", player);
                     break;
                 }
                 if (Input.GetKeyDown(KeyCode.Return)) {
                     var player = match.Players.Where(p => p.Type.IsActive).First();
                     SmashTimeManager.PausedPlayer = player;
-                    Log.Debug("Game paused by {0}.", player);
+                    Debug.LogFormat("Game paused by {0}.", player);
                 }
             }
         }

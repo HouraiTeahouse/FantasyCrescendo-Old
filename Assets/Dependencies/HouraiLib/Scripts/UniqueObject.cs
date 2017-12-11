@@ -34,19 +34,18 @@ namespace HouraiTeahouse {
         void Awake() {
             if (_allIds == null)
                 _allIds = new Dictionary<int, UniqueObject>();
-            var log = Log.GetLogger(this);
             UniqueObject obj;
             if (_allIds.TryGetValue(ID, out obj)) {
                 // Destroy only destroys the object after a frame is finished, which still allows
                 // other code in other attached scripts to execute.
                 // DestroyImmediate ensures that said code is not executed and immediately removes the
                 // GameObject from the scene.
-                log.Warning("{0} (ID: {1}) already exists. Destroying {2}", obj.name, ID, name);
+                Debug.LogWarningFormat("{0} (ID: {1}) already exists. Destroying {2}", obj.name, ID, name);
                 DestroyImmediate(gameObject);
                 return;
             }
             _allIds[ID] = this;
-            log.Info("Registered {0} as a unique object. (ID: {1})", name, ID);
+            Debug.LogFormat("Registered {0} as a unique object. (ID: {1})", name, ID);
         }
         
         /// <summary>
