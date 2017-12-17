@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using UnityEngine;
 using UnityEditor;
 
@@ -57,14 +58,15 @@ namespace HouraiTeahouse {
                 EditorGUI.LabelField(colRect, col.Name);
             });
             rect.y += LabelPadding;
+            _scrollPos = GUI.BeginScrollView(area, _scrollPos, new Rect(0, 0, area.width, set.Count() * RowHeight));
             foreach (var element in set) {
-                var isUnityObject = element is UnityEngine.Object;
                 EditorGUI.BeginChangeCheck();
                 DrawRow(ref rect, area.width, (col, colRect) => col.Draw(colRect, element));
                 if (!EditorGUI.EndChangeCheck())
                     continue;
-                if (isUnityObject) {
-                    EditorUtility.SetDirty(element as UnityEngine.Object);
+                var elementObject = element as UnityEngine.Object;
+                if (elementObject != null) {
+                    EditorUtility.SetDirty(elementObject);
                 } else {
                     var serializedProperty = element as SerializedProperty;
                     var serializedObject = element as SerializedObject;
@@ -74,6 +76,7 @@ namespace HouraiTeahouse {
                         serializedObject.ApplyModifiedProperties();
                 }
             }
+            GUI.EndScrollView();
         }
 
         void DrawRow(ref Rect position, float width, Action<Column, Rect> colFunc) {

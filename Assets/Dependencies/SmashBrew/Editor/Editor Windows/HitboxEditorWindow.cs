@@ -38,13 +38,7 @@ namespace HouraiTeahouse.SmashBrew {
                 var type = hitbox.CurrentType;
                 var color = GUI.color;
                 GUI.color = Config.Debug.GetHitboxColor(type);
-                var hitboxType = (Hitbox.Type)EditorGUI.EnumPopup(rect, GUIContent.none, type);
-                serializedObject.FindProperty("_isActive").boolValue = hitboxType != Hitbox.Type.Inactive;
-                serializedObject.FindProperty("_isHitbox").boolValue  = hitboxType == Hitbox.Type.Offensive;
-                serializedObject.FindProperty("_isIntangible").boolValue  = hitboxType == Hitbox.Type.Intangible;
-                serializedObject.FindProperty("_isInvincible").boolValue  = hitboxType == Hitbox.Type.Invincible;
-                serializedObject.FindProperty("_absorbing").boolValue  = hitboxType == Hitbox.Type.Absorb;
-                serializedObject.FindProperty("_reflector").boolValue  = hitboxType == Hitbox.Type.Reflective;
+                EditorGUI.PropertyField(rect, serializedObject.FindProperty("_type"), GUIContent.none);
                 GUI.color = color;
             });
             var damageCol = CreatePropertyColumn("_damage");

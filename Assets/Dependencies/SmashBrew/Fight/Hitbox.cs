@@ -42,23 +42,8 @@ namespace HouraiTeahouse.SmashBrew {
 
         HashSet<object> _history;
 
-        [SerializeField] 
-        bool _isActive = true;
-
         [SerializeField]
-        bool _isHitbox;
-
-        [SerializeField]
-        bool _isIntangible;
-
-        [SerializeField]
-        bool _isInvincible;
-
-        [SerializeField]
-        bool _absorbing;
-
-        [SerializeField]
-        bool _reflector;
+        Type _type;
 
         [SerializeField]
         int _priority = 100;
@@ -86,30 +71,8 @@ namespace HouraiTeahouse.SmashBrew {
         }
 
         public Type CurrentType {
-            get {
-                // Must be done this way to allow animated properties
-                if (!_isActive)
-                    return Type.Inactive;
-                if (_isHitbox)
-                    return Type.Offensive;
-                if (_isIntangible)
-                    return Type.Intangible;
-                if (_isInvincible)
-                    return Type.Invincible;
-                if (_absorbing)
-                    return Type.Absorb;
-                if (_reflector)
-                    return Type.Reflective;
-                return Type.Damageable;
-            }
-            set {
-                _isActive = value != Type.Inactive;
-                _isHitbox = value == Type.Offensive;
-                _isIntangible = value == Type.Intangible;
-                _isInvincible = value == Type.Invincible;
-                _absorbing = value == Type.Absorb;
-                _reflector = value == Type.Reflective;
-            }
+            get { return _type; }
+            set { _type = value; }
         }
 
         public Type DefaultType { get; private set; }
