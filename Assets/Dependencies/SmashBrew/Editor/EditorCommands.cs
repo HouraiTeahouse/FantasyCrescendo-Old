@@ -19,40 +19,59 @@ namespace HouraiTeahouse.SmashBrew {
             AddHitbox(Hitbox.Type.Damageable);
         }
 
-        [MenuItem("Smash Brew/Add Hurtbox %#h", true)]
-        [MenuItem("Smash Brew/Add Offensive Hitbox %h", true)]
-        static bool AddHitboxValidate() {
-            return Selection.gameObjects.Length > 0;
+        static Hitbox CreateHitbox(Hitbox.Type type, Transform parent) {
+            var hbGo = new GameObject();
+            Undo.RegisterCreatedObjectUndo(hbGo, "Create Hitbox GameObject");
+            var collider = Undo.AddComponent<SphereCollider>(hbGo);
+            var hb = Undo.AddComponent<Hitbox>(hbGo);
+            hb.CurrentType = type;
+            if (parent != null) {
+                Undo.SetTransformParent(hb.transform, parent, "Parent Hitbox");
+            }
+            hb.transform.Reset();
+            Undo.RecordObject(collider, "Edit Collider Size");
+            collider.radius = 1f / ((Vector3) (hb.transform.localToWorldMatrix * Vector3.one)).Max();
+            return hb;
+        }
+
+        static GameObject GetRootOrCharacterGameObject(Component component) {
+            var character = component.GetComponentInParent<Character>();
+            var root = component.transform.root;
+            if (character != null)
+                return character.gameObject;
+            else if (root == null)
+                return component.transform.gameObject;
+            return root.gameObject;
+        }
+
+        static void AddHitboxToSet(Dictionary<GameObject, List<Hitbox>> rootMap, GameObject rootGo, Hitbox hitbox) {
+            if (!rootMap.ContainsKey(rootGo))
+                rootMap[rootGo] = new List<Hitbox>();
+            rootMap[rootGo].Add(hitbox);
         }
 
         static void AddHitbox(Hitbox.Type type) {
             var hitboxes = new List<Hitbox>();
-            var rootMap = new Dictionary<GameObject, List<Hitbox>>();
             Undo.IncrementCurrentGroup();
-            foreach (GameObject go in Selection.gameObjects) {
-                var hbGo = new GameObject();
-                Undo.RegisterCreatedObjectUndo(hbGo, "Create Hitbox GameObject");
-                var collider = Undo.AddComponent<SphereCollider>(hbGo);
-                var hb = Undo.AddComponent<Hitbox>(hbGo);
-                hb.CurrentType = type;
-                hitboxes.Add(hb);
-                Undo.SetTransformParent(hb.transform, go.transform, "Parent Hitbox");
-                hb.transform.Reset();
-                Undo.RecordObject(collider, "Edit Collider Size");
-                collider.radius = 1f / ((Vector3) (hb.transform.localToWorldMatrix * Vector3.one)).Max();
-                var character = hbGo.GetComponentInParent<Character>();
-                GameObject rootGo = character != null ? character.gameObject : hb.transform.root.gameObject;
-                if (!rootMap.ContainsKey(rootGo))
-                    rootMap[rootGo] = new List<Hitbox>();
-                rootMap[rootGo].Add(hb);
-            }
-            foreach (KeyValuePair<GameObject, List<Hitbox>> set in rootMap) {
-                Hitbox[] allHitboxes = set.Key.GetComponentsInChildren<Hitbox>();
-                int i = allHitboxes.Length - set.Value.Count;
-                Undo.RecordObjects(set.Value.ToArray(), "Name Changes");
-                foreach (Hitbox hitbox in set.Value) {
-                    hitbox.name = string.Format("{0}_hb_{1}_{2}", set.Key.name, type, i).ToLower();
-                    i++;
+            if (Selection.gameObjects.Length <= 0)  {
+                var hitbox = CreateHitbox(type, null);
+                hitboxes.Add(hitbox);
+                hitbox.name = string.Format("hb_{0}", type);
+            } else {
+                var rootMap = new Dictionary<GameObject, List<Hitbox>>();
+                foreach (GameObject gameObject in Selection.gameObjects) {
+                    var hitbox = CreateHitbox(type, gameObject.transform);
+                    hitboxes.Add(hitbox);
+                    AddHitboxToSet(rootMap, GetRootOrCharacterGameObject(hitbox), hitbox);
+                }
+                foreach (KeyValuePair<GameObject, List<Hitbox>> set in rootMap) {
+                    Hitbox[] allHitboxes = set.Key.GetComponentsInChildren<Hitbox>();
+                    int i = allHitboxes.Length - set.Value.Count;
+                    Undo.RecordObjects(set.Value.ToArray(), "Name Changes");
+                    foreach (Hitbox hitbox in set.Value) {
+                        hitbox.name = string.Format("{0}_hb_{1}_{2}", set.Key.name, type, i).ToLower();
+                        i++;
+                    }
                 }
             }
             Selection.objects = hitboxes.GetGameObject().ToArray();
