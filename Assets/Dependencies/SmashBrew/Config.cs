@@ -181,7 +181,7 @@ namespace HouraiTeahouse.SmashBrew {
         [SerializeField]
         Color ReflectHitboxColor = new Color(0, 0.25f, 0.5f, 1);
 
-        EnumMap<Hitbox.Type, Color> _colorMap;
+        EnumMap<HitboxType, Color> _colorMap;
 
         internal Material HitboxMaterial {
             get { return  _hitboxMaterial; }
@@ -190,18 +190,18 @@ namespace HouraiTeahouse.SmashBrew {
         public void OnBeforeSerialize() { }
 
         public void OnAfterDeserialize() {
-            _colorMap = new EnumMap<Hitbox.Type, Color>();
-            _colorMap[Hitbox.Type.Inactive] = _inactiveHitboxColor;
-            _colorMap[Hitbox.Type.Offensive] = _offensiveHitboxColor;
-            _colorMap[Hitbox.Type.Damageable] = _damageableHitboxColor;
-            _colorMap[Hitbox.Type.Invincible] = _invincibleHitboxColor;
-            _colorMap[Hitbox.Type.Intangible] = _intangibleHitboxColor;
-            _colorMap[Hitbox.Type.Absorb] = _absorbHitboxColor;
-            _colorMap[Hitbox.Type.Shield] = _shieldHitboxColor;
-            _colorMap[Hitbox.Type.Reflective] = ReflectHitboxColor;
+            _colorMap = new EnumMap<HitboxType, Color>();
+            _colorMap[HitboxType.Inactive] = _inactiveHitboxColor;
+            _colorMap[HitboxType.Offensive] = _offensiveHitboxColor;
+            _colorMap[HitboxType.Damageable] = _damageableHitboxColor;
+            _colorMap[HitboxType.Invincible] = _invincibleHitboxColor;
+            _colorMap[HitboxType.Intangible] = _intangibleHitboxColor;
+            _colorMap[HitboxType.Absorb] = _absorbHitboxColor;
+            _colorMap[HitboxType.Shield] = _shieldHitboxColor;
+            _colorMap[HitboxType.Reflective] = ReflectHitboxColor;
         }
 
-        public Color GetHitboxColor(Hitbox.Type type) { return _colorMap[type]; }
+        public Color GetHitboxColor(HitboxType type) { return _colorMap[type]; }
 
     }
 

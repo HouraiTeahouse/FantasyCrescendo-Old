@@ -11,15 +11,15 @@ namespace HouraiTeahouse.SmashBrew {
 
         [MenuItem("Smash Brew/Add Offensive Hitbox %h")]
         static void AddOffensiveHitbox() {
-            AddHitbox(Hitbox.Type.Offensive);
+            AddHitbox(HitboxType.Offensive);
         }
 
         [MenuItem("Smash Brew/Add Hurtbox %#h")]
         static void AddHurtbox() {
-            AddHitbox(Hitbox.Type.Damageable);
+            AddHitbox(HitboxType.Damageable);
         }
 
-        static Hitbox CreateHitbox(Hitbox.Type type, Transform parent) {
+        static Hitbox CreateHitbox(HitboxType type, Transform parent) {
             var hbGo = new GameObject();
             Undo.RegisterCreatedObjectUndo(hbGo, "Create Hitbox GameObject");
             var collider = Undo.AddComponent<SphereCollider>(hbGo);
@@ -50,7 +50,7 @@ namespace HouraiTeahouse.SmashBrew {
             rootMap[rootGo].Add(hitbox);
         }
 
-        static void AddHitbox(Hitbox.Type type) {
+        static void AddHitbox(HitboxType type) {
             var hitboxes = new List<Hitbox>();
             Undo.IncrementCurrentGroup();
             if (Selection.gameObjects.Length <= 0)  {

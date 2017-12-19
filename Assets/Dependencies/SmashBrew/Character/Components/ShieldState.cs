@@ -87,8 +87,8 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             render.lightProbeUsage = LightProbeUsage.Off;
 
             _shieldHitbox = _shieldObj.AddComponent<Hitbox>();
-            _shieldHitbox.CurrentType = Hitbox.Type.Shield;
-            _shieldHitbox.CurrentType = Hitbox.Type.Shield;
+            _shieldHitbox.CurrentType = HitboxType.Shield;
+            _shieldHitbox.CurrentType = HitboxType.Shield;
 
             SetShieldColor(Color.grey);
             _shieldObj.SetActive(false);
@@ -124,8 +124,8 @@ namespace HouraiTeahouse.SmashBrew.Characters {
 
         public override void ApplyState(ref CharacterStateSummary state) {
             if (_targetBone != null && _shieldObj.activeInHierarchy) {
-                _shieldHitbox.CurrentType = Hitbox.Type.Shield;
-                _shieldHitbox.CurrentType = Hitbox.Type.Shield;
+                _shieldHitbox.CurrentType = HitboxType.Shield;
+                _shieldHitbox.CurrentType = HitboxType.Shield;
                 _shieldTransform.localScale = Vector3.one * _shieldSize * (state.ShieldHealth/MaxShieldHealth);
                 _shieldTransform.localPosition = transform.InverseTransformPoint(_targetBone.position);
             }

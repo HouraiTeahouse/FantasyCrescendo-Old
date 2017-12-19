@@ -22,7 +22,7 @@ namespace HouraiTeahouse.SmashBrew {
         EditorTable<SerializedObject>.Column CreatePropertyColumn(string propertyName, bool onlyOffensive = true) {
             return table.AddColumn((rect, serializedObject) => {
                 var hitbox = serializedObject.targetObject as Hitbox;
-                if (hitbox.CurrentType == Hitbox.Type.Offensive || !onlyOffensive)
+                if (hitbox.CurrentType == HitboxType.Offensive || !onlyOffensive)
                     EditorGUI.PropertyField(rect, serializedObject.FindProperty(propertyName), GUIContent.none);
             });
         }

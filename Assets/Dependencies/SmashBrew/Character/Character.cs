@@ -84,11 +84,11 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             var hitboxComponets = GetComponentsInChildren<Hitbox>(true);
             _hitboxes = new ReadOnlyCollection<Hitbox>(hitboxComponets.ToArray());
             _hurtboxes = new ReadOnlyCollection<Hitbox>(
-                hitboxComponets.Where(h => h.CurrentType != Hitbox.Type.Offensive).ToArray());
-            var typeMap = new Dictionary<ImmunityType, Hitbox.Type> {
-                {ImmunityType.Normal, Hitbox.Type.Damageable},
-                {ImmunityType.Intangible, Hitbox.Type.Intangible},
-                {ImmunityType.Invincible, Hitbox.Type.Invincible}
+                hitboxComponets.Where(h => h.CurrentType != HitboxType.Offensive).ToArray());
+            var typeMap = new Dictionary<ImmunityType, HitboxType> {
+                {ImmunityType.Normal, HitboxType.Damageable},
+                {ImmunityType.Intangible, HitboxType.Intangible},
+                {ImmunityType.Invincible, HitboxType.Invincible}
             };
             StateController.OnStateChange += (b, a) => {
                 foreach (var hitbox in _hitboxes)
@@ -96,7 +96,7 @@ namespace HouraiTeahouse.SmashBrew.Characters {
                 _hitHistory.Clear();
             };
             StateController.OnStateChange += (b, a) => {
-                var hitboxType = Hitbox.Type.Damageable;
+                var hitboxType = HitboxType.Damageable;
                 if (!typeMap.TryGetValue(a.Data.DamageType, out hitboxType))
                     return;
                 foreach (var hurtbox in _hurtboxes)

@@ -14,21 +14,7 @@ namespace HouraiTeahouse.SmashBrew {
 
         static bool _initialized = false;
 
-        public enum Type {
-
-            // The values here are used as priority mulitpliers
-            Inactive = 1,
-            Offensive = Inactive << 1,
-            Damageable = Offensive << 1,
-            Invincible = Damageable << 1,
-            Intangible = Invincible << 1,
-            Shield = Intangible << 1,
-            Absorb = Shield << 1,
-            Reflective = Absorb << 1
-
-        }
-
-        static readonly Table2D<Type, Action<Hitbox, Hitbox>> ReactionMatrix;
+        static readonly Table2D<HitboxType, Action<Hitbox, Hitbox>> ReactionMatrix;
         static readonly List<Hitbox> _hitboxes;
 
         public static IEnumerable<Hitbox> ActiveHitboxes {
@@ -43,77 +29,43 @@ namespace HouraiTeahouse.SmashBrew {
         HashSet<object> _history;
 
         [SerializeField]
-        Type _type;
+        HitboxType _type;
+        public int Priority = 100;
+        public float Damage = 5f;
 
-        [SerializeField]
-        int _priority = 100;
-
-        [SerializeField]
-        float _damage = 5f;
-
-        [SerializeField, Range(0, 360)]
-        float _angle = 45f;
-
-        [SerializeField]
-        float _baseKnockback;
-
-        [SerializeField]
-        float _knockbackScaling = 1f;
-
-        [SerializeField]
-        bool _reflectable;
+        [Range(0, 360)]
+        public float Angle = 45f;
+        public float BaseKnockback;
+        public float KnockbackScaling = 1f;
+        public bool Reflectable;
+        public bool Absorbable;
 
         [SerializeField]
         bool _absorbable;
+
+        public HitboxType CurrentType {
+            get { return _type; }
+            set {
+                _type = value;
+                gameObject.tag = Config.Tags.HitboxTag;
+                switch (value) {
+                    case HitboxType.Damageable:
+                    case HitboxType.Shield:
+                        gameObject.layer = Config.Tags.HurtboxLayer;
+                        break;
+                    default:
+                        gameObject.layer = Config.Tags.HitboxLayer;
+                        break;
+                }
+            }
+        }
         
         public bool IsActive {
-            get { return CurrentType != Type.Inactive; }
-        }
-
-        public Type CurrentType {
-            get { return _type; }
-            set { _type = value; }
-        }
-
-        public Type DefaultType { get; private set; }
-
-        public int Priority {
-            get { return _priority; }
-            set { _priority = value; }
-        }
-
-        public float Damage {
-            get { return _damage; }
-            set { _damage = value; }
-        }
-
-        public float Angle {
-            get { return _angle; }
-            set { _angle = value; }
-        }
-
-        public float BaseKnockback {
-            get { return _baseKnockback; }
-            set { _baseKnockback = value; }
-        }
-
-        public float Scaling {
-            get { return _knockbackScaling; }
-            set { _knockbackScaling = value; }
-        }
-
-        public bool Reflectable {
-            get { return _reflectable; }
-            set { _reflectable = value; }
-        }
-
-        public bool Absorbable {
-            get { return _absorbable; }
-            set { _absorbable = value; }
+            get { return CurrentType != HitboxType.Inactive; }
         }
 
         public float BaseDamage {
-            get { return Source == null ? _damage : Source.GetComponent<DamageState>().ModifyDamage(_damage); }
+            get { return Source == null ? Damage : Source.GetComponent<DamageState>().ModifyDamage(Damage); }
         }
 
         public bool FlipDirection {
@@ -132,13 +84,12 @@ namespace HouraiTeahouse.SmashBrew {
         public Character Source { get; set; }
 
         public IDamageable Damageable { get; private set; }
-
         public IKnockbackable Knockbackable { get; private set; }
 
         static Hitbox() {
-            ReactionMatrix = new Table2D<Type, Action<Hitbox, Hitbox>>();
+            ReactionMatrix = new Table2D<HitboxType, Action<Hitbox, Hitbox>>();
             _hitboxes = new List<Hitbox>();
-            ReactionMatrix[Type.Offensive, Type.Damageable] = delegate(Hitbox src, Hitbox dst) {
+            ReactionMatrix[HitboxType.Offensive, HitboxType.Damageable] = delegate(Hitbox src, Hitbox dst) {
                 if (dst.Damageable != null)
                     dst.Damageable.Damage(src, src.BaseDamage);
                 if (dst.Knockbackable != null) {
@@ -147,11 +98,11 @@ namespace HouraiTeahouse.SmashBrew {
                 }
                 DrawEffect(src, dst);
             };
-            ReactionMatrix[Type.Offensive, Type.Absorb] = ExecuteInterface<IAbsorbable>(h => h.Absorbable,
-                (a, o) => a.Absorb(o));
-            ReactionMatrix[Type.Offensive, Type.Reflective] = ExecuteInterface<IReflectable>(h => h.Reflectable,
-                (a, o) => a.Reflect(o));
-            ReactionMatrix[Type.Offensive, Type.Invincible] = DrawEffect;
+            ReactionMatrix[HitboxType.Offensive, HitboxType.Absorb] = 
+                ExecuteInterface<IAbsorbable>(h => h.Absorbable, (a, o) => a.Absorb(o));
+            ReactionMatrix[HitboxType.Offensive, HitboxType.Reflective] = 
+                ExecuteInterface<IReflectable>(h => h.Reflectable, (a, o) => a.Reflect(o));
+            ReactionMatrix[HitboxType.Offensive, HitboxType.Invincible] = DrawEffect;
         }
 
         static Action<Hitbox, Hitbox> ExecuteInterface<T>(Predicate<Hitbox> check, Action<T, object> action) {
@@ -184,24 +135,11 @@ namespace HouraiTeahouse.SmashBrew {
         /// </summary>
         void Awake() {
             Initialize();
-            DefaultType = CurrentType;
             Source = GetComponentInParent<Character>();
             Damageable = GetComponentInParent<IDamageable>();
             Knockbackable = GetComponentInParent<IKnockbackable>();
             _history = new HashSet<object>();
-            //_effect = GetComponent<ParticleSystem>();
-            //_soundEffect = GetComponent<AudioSource>();
 
-            gameObject.tag = Config.Tags.HitboxTag;
-            switch (CurrentType) {
-                case Type.Damageable:
-                case Type.Shield:
-                    gameObject.layer = Config.Tags.HurtboxLayer;
-                    break;
-                default:
-                    gameObject.layer = Config.Tags.HitboxLayer;
-                    break;
-            }
             _colliders = GetComponents<Collider>();
             foreach (Collider col in _colliders)
                 col.isTrigger = true;
@@ -264,7 +202,7 @@ namespace HouraiTeahouse.SmashBrew {
             if (!DrawHitboxes)
             #endif
                 return;
-            if (CurrentType == Type.Inactive)
+            if (CurrentType == HitboxType.Inactive)
                 return;
             if (_colliders == null)
                 _colliders = GetComponentsInChildren<Collider>();
@@ -291,8 +229,9 @@ namespace HouraiTeahouse.SmashBrew {
                 mesh = ((MeshCollider) col).sharedMesh;
             if (mesh == null)
                 return;
-            Config.Debug.HitboxMaterial.SetColor("_Color", color);
-            Config.Debug.HitboxMaterial.SetPass(0);
+            var material = Config.Debug.HitboxMaterial;
+            material.SetColor("_Color", color);
+            material.SetPass(0);
             Graphics.DrawMeshNow(mesh, Gizmo.GetColliderMatrix(col));
         }
 

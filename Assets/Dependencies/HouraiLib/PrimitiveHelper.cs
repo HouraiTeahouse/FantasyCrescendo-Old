@@ -20,9 +20,10 @@ public static class PrimitiveHelper {
     }
 
     public static Mesh GetPrimitiveMesh(PrimitiveType type) {
-        if (!PrimitiveMeshes.ContainsKey(type))
-            CreatePrimitiveMesh(type);
-        return PrimitiveMeshes[type];
+        Mesh mesh;
+        if (!PrimitiveMeshes.TryGetValue(type, out mesh))
+            return CreatePrimitiveMesh(type);
+        return mesh;
     }
 
     static Mesh CreatePrimitiveMesh(PrimitiveType type) {
