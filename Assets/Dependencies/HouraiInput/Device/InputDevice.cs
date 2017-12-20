@@ -67,8 +67,8 @@ namespace HouraiTeahouse.HouraiInput {
 
         public InputControl AnyButton {
             get {
-                foreach (InputControl control in Controls.IgnoreNulls()) {
-                    if (control.IsButton && control.IsPressed)
+                foreach (InputControl control in Controls) {
+                    if (control != null && control.IsButton && control.IsPressed)
                         return control;
                 }
                 return InputControl.Null;
@@ -99,7 +99,9 @@ namespace HouraiTeahouse.HouraiInput {
 
         internal void PostUpdate(ulong updateTick, float deltaTime) {
             // Apply post-processing to controls.
-            foreach (InputControl control in Controls.IgnoreNulls()) {
+            foreach (InputControl control in Controls) {
+                if (control == null)
+                    continue;
                 if (control.RawValue != null)
                     control.UpdateWithValue(control.RawValue.Value, updateTick);
                 else if (control.PreValue != null)

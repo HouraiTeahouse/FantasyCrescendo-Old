@@ -119,8 +119,10 @@ namespace HouraiTeahouse.HouraiInput {
             if (focusState)
                 return;
             foreach (InputDevice device in devices) {
-                foreach (InputControl control in device.Controls.IgnoreNulls())
-                    control.SetZeroTick();
+                foreach (InputControl control in device.Controls) {
+                    if (control != null)
+                        control.SetZeroTick();
+                }
             }
         }
 
@@ -166,8 +168,10 @@ namespace HouraiTeahouse.HouraiInput {
         }
 
         static void PreUpdateDevices(float deltaTime) {
-            foreach (var control in devices.SelectMany(d => d.Controls).IgnoreNulls())
-                control.PreUpdate(_currentTick);
+            foreach (var control in devices.SelectMany(d => d.Controls)) {
+                if (control != null)
+                    control.PreUpdate(_currentTick);
+            }
         }
 
         static void UpdateDevices(float deltaTime) {

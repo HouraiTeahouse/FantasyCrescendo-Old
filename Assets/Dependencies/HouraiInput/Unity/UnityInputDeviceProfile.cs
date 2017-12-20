@@ -67,7 +67,9 @@ namespace HouraiTeahouse.HouraiInput {
 
         public bool IsJoystick {
             get {
-                return (LastResortRegex != null) || !JoystickNames.IsNullOrEmpty() || !JoystickRegex.IsNullOrEmpty();
+                return (LastResortRegex != null) || 
+                    !(JoystickNames == null || !JoystickNames.Any()) || 
+                    !(JoystickRegex == null || !JoystickRegex.Any());
             }
         }
 
