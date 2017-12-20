@@ -1,0 +1,12 @@
+{
+    "name": "HouraiLocalization.Editor",
+    "references": [
+        "HouraiLocalization",
+        "HouraiLib.Editor",
+        "HouraiLib"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": []
+}

@@ -1,0 +1,10 @@
+{
+    "name": "HouraiLib.Editor",
+    "references": [
+        "HouraiLib"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": []
+}

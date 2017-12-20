@@ -1,0 +1,13 @@
+{
+    "name": "SmashBrew.Editor",
+    "references": [
+        "SmashBrew",
+        "HouraiLib.Editor",
+        "HouraiInput",
+        "HouraiLib"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": []
+}
