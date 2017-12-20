@@ -1,0 +1,11 @@
+{
+    "name": "SmashBrew",
+    "references": [
+        "HouraiInput",
+        "HouraiLib",
+        "GameConsole",
+        "HouraiLocalization"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": []
+}

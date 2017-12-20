@@ -1,0 +1,8 @@
+{
+    "name": "GameConsole",
+    "references": [
+        "HouraiLib"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": []
+}

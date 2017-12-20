@@ -122,6 +122,7 @@ namespace HouraiTeahouse.SmashBrew {
             }
         }
 
+        //TODO(james7132): Remove this from SmashBrew
         void LanguageCommand(string[] args) {
             if (!ArgLengthCheck(1, args, "language"))
                 return;
