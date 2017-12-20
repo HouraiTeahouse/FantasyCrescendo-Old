@@ -53,6 +53,15 @@ namespace HouraiTeahouse.SmashBrew.Characters {
             return !(lhs == rhs);
         }
 
+        public override bool Equals(object obj) {
+            var state = obj as CharacterState;
+            return object.ReferenceEquals(state, null) ? false : state == this;
+        }
+
+        public override int GetHashCode() {
+            return AnimatorHash;
+        }
+
     }
 
     public static class CharacterStateExtensions {
