@@ -32,8 +32,9 @@ namespace HouraiTeahouse.Editor {
             public void Draw(Rect position, SerializedProperty property, Type type) {
                 EditorGUI.BeginChangeCheck();
                 Object obj;
-                using (HGUI.Color(Valid ? GUI.color : Color.red))
+                using (HGUI.Color(Valid ? GUI.color : Color.red)) {
                     obj = EditorGUI.ObjectField(position, Content, _object, type, false);
+                }
                 if (!EditorGUI.EndChangeCheck())
                     return;
                 Update(obj);
