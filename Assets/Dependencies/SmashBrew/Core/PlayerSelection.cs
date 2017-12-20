@@ -13,7 +13,7 @@ namespace HouraiTeahouse.SmashBrew {
         int _pallete;
 
         [SerializeField]
-        int _cpuLevel = 0;
+        int _cpuLevel;
 
         /// <summary> 
         /// The Player's selected Character. If null, a random Character will be spawned when the match starts. 

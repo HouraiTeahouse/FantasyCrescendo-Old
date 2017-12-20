@@ -25,10 +25,12 @@ namespace HouraiTeahouse.SmashBrew.Characters {
 
         public const int kInputHistorySize = 3;
 
+        //TODO(james7132): Move hitbox logic out of Character
         ReadOnlyCollection<Hitbox> _hitboxes;
         ReadOnlyCollection<Hitbox> _hurtboxes;
         Dictionary<int, CharacterState> _stateMap;
         List<ICharacterComponent> _components;
+        //TODO(james7132): Figure out how to handle this over the network
         HashSet<object> _hitHistory;
         InputSlice _input;
         CharacterStateHistory _history;
@@ -141,11 +143,6 @@ namespace HouraiTeahouse.SmashBrew.Characters {
 
         bool IRegistrar<ICharacterComponent>.Unregister(ICharacterComponent component) {
             return _components.Remove(component);
-        }
-
-        public void ResetAllHitboxes() {
-            foreach (Hitbox hitbox in Hitboxes.IgnoreNulls())
-                hitbox.ResetState();
         }
 
         public CharacterState GetState(int hash) {

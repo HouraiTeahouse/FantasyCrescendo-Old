@@ -36,7 +36,7 @@ namespace HouraiTeahouse.SmashBrew.Matches {
         void LogActive(bool isActive) {
             IsActive = isActive;
             if (IsActive)
-                Debug.Log("Match rule enabled: {0}", this);
+                Debug.LogFormat("Match rule enabled: {0}", this);
         }
 
     }

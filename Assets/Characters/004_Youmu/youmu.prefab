@@ -21,9 +21,9 @@ GameObject:
   - component: {fileID: 4747862772605502}
   - component: {fileID: 135493564811593142}
   - component: {fileID: 114515550019117020}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: youmu konpaku_hb_damageable_4
-  m_TagString: Untagged
+  m_TagString: Hitbox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -316,9 +316,9 @@ GameObject:
   - component: {fileID: 4763768569249892}
   - component: {fileID: 135235294856096822}
   - component: {fileID: 114833209900403304}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: youmu konpaku_hb_damageable_5
-  m_TagString: Untagged
+  m_TagString: Hitbox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -365,9 +365,9 @@ GameObject:
   - component: {fileID: 4956865571185360}
   - component: {fileID: 135274138282465088}
   - component: {fileID: 114823963462679722}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: youmu konpaku_hb_damageable_10
-  m_TagString: Untagged
+  m_TagString: Hitbox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -399,9 +399,9 @@ GameObject:
   - component: {fileID: 4740864350148422}
   - component: {fileID: 135562833859638824}
   - component: {fileID: 114563119572702368}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: youmu konpaku_hb_damageable_7
-  m_TagString: Untagged
+  m_TagString: Hitbox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -570,9 +570,9 @@ GameObject:
   - component: {fileID: 4787638796341542}
   - component: {fileID: 135945763633041854}
   - component: {fileID: 114947498727309858}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: youmu konpaku_hb_damageable_9
-  m_TagString: Untagged
+  m_TagString: Hitbox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1265,9 +1265,9 @@ GameObject:
   - component: {fileID: 4093475425442086}
   - component: {fileID: 135431581723688672}
   - component: {fileID: 114872518508955970}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: youmu konpaku_hb_damageable_1
-  m_TagString: Untagged
+  m_TagString: Hitbox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1312,9 +1312,9 @@ GameObject:
   - component: {fileID: 4497652195460762}
   - component: {fileID: 135166182168724560}
   - component: {fileID: 114427893136825504}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: youmu konpaku_hb_damageable_6
-  m_TagString: Untagged
+  m_TagString: Hitbox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1589,9 +1589,9 @@ GameObject:
   - component: {fileID: 4578746112720986}
   - component: {fileID: 135913946643341010}
   - component: {fileID: 114114736474692494}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: youmu konpaku_hb_damageable_3
-  m_TagString: Untagged
+  m_TagString: Hitbox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1913,9 +1913,9 @@ GameObject:
   - component: {fileID: 4085238976450978}
   - component: {fileID: 135296156801204192}
   - component: {fileID: 114479161972970392}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: youmu konpaku_hb_damageable_0
-  m_TagString: Untagged
+  m_TagString: Hitbox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1991,9 +1991,9 @@ GameObject:
   - component: {fileID: 4892324980463440}
   - component: {fileID: 135417587815696368}
   - component: {fileID: 114531989244137350}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: youmu konpaku_hb_damageable_8
-  m_TagString: Untagged
+  m_TagString: Hitbox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2053,9 +2053,9 @@ GameObject:
   - component: {fileID: 4413178966579872}
   - component: {fileID: 135523193134526502}
   - component: {fileID: 114700404620700524}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: youmu konpaku_hb_damageable_2
-  m_TagString: Untagged
+  m_TagString: Hitbox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4227,7 +4227,6 @@ MonoBehaviour:
   _resetHealth: 30
   _targetBone: {fileID: 4911376193151742}
   _shieldMaterial: {fileID: 2100000, guid: 70c567f44c231184d87f4483cfe45e47, type: 2}
-  _currentShieldHealth: 0
 --- !u!114 &114052966524414852
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4250,18 +4249,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cfe52ab2f1046e4ba7bdead40232213, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isActive: 1
-  _isHitbox: 1
-  _isIntangible: 0
-  _isInvincible: 0
-  _absorbing: 0
-  _reflector: 0
-  _priority: 100
-  _damage: 5
-  _angle: 45
-  _baseKnockback: 0
-  _knockbackScaling: 1
-  _reflectable: 0
+  _type: 1
+  Priority: 100
+  Damage: 5
+  Angle: 45
+  BaseKnockback: 0
+  KnockbackScaling: 1
+  Reflectable: 0
+  Absorbable: 0
   _absorbable: 0
 --- !u!114 &114114736474692494
 MonoBehaviour:
@@ -4274,18 +4269,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cfe52ab2f1046e4ba7bdead40232213, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isActive: 1
-  _isHitbox: 0
-  _isIntangible: 0
-  _isInvincible: 0
-  _absorbing: 0
-  _reflector: 0
-  _priority: 100
-  _damage: 5
-  _angle: 45
-  _baseKnockback: 0
-  _knockbackScaling: 0
-  _reflectable: 0
+  _type: 4
+  Priority: 100
+  Damage: 5
+  Angle: 45
+  BaseKnockback: 0
+  KnockbackScaling: 1
+  Reflectable: 0
+  Absorbable: 0
   _absorbable: 0
 --- !u!114 &114142993279530594
 MonoBehaviour:
@@ -4298,18 +4289,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cfe52ab2f1046e4ba7bdead40232213, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isActive: 1
-  _isHitbox: 1
-  _isIntangible: 0
-  _isInvincible: 0
-  _absorbing: 0
-  _reflector: 0
-  _priority: 100
-  _damage: 5
-  _angle: 45
-  _baseKnockback: 0
-  _knockbackScaling: 1
-  _reflectable: 0
+  _type: 1
+  Priority: 100
+  Damage: 5
+  Angle: 45
+  BaseKnockback: 0
+  KnockbackScaling: 1
+  Reflectable: 0
+  Absorbable: 0
   _absorbable: 0
 --- !u!114 &114182895714346794
 MonoBehaviour:
@@ -4417,18 +4404,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cfe52ab2f1046e4ba7bdead40232213, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isActive: 1
-  _isHitbox: 1
-  _isIntangible: 0
-  _isInvincible: 0
-  _absorbing: 0
-  _reflector: 0
-  _priority: 100
-  _damage: 5
-  _angle: 45
-  _baseKnockback: 0
-  _knockbackScaling: 1
-  _reflectable: 0
+  _type: 1
+  Priority: 100
+  Damage: 5
+  Angle: 45
+  BaseKnockback: 0
+  KnockbackScaling: 1
+  Reflectable: 0
+  Absorbable: 0
   _absorbable: 0
 --- !u!114 &114298429239180080
 MonoBehaviour:
@@ -4441,18 +4424,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cfe52ab2f1046e4ba7bdead40232213, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isActive: 1
-  _isHitbox: 1
-  _isIntangible: 0
-  _isInvincible: 0
-  _absorbing: 0
-  _reflector: 0
-  _priority: 100
-  _damage: 5
-  _angle: 45
-  _baseKnockback: 0
-  _knockbackScaling: 1
-  _reflectable: 0
+  _type: 1
+  Priority: 100
+  Damage: 5
+  Angle: 45
+  BaseKnockback: 0
+  KnockbackScaling: 1
+  Reflectable: 0
+  Absorbable: 0
   _absorbable: 0
 --- !u!114 &114340516524939838
 MonoBehaviour:
@@ -4488,18 +4467,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cfe52ab2f1046e4ba7bdead40232213, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isActive: 1
-  _isHitbox: 0
-  _isIntangible: 0
-  _isInvincible: 0
-  _absorbing: 0
-  _reflector: 0
-  _priority: 100
-  _damage: 5
-  _angle: 45
-  _baseKnockback: 0
-  _knockbackScaling: 0
-  _reflectable: 0
+  _type: 4
+  Priority: 100
+  Damage: 5
+  Angle: 45
+  BaseKnockback: 0
+  KnockbackScaling: 1
+  Reflectable: 0
+  Absorbable: 0
   _absorbable: 0
 --- !u!114 &114479161972970392
 MonoBehaviour:
@@ -4512,18 +4487,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cfe52ab2f1046e4ba7bdead40232213, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isActive: 1
-  _isHitbox: 0
-  _isIntangible: 0
-  _isInvincible: 0
-  _absorbing: 0
-  _reflector: 0
-  _priority: 100
-  _damage: 5
-  _angle: 45
-  _baseKnockback: 0
-  _knockbackScaling: 0
-  _reflectable: 0
+  _type: 4
+  Priority: 100
+  Damage: 5
+  Angle: 45
+  BaseKnockback: 0
+  KnockbackScaling: 1
+  Reflectable: 0
+  Absorbable: 0
   _absorbable: 0
 --- !u!114 &114514099343161452
 MonoBehaviour:
@@ -4536,18 +4507,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cfe52ab2f1046e4ba7bdead40232213, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isActive: 1
-  _isHitbox: 1
-  _isIntangible: 0
-  _isInvincible: 0
-  _absorbing: 0
-  _reflector: 0
-  _priority: 100
-  _damage: 5
-  _angle: 45
-  _baseKnockback: 0
-  _knockbackScaling: 1
-  _reflectable: 0
+  _type: 1
+  Priority: 100
+  Damage: 5
+  Angle: 45
+  BaseKnockback: 0
+  KnockbackScaling: 1
+  Reflectable: 0
+  Absorbable: 0
   _absorbable: 0
 --- !u!114 &114515550019117020
 MonoBehaviour:
@@ -4560,18 +4527,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cfe52ab2f1046e4ba7bdead40232213, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isActive: 1
-  _isHitbox: 0
-  _isIntangible: 0
-  _isInvincible: 0
-  _absorbing: 0
-  _reflector: 0
-  _priority: 100
-  _damage: 5
-  _angle: 45
-  _baseKnockback: 0
-  _knockbackScaling: 0
-  _reflectable: 0
+  _type: 4
+  Priority: 100
+  Damage: 5
+  Angle: 45
+  BaseKnockback: 0
+  KnockbackScaling: 1
+  Reflectable: 0
+  Absorbable: 0
   _absorbable: 0
 --- !u!114 &114520452566825328
 MonoBehaviour:
@@ -4584,18 +4547,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cfe52ab2f1046e4ba7bdead40232213, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isActive: 1
-  _isHitbox: 1
-  _isIntangible: 0
-  _isInvincible: 0
-  _absorbing: 0
-  _reflector: 0
-  _priority: 100
-  _damage: 5
-  _angle: 45
-  _baseKnockback: 0
-  _knockbackScaling: 1
-  _reflectable: 0
+  _type: 1
+  Priority: 100
+  Damage: 5
+  Angle: 45
+  BaseKnockback: 0
+  KnockbackScaling: 1
+  Reflectable: 0
+  Absorbable: 0
   _absorbable: 0
 --- !u!114 &114531989244137350
 MonoBehaviour:
@@ -4608,18 +4567,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cfe52ab2f1046e4ba7bdead40232213, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isActive: 1
-  _isHitbox: 0
-  _isIntangible: 0
-  _isInvincible: 0
-  _absorbing: 0
-  _reflector: 0
-  _priority: 100
-  _damage: 5
-  _angle: 45
-  _baseKnockback: 0
-  _knockbackScaling: 0
-  _reflectable: 0
+  _type: 4
+  Priority: 100
+  Damage: 5
+  Angle: 45
+  BaseKnockback: 0
+  KnockbackScaling: 1
+  Reflectable: 0
+  Absorbable: 0
   _absorbable: 0
 --- !u!114 &114554578085764870
 MonoBehaviour:
@@ -4646,18 +4601,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cfe52ab2f1046e4ba7bdead40232213, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isActive: 1
-  _isHitbox: 1
-  _isIntangible: 0
-  _isInvincible: 0
-  _absorbing: 0
-  _reflector: 0
-  _priority: 100
-  _damage: 5
-  _angle: 45
-  _baseKnockback: 0
-  _knockbackScaling: 1
-  _reflectable: 0
+  _type: 1
+  Priority: 100
+  Damage: 5
+  Angle: 45
+  BaseKnockback: 0
+  KnockbackScaling: 1
+  Reflectable: 0
+  Absorbable: 0
   _absorbable: 0
 --- !u!114 &114563119572702368
 MonoBehaviour:
@@ -4670,18 +4621,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cfe52ab2f1046e4ba7bdead40232213, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isActive: 1
-  _isHitbox: 0
-  _isIntangible: 0
-  _isInvincible: 0
-  _absorbing: 0
-  _reflector: 0
-  _priority: 100
-  _damage: 5
-  _angle: 45
-  _baseKnockback: 0
-  _knockbackScaling: 0
-  _reflectable: 0
+  _type: 4
+  Priority: 100
+  Damage: 5
+  Angle: 45
+  BaseKnockback: 0
+  KnockbackScaling: 1
+  Reflectable: 0
+  Absorbable: 0
   _absorbable: 0
 --- !u!114 &114589106090885552
 MonoBehaviour:
@@ -4705,18 +4652,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cfe52ab2f1046e4ba7bdead40232213, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isActive: 1
-  _isHitbox: 1
-  _isIntangible: 0
-  _isInvincible: 0
-  _absorbing: 0
-  _reflector: 0
-  _priority: 100
-  _damage: 5
-  _angle: 45
-  _baseKnockback: 0
-  _knockbackScaling: 1
-  _reflectable: 0
+  _type: 1
+  Priority: 100
+  Damage: 5
+  Angle: 45
+  BaseKnockback: 0
+  KnockbackScaling: 1
+  Reflectable: 0
+  Absorbable: 0
   _absorbable: 0
 --- !u!114 &114639424931456150
 MonoBehaviour:
@@ -4729,18 +4672,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cfe52ab2f1046e4ba7bdead40232213, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isActive: 1
-  _isHitbox: 1
-  _isIntangible: 0
-  _isInvincible: 0
-  _absorbing: 0
-  _reflector: 0
-  _priority: 100
-  _damage: 5
-  _angle: 45
-  _baseKnockback: 0
-  _knockbackScaling: 1
-  _reflectable: 0
+  _type: 1
+  Priority: 100
+  Damage: 5
+  Angle: 45
+  BaseKnockback: 0
+  KnockbackScaling: 1
+  Reflectable: 0
+  Absorbable: 0
   _absorbable: 0
 --- !u!114 &114683054039491906
 MonoBehaviour:
@@ -4753,18 +4692,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cfe52ab2f1046e4ba7bdead40232213, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isActive: 1
-  _isHitbox: 1
-  _isIntangible: 0
-  _isInvincible: 0
-  _absorbing: 0
-  _reflector: 0
-  _priority: 100
-  _damage: 5
-  _angle: 45
-  _baseKnockback: 0
-  _knockbackScaling: 1
-  _reflectable: 0
+  _type: 1
+  Priority: 100
+  Damage: 5
+  Angle: 45
+  BaseKnockback: 0
+  KnockbackScaling: 1
+  Reflectable: 0
+  Absorbable: 0
   _absorbable: 0
 --- !u!114 &114694525718443830
 MonoBehaviour:
@@ -4789,18 +4724,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cfe52ab2f1046e4ba7bdead40232213, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isActive: 1
-  _isHitbox: 0
-  _isIntangible: 0
-  _isInvincible: 0
-  _absorbing: 0
-  _reflector: 0
-  _priority: 100
-  _damage: 5
-  _angle: 45
-  _baseKnockback: 0
-  _knockbackScaling: 0
-  _reflectable: 0
+  _type: 4
+  Priority: 100
+  Damage: 5
+  Angle: 45
+  BaseKnockback: 0
+  KnockbackScaling: 1
+  Reflectable: 0
+  Absorbable: 0
   _absorbable: 0
 --- !u!114 &114710089293648462
 MonoBehaviour:
@@ -4851,18 +4782,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cfe52ab2f1046e4ba7bdead40232213, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isActive: 1
-  _isHitbox: 1
-  _isIntangible: 0
-  _isInvincible: 0
-  _absorbing: 0
-  _reflector: 0
-  _priority: 100
-  _damage: 5
-  _angle: 45
-  _baseKnockback: 0
-  _knockbackScaling: 1
-  _reflectable: 0
+  _type: 1
+  Priority: 100
+  Damage: 5
+  Angle: 45
+  BaseKnockback: 0
+  KnockbackScaling: 1
+  Reflectable: 0
+  Absorbable: 0
   _absorbable: 0
 --- !u!114 &114823963462679722
 MonoBehaviour:
@@ -4875,18 +4802,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cfe52ab2f1046e4ba7bdead40232213, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isActive: 1
-  _isHitbox: 0
-  _isIntangible: 0
-  _isInvincible: 0
-  _absorbing: 0
-  _reflector: 0
-  _priority: 100
-  _damage: 5
-  _angle: 45
-  _baseKnockback: 0
-  _knockbackScaling: 0
-  _reflectable: 0
+  _type: 4
+  Priority: 100
+  Damage: 5
+  Angle: 45
+  BaseKnockback: 0
+  KnockbackScaling: 1
+  Reflectable: 0
+  Absorbable: 0
   _absorbable: 0
 --- !u!114 &114833209900403304
 MonoBehaviour:
@@ -4899,18 +4822,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cfe52ab2f1046e4ba7bdead40232213, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isActive: 1
-  _isHitbox: 0
-  _isIntangible: 0
-  _isInvincible: 0
-  _absorbing: 0
-  _reflector: 0
-  _priority: 100
-  _damage: 5
-  _angle: 45
-  _baseKnockback: 0
-  _knockbackScaling: 0
-  _reflectable: 0
+  _type: 4
+  Priority: 100
+  Damage: 5
+  Angle: 45
+  BaseKnockback: 0
+  KnockbackScaling: 1
+  Reflectable: 0
+  Absorbable: 0
   _absorbable: 0
 --- !u!114 &114840484026881440
 MonoBehaviour:
@@ -4966,18 +4885,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cfe52ab2f1046e4ba7bdead40232213, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isActive: 1
-  _isHitbox: 0
-  _isIntangible: 0
-  _isInvincible: 0
-  _absorbing: 0
-  _reflector: 0
-  _priority: 100
-  _damage: 5
-  _angle: 45
-  _baseKnockback: 0
-  _knockbackScaling: 0
-  _reflectable: 0
+  _type: 4
+  Priority: 100
+  Damage: 5
+  Angle: 45
+  BaseKnockback: 0
+  KnockbackScaling: 1
+  Reflectable: 0
+  Absorbable: 0
   _absorbable: 0
 --- !u!114 &114947498727309858
 MonoBehaviour:
@@ -4990,18 +4905,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cfe52ab2f1046e4ba7bdead40232213, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isActive: 1
-  _isHitbox: 0
-  _isIntangible: 0
-  _isInvincible: 0
-  _absorbing: 0
-  _reflector: 0
-  _priority: 100
-  _damage: 5
-  _angle: 45
-  _baseKnockback: 0
-  _knockbackScaling: 0
-  _reflectable: 0
+  _type: 4
+  Priority: 100
+  Damage: 5
+  Angle: 45
+  BaseKnockback: 0
+  KnockbackScaling: 1
+  Reflectable: 0
+  Absorbable: 0
   _absorbable: 0
 --- !u!135 &135004399797375764
 SphereCollider:
@@ -5276,11 +5187,12 @@ SkinnedMeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: 853c4026bc226524eb90c0db8fc4e53f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5291,6 +5203,7 @@ SkinnedMeshRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -5321,16 +5234,17 @@ SkinnedMeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 2100000, guid: 7ebe81e8c654d384192b5102d589934d, type: 2}
+  - {fileID: 2100000, guid: 4a8b71a84ffd2a44ebd27d7f33e26840, type: 2}
+  - {fileID: 2100000, guid: 4a8b71a84ffd2a44ebd27d7f33e26840, type: 2}
+  - {fileID: 2100000, guid: f720970af611d6440816693a33b9557e, type: 2}
+  - {fileID: 2100000, guid: 4a8b71a84ffd2a44ebd27d7f33e26840, type: 2}
+  - {fileID: 2100000, guid: 853c4026bc226524eb90c0db8fc4e53f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5341,6 +5255,7 @@ SkinnedMeshRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -5469,11 +5384,12 @@ SkinnedMeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: 853c4026bc226524eb90c0db8fc4e53f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5484,6 +5400,7 @@ SkinnedMeshRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
