@@ -201,7 +201,13 @@ namespace HouraiTeahouse.SmashBrew {
             _colorMap[HitboxType.Reflective] = ReflectHitboxColor;
         }
 
-        public Color GetHitboxColor(HitboxType type) { return _colorMap[type]; }
+        public Color GetHitboxColor(HitboxType type) {
+            Color hitboxColor;
+            if (!_colorMap.TryGetValue(type, out hitboxColor)) {
+                hitboxColor = _colorMap[HitboxType.Damageable];
+            }
+            return hitboxColor;
+        }
 
     }
 
